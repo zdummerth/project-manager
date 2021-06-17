@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import styled from 'styled-components'
-import { CaretUpCircle, BookOpen  } from '@styled-icons/boxicons-regular'
+import { CaretUpCircle, BookOpen } from '@styled-icons/boxicons-regular'
 import Flex from 'components/shared/Flex'
 import { dimensions, fontSizes } from 'styles'
 
@@ -26,10 +26,14 @@ const StyledCaretUp = styled(CaretUpCircle)`
 const Navigation = () => {
     return (
         <Container jc='center' ai='center'>
-            <NavItem dir='column' ai='center'>
-                <BookOpen size={fontSizes.icons} />
-                <NavItemText>Stories</NavItemText>
-            </NavItem>
+            <Link href='/'>
+                <a>
+                    <NavItem dir='column' ai='center'>
+                        <BookOpen size={fontSizes.icons} />
+                        <NavItemText>Stories</NavItemText>
+                    </NavItem>
+                </a>
+            </Link>
         </Container>
     )
 }

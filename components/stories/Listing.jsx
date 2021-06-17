@@ -3,10 +3,11 @@ import styled from 'styled-components'
 import { dimensions } from 'styles'
 import Flex from 'components/shared/Flex'
 import Image from 'next/image'
+import Link from 'next/link'
 
 
 const ItemContainer = styled(Flex)`
-  width: 100%;
+  width: 100vw;
   height: calc( (100vh - ${dimensions.navHeight})/2 );
   // height: 45vh;
   border: 1px solid ${({ theme }) => theme.colors.brand};
@@ -34,20 +35,24 @@ const data = [
 ]
 
 const Item = ({ i }) => {
-  const { image, title } = i
-  console.log({image, title})
+  const { coverImage, title, slug } = i
+  console.log({ title })
   return (
-    <ItemContainer dir='column' ai='center'>
-      <ItemTitle>{title}</ItemTitle>
-      <ImageContainer>
-        <Image
-          src={image}
-          alt={title}
-          layout='fill'
-          objectFit='contain'
-        />
-      </ImageContainer>
-    </ItemContainer>
+    <Link href={`/posts/${slug}`}>
+      <a>
+        <ItemContainer dir='column' ai='center'>
+          <ItemTitle>{title}</ItemTitle>
+          <ImageContainer>
+            <Image
+              src={coverImage}
+              alt={title}
+              layout='fill'
+              objectFit='contain'
+            />
+          </ImageContainer>
+        </ItemContainer>
+      </a>
+    </Link>
   )
 }
 
@@ -56,10 +61,10 @@ const StyledListing = styled(Flex)`
   width: 100%;
 `
 
-export default function Listing() {
+export default function Listing({ stories }) {
   return (
     <StyledListing>
-      {data.map((i, index) => <Item key={i.title + index} i={i} />)}
+      {stories.map((s, index) => <Item key={s.title + index} i={s} />)}
     </StyledListing>
   )
 }

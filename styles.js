@@ -6,6 +6,7 @@ export const theme1 = {
     text: 'white',
     error: 'red',
     background: 'black',
+    inputBackground: '#111',
     gray: 'gray',
     darkgray: 'rgb(45,45,45)',
     lightblue: 'rgb(164,232,242)',
