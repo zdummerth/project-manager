@@ -32,7 +32,7 @@ const DisabledOverlay = styled.div`
     right: 0;
     top: 0;
     bottom: 0;
-    border-radius: 50px;
+    // border-radius: 50px;
     background: ${({ theme }) => theme.colors.button.disabled};
 `
 

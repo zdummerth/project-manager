@@ -4,7 +4,7 @@ import Flex from 'components/shared/Flex'
 import Image from 'next/image'
 import { getAllPosts } from 'lib/api'
 import StoryListing from 'components/stories/Listing'
-import DonateForm from 'components/donate/form'
+import DonateForm from 'components/forms/donate/form'
 
 
 
