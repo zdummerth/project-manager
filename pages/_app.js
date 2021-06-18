@@ -1,4 +1,6 @@
-import React, { useEffect } from 'react'
+import React from 'react'
+import { Elements } from '@stripe/react-stripe-js'
+import { loadStripe } from '@stripe/stripe-js'
 import { createGlobalStyle, ThemeProvider } from 'styled-components'
 import { theme1 } from 'styles'
 import Layout from 'components/layout/Layout'
@@ -26,6 +28,7 @@ const GlobalStyle = createGlobalStyle`
     }
 `
 
+const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_TEST_KEY);
 
 function MyApp({ Component, pageProps }) {
 
@@ -35,12 +38,14 @@ function MyApp({ Component, pageProps }) {
 
   return (
     <>
-    <GlobalStyle />
-      <ThemeProvider theme={theme1}>
-        <Layout>
-          <Component {...pageProps} />
-        </Layout>
-      </ThemeProvider>
+      <GlobalStyle />
+      <Elements stripe={stripePromise}>
+        <ThemeProvider theme={theme1}>
+          <Layout>
+            <Component {...pageProps} />
+          </Layout>
+        </ThemeProvider>
+      </Elements>
     </>
   )
 }
