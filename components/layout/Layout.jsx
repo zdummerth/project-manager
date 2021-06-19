@@ -39,6 +39,7 @@ const BlankButton = styled.button`
 const StyledDonate = styled(Flex)`
     position: fixed;
     width: 100%;
+    max-width: 700px;
     bottom: ${({ open }) => open ? '0' : '-248px'};
     transition: bottom .5s ease-in-out;
     background: ${({ theme }) => theme.colors.background};

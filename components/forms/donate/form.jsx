@@ -8,16 +8,16 @@ import Checkout from 'components/forms/donate/checkout'
 // import { dimensions, colors } from 'styles'
 
 const Container = styled(Flex)`
-    width: 100%;
+    // width: 100%;
 `
 
 
 const Form = styled.form`
-    width: 90%;
+    // width: 100%;
 `
 
 const InputContainer = styled(Flex)`
-    width: 50%;
+    // width: 200px;
     margin-bottom: 10px;
     border-radius: 5px;
     border: 1px solid ${({ theme }) => theme.colors.gray};
@@ -31,19 +31,12 @@ const StyledInput = styled.input`
   border: none;
   outline: none;
   font-size: 16px;
-  width: 100px;
+  flex: 1;
 `
 
 const ErrorMsg = styled.div`
     color: ${({ theme }) => theme.colors.error};
     margin-bottom: 10px;
-`
-
-const Centering = styled(Flex)`
-    width: 100%;
-    height: 100%;
-    justify-content: center;
-    align-items: center;
 `
 
 
