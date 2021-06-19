@@ -1,7 +1,12 @@
 import stripe from 'stripe'
 import isCurrency from 'validator/lib/isCurrency'
 
-const stripeClient = stripe(process.env.STRIPE_TEST_KEY)
+const key = process.env.NODE_ENV === 'production' ? (
+    process.env.STRIPE_LIVE_KEY
+) : (
+    process.env.STRIPE_TEST_KEY
+)
+const stripeClient = stripe(key)
 
 export default async (req, res) => {
     console.log('update payment intent called', req.body)
@@ -20,7 +25,7 @@ export default async (req, res) => {
 
         console.log('payment intent response', paymentIntent)
 
-        res.status(200).json({ 
+        res.status(200).json({
             clientSecret: paymentIntent.client_secret,
             amount: paymentIntent.amount,
             id: paymentIntent.id,
