@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Elements } from '@stripe/react-stripe-js'
 import { loadStripe } from '@stripe/stripe-js'
 import { createGlobalStyle, ThemeProvider } from 'styled-components'
@@ -36,12 +36,17 @@ function MyApp({ Component, pageProps }) {
   //   fetch('/api/createSiteView')
   // }, [])
 
+  const [appState, setAppState] = useState({
+    donateOpen: false
+  })
+
+
   return (
     <>
       <GlobalStyle />
       <Elements stripe={stripePromise}>
         <ThemeProvider theme={theme1}>
-          <Layout>
+          <Layout donateOpen={appState.donateOpen} setAppState={setAppState}>
             <Component {...pageProps} />
           </Layout>
         </ThemeProvider>

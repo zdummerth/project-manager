@@ -20,7 +20,8 @@ const Container = styled(Flex)`
 const CardContainer = styled.div`
     // width: 90%;
     padding: 8px;
-    margin-bottom: 10px;
+    margin-top: 10px;
+    margin-bottom: 20px;
     border: 1px solid white;
     border-radius: 5px;
 `
@@ -29,7 +30,21 @@ const Form = styled.form`
     width: 90%;
 `
 
-const Amount = styled.div``
+const Amount = styled.div`
+    margin: 8px;
+    font-weight: bold;
+`
+
+const PlainButton = styled.button`
+    align-self: flex-end;
+    background: transparent;
+    border: 1px solid ${({ theme }) => theme.colors.gray};
+    border-radius: 5px;
+    color: ${({ theme }) => theme.colors.text};
+    padding: 5px;
+    margin: 8px;
+
+`
 
 const cardStyle = {
     style: {
@@ -50,7 +65,13 @@ const cardStyle = {
     }
 };
 
-const Checkout = ({ clientSecret, amount }) => {
+const Checkout = ({ 
+    clientSecret, 
+    amount, 
+    paymentIntentId,
+    setPaymentIntent
+}) => {
+
     const [succeeded, setSucceeded] = useState(false)
     const [error, setError] = useState(null)
     const [processing, setProcessing] = useState('')
@@ -92,22 +113,27 @@ const Checkout = ({ clientSecret, amount }) => {
         }
     }
 
+
+
     return (
         <Container dir='column' ai='center'>
             <Form onSubmit={handleSubmit}>
                 {error && (
-                    <div role="alert">
+                    <Flex jc='center' role="alert">
                         {error}
-                    </div>
+                    </Flex>
                 )}
 
                 {succeeded ? (
-                    <div>Thank you for the dough</div>
+                    <Flex jc='center'>Thanks for the dough</Flex>
                 ) : (
                     <>
-                        <Amount>
-                            {`Amount: $${formattedPrice}`}
-                        </Amount>
+                        <Flex ai='center'>
+                            <Amount>
+                                {`Amount: $${formattedPrice}`}
+                            </Amount>
+                            <PlainButton type='button' onClick={() => setPaymentIntent(prev => ({ ...prev, edit: true}))}>Edit</PlainButton>
+                        </Flex>
                         <CardContainer>
                             <CardElement options={cardStyle} onChange={handleChange} />
                         </CardContainer>

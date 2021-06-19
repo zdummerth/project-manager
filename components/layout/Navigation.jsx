@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import styled from 'styled-components'
-import { CaretUpCircle, BookOpen } from '@styled-icons/boxicons-regular'
+import { CaretUpCircle, BookOpen, DollarCircle } from '@styled-icons/boxicons-regular'
 import Flex from 'components/shared/Flex'
 import { dimensions, fontSizes } from 'styles'
 
@@ -11,29 +11,35 @@ const Container = styled(Flex)`
     width: 100%;
 `
 
-const NavItem = styled(Flex)``
+const NavItem = styled(Flex)`
+    padding: 10px;
+`
 
 const NavItemText = styled.i`
 //   position: relative;
   font-size: 14px;
 `
 
-const StyledCaretUp = styled(CaretUpCircle)`
-  transform: ${({ open }) => open ? 'rotate(180deg)' : 'rotate(0)'};
-  transition: all 0.3s ease-in;
-`
+const Navigation = ({ setAppState, donateOpen }) => {
 
-const Navigation = () => {
+    const handleClick = () => {
+        setAppState(prev => ({
+            ...prev,
+            donateOpen: !donateOpen
+        }))
+    }
     return (
-        <Container jc='center' ai='center'>
+        <Container jc='space-between' ai='center'>
             <Link href='/'>
                 <a>
                     <NavItem dir='column' ai='center'>
                         <BookOpen size={fontSizes.icons} />
-                        <NavItemText>Stories</NavItemText>
                     </NavItem>
                 </a>
             </Link>
+            <NavItem onClick={handleClick}>
+                <DollarCircle size={fontSizes.icons} />
+            </NavItem>
         </Container>
     )
 }

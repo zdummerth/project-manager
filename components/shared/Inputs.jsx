@@ -7,9 +7,9 @@ const StyledInput = styled.input`
   background: ${({ theme }) => theme.colors.inputBackground};
   color: ${({ theme }) => theme.colors.text};
   padding: 8px;
-  border-radius: 5px;
-  border: 1px solid ${({ theme }) => theme.colors.gray};
-
+  border: none;
+  // border-radius: 5px;
+  // border: 1px solid ${({ theme }) => theme.colors.gray};
 `
 
 const Label = styled.label`

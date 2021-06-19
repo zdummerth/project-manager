@@ -1,5 +1,7 @@
 import React from 'react'
 import styled, { keyframes } from 'styled-components'
+import Flex from 'components/shared/Flex'
+
 
 const rotate360 = keyframes`
   0% {
@@ -21,9 +23,18 @@ const Spinner = styled.div`
   border-radius: 50%;
 `
 
+const Centering = styled(Flex)`
+    width: 100%;
+    height: 100%;
+    justify-content: center;
+    align-items: center;
+`
+
 const LoadingIndicator = () => {
   return (
-    <Spinner />
+    <Centering>
+      <Spinner />
+    </Centering>
   )
 }
 

@@ -17,8 +17,7 @@ export default function Home({ allPosts }) {
   console.log({allPosts})
   return (
     <Container>
-      <DonateForm />
-      {/* <StoryListing stories={allPosts} /> */}
+      <StoryListing stories={allPosts} />
     </Container>
   )
 }

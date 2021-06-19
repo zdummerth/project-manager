@@ -4,7 +4,7 @@ export const theme1 = {
   colors: {
     brand: '#6FFFB0',
     text: 'white',
-    error: 'red',
+    error: '#C00A0A',
     background: 'black',
     inputBackground: '#111',
     gray: 'gray',

@@ -19,110 +19,130 @@ const Container = styled(Flex)`
     width: 100%;
 `
 
-const CardContainer = styled.div`
-    // width: 90%;
-    padding: 8px;
-    margin-bottom: 10px;
-    border: 1px solid white;
-    border-radius: 5px;
-`
 
 const Form = styled.form`
     width: 90%;
 `
 
-const cardStyle = {
-    style: {
-        base: {
-            color: "white",
-            fontFamily: 'Arial, sans-serif',
-            fontSmoothing: "antialiased",
-            fontSize: "16px",
-            "::placeholder": {
-                color: "white"
-            }
-        },
-        invalid: {
-            color: "#fa755a",
-            iconColor: "#fa755a"
-        },
+const InputContainer = styled(Flex)`
+    width: 50%;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    border: 1px solid ${({ theme }) => theme.colors.gray};
+    background: ${({ theme }) => theme.colors.inputBackground};
+    padding: 5px;
+`
 
-    }
-};
+const StyledInput = styled.input`
+  background: ${({ theme }) => theme.colors.inputBackground};
+  color: ${({ theme }) => theme.colors.text};
+  border: none;
+  outline: none;
+  font-size: 16px;
+  width: 100px;
+`
+
+const ErrorMsg = styled.div`
+    color: ${({ theme }) => theme.colors.error};
+    margin-bottom: 10px;
+`
+
+const Centering = styled(Flex)`
+    width: 100%;
+    height: 100%;
+    justify-content: center;
+    align-items: center;
+`
+
+
 
 const DonateForm = () => {
     const [loading, setLoading] = useState(false)
+    const [error, setError] = useState(false)
     const [amount, setAmount] = useState('')
-    const [clientSecret, setClientSecret] = useState('')
-    const [paymentIntent, setPaymentIntent] = useState({})
-    const stripe = useStripe()
-    const elements = useElements()
-    const loadingStripe = !stripe || !elements
+    const [paymentIntent, setPaymentIntent] = useState({
+        id: null,
+        amount: null,
+        clientSecret: null,
+        edit: false
+    })
 
-    console.log('amount: ', amount)
-
-    const handleChange = event => {
-        event.preventDefault()
-        // const inCents = event.target.value.replace('.', '')
-        const trimChar = (string, charToRemove) => {
-            while (string.charAt(0) == charToRemove) {
-                string = string.substring(1);
-            }
-
-            return string;
-        }
-
-        setAmount(trimChar(event.target.value, '0'))
+    if(isCurrency(amount) && error) {
+        setError(false)
     }
 
+    // console.log('amount: ', amount)
 
     const handleSubmit = async (event) => {
         event.preventDefault()
-        if (loadingStripe) return
+        console.log('submitting: ', amount)
+
+        if(!isCurrency(amount)) {
+            console.log('amount is not a currency ')
+            setError('Must be a valid USD currency, e.g. 5, 5.00')
+            return
+        }
+
         setLoading(true)
 
-        // Get a reference to a mounted CardElement. Elements knows how
-        // to find your CardElement because there can only ever be one of
-        // each type of element.
+        const url = paymentIntent.edit ? (
+            '/api/stripe/update-paymentIntent'
+        ) : (
+            '/api/stripe/create-paymentIntent'
+        )
 
-        // setProcessing(true)
-        const paymentIntentRes = await fetch("/api/stripe/create-paymentIntent", {
+
+        const paymentIntentRes = await fetch(url, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
             },
-            body: JSON.stringify({ amount })
+            body: JSON.stringify({
+                amount,
+                paymentIntentId: paymentIntent.id
+            })
         })
 
         if (paymentIntentRes.ok) {
             const paymentIntent = await paymentIntentRes.json()
             // setClientSecret(paymentIntent.clientSecret)
             setPaymentIntent(paymentIntent)
+            setLoading(false)
             console.log({ paymentIntent })
             // setAmount(paymentIntent.amount)
         } else {
             console.log('paymentIntentRes', paymentIntentRes)
             setLoading(false)
         }
-
     }
 
     return (
         <Container dir='column' ai='center'>
-            {paymentIntent.clientSecret ? (
-                <Checkout clientSecret={paymentIntent.clientSecret} amount={paymentIntent.amount + ''} />
+            {(paymentIntent.clientSecret && paymentIntent.amount && !paymentIntent.edit) ? (
+                <Checkout
+                    clientSecret={paymentIntent.clientSecret}
+                    paymentIntentId={paymentIntent.id}
+                    amount={paymentIntent.amount + ''}
+                    setPaymentIntent={setPaymentIntent}
+                />
             ) : (
                 <>
                     <Form onSubmit={handleSubmit}>
-                        <Input
-                            type='text'
-                            id='amount'
-                            label='Amount'
-                            value={amount}
-                            onChange={handleChange}
-                        // onChange={(e) => setAmount(e.target.value)}
-                        />
-                        <Button disabled={!amount || loading}>{loading ? <LoadingIndicator /> : 'Donate'}</Button>
+                        <Flex dir='column' ai='center'>
+                            {error && (
+                                <ErrorMsg>{error}</ErrorMsg>
+                            )}
+                            <InputContainer ai='center'>
+                                <div>$</div>
+                                <StyledInput
+                                    type='text'
+                                    id='amount'
+                                    value={amount}
+                                    onChange={(e) => setAmount(e.target.value)}
+                                />
+                            </InputContainer>
+                            <Button disabled={!amount || loading}>{loading ? <LoadingIndicator /> : 'Donate'}</Button>
+                        </Flex>
                     </Form>
                 </>
             )}
