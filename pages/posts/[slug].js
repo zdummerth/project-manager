@@ -14,6 +14,7 @@ const Container = styled(Flex)`
 
 const Content = styled.div`
     font-size: 18px;
+    line-height: 1.5;
 `
 
 const ImageContainer = styled.div`

@@ -27,8 +27,12 @@ const GlobalStyle = createGlobalStyle`
         font-size: inherit;
     }
 `
-
-const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_TEST_KEY);
+const key = process.env.NODE_ENV === 'production' ? (
+  process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_LIVE_KEY
+) : (
+  process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_TEST_KEY
+)
+const stripePromise = loadStripe(key);
 
 function MyApp({ Component, pageProps }) {
 

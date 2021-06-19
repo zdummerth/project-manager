@@ -1,19 +1,11 @@
-import Link from 'next/link'
-import React, { useState, useEffect } from "react"
-import {
-    CardElement,
-    useStripe,
-    useElements
-} from "@stripe/react-stripe-js"
+import React, { useState } from "react"
 import isCurrency from 'validator/lib/isCurrency'
 import styled from 'styled-components'
-import { CaretUpCircle, BookOpen } from '@styled-icons/boxicons-regular'
 import Flex from 'components/shared/Flex'
 import Button from 'components/shared/Button'
-import Input from 'components/shared/Inputs'
 import LoadingIndicator from 'components/shared/LoadingIndicator'
 import Checkout from 'components/forms/donate/checkout'
-import { dimensions, colors } from 'styles'
+// import { dimensions, colors } from 'styles'
 
 const Container = styled(Flex)`
     width: 100%;

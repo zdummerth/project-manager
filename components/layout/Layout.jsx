@@ -13,6 +13,8 @@ const Container = styled(Flex)`
     // background: ${({ theme }) => theme.colors.background};
     color: ${({ theme }) => theme.colors.text};
     min-height: 100vh;
+    max-width: 700px;
+    margin: 0 auto;
 `
 
 const FormContainer = styled.div`
@@ -21,7 +23,8 @@ const FormContainer = styled.div`
 `
 
 const Content = styled(Flex)`
-    flex: 1
+    flex: 1;
+    width: 100%;
 `
 
 const BlankButton = styled.button`
@@ -55,6 +58,8 @@ const Filler = styled.div`
 `
 
 const Layout = ({ children, setAppState, donateOpen }) => {
+
+    console.log('process', process.env.NODE_ENV)
 
     const handleClick = () => {
         setAppState(prev => ({

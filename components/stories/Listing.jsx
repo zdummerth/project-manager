@@ -7,7 +7,7 @@ import Link from 'next/link'
 
 
 const ItemContainer = styled(Flex)`
-  width: 100vw;
+  width: 100%;
   height: calc( (100vh - ${dimensions.navHeight})/2 );
   // height: 45vh;
   border: 1px solid ${({ theme }) => theme.colors.brand};
@@ -63,7 +63,7 @@ const StyledListing = styled(Flex)`
 
 export default function Listing({ stories }) {
   return (
-    <StyledListing>
+    <StyledListing dir='column' ai='stretch'>
       {stories.map((s, index) => <Item key={s.title + index} i={s} />)}
     </StyledListing>
   )
