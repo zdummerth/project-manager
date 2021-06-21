@@ -4,7 +4,7 @@ import styled from 'styled-components'
 import Flex from 'components/shared/Flex'
 import Button from 'components/shared/Button'
 import LoadingIndicator from 'components/shared/LoadingIndicator'
-import Checkout from 'components/forms/donate/checkout'
+import Checkout from 'components/forms/donate/checkout/Controls'
 // import { dimensions, colors } from 'styles'
 
 const Container = styled(Flex)`

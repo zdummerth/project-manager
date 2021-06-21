@@ -3,7 +3,7 @@ import { XCircle } from '@styled-icons/boxicons-regular'
 import { fontSizes } from 'styles'
 import Flex from 'components/shared/Flex'
 import Navigation from 'components/layout/Navigation'
-import DonateForm from 'components/forms/donate/form/controls'
+import DonateForm from 'components/forms/donate/form/Controls'
 import useAppState from 'hooks/useAppState'
 
 
