@@ -7,17 +7,11 @@ import LoadingIndicator from 'components/shared/LoadingIndicator'
 import Checkout from 'components/forms/donate/checkout/Controls'
 // import { dimensions, colors } from 'styles'
 
-const Container = styled(Flex)`
-    // width: 100%;
-`
+const Container = styled(Flex)``
 
-
-const Form = styled.form`
-    // width: 100%;
-`
+const Form = styled.form``
 
 const InputContainer = styled(Flex)`
-    // width: 200px;
     margin-bottom: 10px;
     border-radius: 5px;
     border: 1px solid ${({ theme }) => theme.colors.gray};

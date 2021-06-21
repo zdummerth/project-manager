@@ -39,9 +39,11 @@ const StyledDonate = styled(Flex)`
     position: fixed;
     width: 100%;
     max-width: 700px;
-    bottom: ${({ open }) => open ? '0' : '-248px'};
+    bottom: ${({ open }) => open ? '0' : '-250px'};
     transition: bottom .5s ease-in-out;
     background: ${({ theme }) => theme.colors.background};
+    border: 1px solid ${({ theme }) => theme.colors.gray};
+    border-bottom: none;
 `
 
 const Filler = styled.div`
@@ -49,7 +51,7 @@ const Filler = styled.div`
     height: 100vh;
     width: 100%;
     bottom: 48px;
-    background: rgba(0,0,0,.9);
+    background: rgba(0,0,0,.95);
     opacity: ${({ open }) => open ? '1' : '0'};
     z-index: ${({ open }) => open ? '0' : '-1'};
     transition: opacity .5s ease-in-out;
