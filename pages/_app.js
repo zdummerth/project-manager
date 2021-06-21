@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { Elements } from '@stripe/react-stripe-js'
 import { loadStripe } from '@stripe/stripe-js'
 import { createGlobalStyle, ThemeProvider } from 'styled-components'
+import AppStateProvider from 'context/AppStateProvider'
 import { theme1 } from 'styles'
 import Layout from 'components/layout/Layout'
 
@@ -40,21 +41,18 @@ function MyApp({ Component, pageProps }) {
   //   fetch('/api/createSiteView')
   // }, [])
 
-  const [appState, setAppState] = useState({
-    donateOpen: false
-  })
-
-
   return (
     <>
       <GlobalStyle />
-      <Elements stripe={stripePromise}>
-        <ThemeProvider theme={theme1}>
-          <Layout donateOpen={appState.donateOpen} setAppState={setAppState}>
-            <Component {...pageProps} />
-          </Layout>
-        </ThemeProvider>
-      </Elements>
+      <AppStateProvider>
+        <Elements stripe={stripePromise}>
+          <ThemeProvider theme={theme1}>
+            <Layout>
+              <Component {...pageProps} />
+            </Layout>
+          </ThemeProvider>
+        </Elements>
+      </AppStateProvider>
     </>
   )
 }

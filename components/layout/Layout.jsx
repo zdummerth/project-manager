@@ -1,16 +1,15 @@
 import styled from 'styled-components'
-import { DollarCircle, XCircle } from '@styled-icons/boxicons-regular'
+import { XCircle } from '@styled-icons/boxicons-regular'
 import { fontSizes } from 'styles'
-
 import Flex from 'components/shared/Flex'
 import Navigation from 'components/layout/Navigation'
-import DonateForm from 'components/forms/donate/form'
+import DonateForm from 'components/forms/donate/form/controls'
+import useAppState from 'hooks/useAppState'
 
 
 
 
 const Container = styled(Flex)`
-    // background: ${({ theme }) => theme.colors.background};
     color: ${({ theme }) => theme.colors.text};
     min-height: 100vh;
     max-width: 700px;
@@ -43,14 +42,12 @@ const StyledDonate = styled(Flex)`
     bottom: ${({ open }) => open ? '0' : '-248px'};
     transition: bottom .5s ease-in-out;
     background: ${({ theme }) => theme.colors.background};
-    // height: 100vh;
 `
 
 const Filler = styled.div`
     position: fixed;    
     height: 100vh;
     width: 100%;
-    // bottom: 248px;
     bottom: 48px;
     background: rgba(0,0,0,.9);
     opacity: ${({ open }) => open ? '1' : '0'};
@@ -58,36 +55,34 @@ const Filler = styled.div`
     transition: opacity .5s ease-in-out;
 `
 
-const Layout = ({ children, setAppState, donateOpen }) => {
+const Layout = ({ children }) => {
+    // console.log('', )
 
-    console.log('process', process.env.NODE_ENV)
+    const {
+        donateOpen,
+        toggleDonateOpen,
+    } = useAppState()
 
-    const handleClick = () => {
-        setAppState(prev => ({
-            ...prev,
-            donateOpen: !donateOpen
-        }))
-    }
+
     return (
         <Container dir='column'>
+
             <Content>
                 {children}
             </Content>
-            {/* <BlankButton onClick={handleClick}>
-                <DollarCircle size={fontSizes.icons} />
-            </BlankButton> */}
-            <Navigation setAppState={setAppState} donateOpen={donateOpen} />
 
-            <Filler onClick={handleClick} open={donateOpen} />
+            <Navigation />
 
+            <Filler onClick={toggleDonateOpen} open={donateOpen} />
             <StyledDonate open={donateOpen} dir='column' ai='center'>
-                <BlankButton onClick={handleClick}>
+                <BlankButton onClick={toggleDonateOpen}>
                     <XCircle size={fontSizes.icons} />
                 </BlankButton>
                 <FormContainer open={donateOpen}>
                     <DonateForm />
                 </FormContainer>
             </StyledDonate>
+
         </Container>
     )
 }

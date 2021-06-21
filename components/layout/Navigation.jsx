@@ -1,7 +1,9 @@
 import Link from 'next/link'
 import styled from 'styled-components'
-import { CaretUpCircle, BookOpen, DollarCircle } from '@styled-icons/boxicons-regular'
+import useAppState from 'hooks/useAppState'
+import { BookOpen, DollarCircle } from '@styled-icons/boxicons-regular'
 import Flex from 'components/shared/Flex'
+
 import { dimensions, fontSizes } from 'styles'
 
 
@@ -15,19 +17,10 @@ const NavItem = styled(Flex)`
     padding: 10px;
 `
 
-const NavItemText = styled.i`
-//   position: relative;
-  font-size: 14px;
-`
+const Navigation = () => {
 
-const Navigation = ({ setAppState, donateOpen }) => {
+    const { toggleDonateOpen } = useAppState()
 
-    const handleClick = () => {
-        setAppState(prev => ({
-            ...prev,
-            donateOpen: !donateOpen
-        }))
-    }
     return (
         <Container jc='space-between' ai='center'>
             <Link href='/'>
@@ -37,7 +30,7 @@ const Navigation = ({ setAppState, donateOpen }) => {
                     </NavItem>
                 </a>
             </Link>
-            <NavItem onClick={handleClick}>
+            <NavItem onClick={toggleDonateOpen}>
                 <DollarCircle size={fontSizes.icons} />
             </NavItem>
         </Container>
