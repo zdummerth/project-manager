@@ -37,7 +37,10 @@ const CommentForm = () => {
     const [comment, setComment] = useState('')
     const [alias, setAlias] = useState('')
 
-    const handleSubmit = async () => {
+    const handleSubmit = async (e) => {
+        e.preventDefault()
+        console.log('submitting')
+
         const uploaded = await fetch('/api/createComment', {
             method: 'POST',
             headers: {

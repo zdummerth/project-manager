@@ -2,9 +2,9 @@ import stripe from 'stripe'
 import isCurrency from 'validator/lib/isCurrency'
 
 const key = process.env.NODE_ENV === 'production' ? (
-    process.env.STRIPE_LIVE_KEY
+    process.env.STRIPE_LIVE_RESTRICTED_KEY
 ) : (
-    process.env.STRIPE_TEST_KEY
+    process.env.STRIPE_TEST_RESTRICTED_KEY
 )
 const stripeClient = stripe(key)
 

@@ -12,7 +12,7 @@ const Container = styled(Flex)`
 
 export default function Home({ allPosts }) {
 
-  console.log({allPosts})
+  console.log({ allPosts })
   return (
     <Container>
       <StoryListing stories={allPosts} />
@@ -26,6 +26,8 @@ export async function getStaticProps() {
     'date',
     'slug',
     'author',
+    'tags',
+    // 'content',
     'coverImage',
     'excerpt',
   ])

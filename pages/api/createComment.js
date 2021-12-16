@@ -11,12 +11,12 @@ const createComment = (data) => {
 
 export default async (req, res) => {
     console.log('create commment api called', req.body)
-    // const { comment } = req.body
+    const { comment } = req.body
     const dbres = await createComment(req.body)
     console.log('database response', dbres)
-    if(dbres) {
-        res.status(201).send()  
+    if (dbres) {
+        res.status(200).json({ success: true })
     } else {
-        res.status(400).send()
+        res.status(400).json({error: 'there was an error'})
     }
 }

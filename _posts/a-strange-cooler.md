@@ -2,6 +2,7 @@
 title: 'A Strange Cooler'
 coverImage: '/images/a-strange-cooler.jpg'
 date: '2020-03-16T05:35:07.322Z'
+tags: ['cooler', 'strange']
 author:
   name: Pete Willows
 ---
