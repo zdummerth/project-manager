@@ -1,8 +1,10 @@
 import React from 'react'
+import faunadb from 'faunadb'
 import styled from 'styled-components'
 import Flex from 'components/shared/Flex'
-import { getAllPosts } from 'lib/api'
+// import { getAllPosts } from 'lib/api'
 import StoryListing from 'components/stories/Listing'
+import RichTextEditor from 'components/cms/RichTextEditor'
 
 
 
@@ -10,29 +12,40 @@ const Container = styled(Flex)`
   width: 100%;
 `
 
-export default function Home({ allPosts }) {
+export default function Home({ allPosts, all_posts }) {
 
-  console.log({ allPosts })
+  console.log({ all_posts })
   return (
     <Container>
-      <StoryListing stories={allPosts} />
+      {/* <StoryListing stories={allPosts} /> */}
+      <RichTextEditor />
     </Container>
   )
 }
 
 export async function getStaticProps() {
-  const allPosts = getAllPosts([
-    'title',
-    'date',
-    'slug',
-    'author',
-    'tags',
-    // 'content',
-    'coverImage',
-    'excerpt',
-  ])
+  const client = new faunadb.Client({ secret: process.env.TESTING_ADMIN_KEY })
+  const q = faunadb.query
+
+  const all_posts = await client.query(
+    q.Call(q.Function("getAllPosts"))
+  )
+
+  console.log('allposts', all_posts.data.map(p => p.data.title))
+
+
+  // const allPosts = getAllPosts([
+  //   'title',
+  //   'date',
+  //   'slug',
+  //   'author',
+  //   'tags',
+  //   // 'content',
+  //   'coverImage',
+  //   'excerpt',
+  // ])
 
   return {
-    props: { allPosts },
+    props: { all_posts: all_posts.data.map(p => p.data) },
   }
 }
