@@ -36,19 +36,19 @@ const data = [
 
 const Item = ({ i }) => {
   const { coverImage, title, slug } = i
-  console.log({ title })
+  console.log({ i })
   return (
     <Link href={`/posts/${slug}`}>
       <a>
         <ItemContainer dir='column' ai='center'>
           <ItemTitle>{title}</ItemTitle>
           <ImageContainer>
-            <Image
+            {/* <Image
               src={coverImage}
               alt={title}
               layout='fill'
               objectFit='contain'
-            />
+            /> */}
           </ImageContainer>
         </ItemContainer>
       </a>

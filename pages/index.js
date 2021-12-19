@@ -4,7 +4,7 @@ import styled from 'styled-components'
 import Flex from 'components/shared/Flex'
 // import { getAllPosts } from 'lib/api'
 import StoryListing from 'components/stories/Listing'
-import RichTextEditor from 'components/cms/RichTextEditor'
+// import RichTextEditor from 'components/cms/RichTextEditor'
 
 
 
@@ -14,11 +14,10 @@ const Container = styled(Flex)`
 
 export default function Home({ allPosts, all_posts }) {
 
-  console.log({ all_posts })
+  // console.log({ all_posts })
   return (
     <Container>
-      {/* <StoryListing stories={allPosts} /> */}
-      <RichTextEditor />
+      <StoryListing stories={all_posts} />
     </Container>
   )
 }
@@ -31,21 +30,10 @@ export async function getStaticProps() {
     q.Call(q.Function("getAllPosts"))
   )
 
-  console.log('allposts', all_posts.data.map(p => p.data.title))
-
-
-  // const allPosts = getAllPosts([
-  //   'title',
-  //   'date',
-  //   'slug',
-  //   'author',
-  //   'tags',
-  //   // 'content',
-  //   'coverImage',
-  //   'excerpt',
-  // ])
-
   return {
-    props: { all_posts: all_posts.data.map(p => p.data) },
+    props: { all_posts: all_posts.data.map(p => ({
+      id: p.ref.id,
+      ...p.data
+    })) },
   }
 }

@@ -68,12 +68,12 @@ const Layout = ({ children }) => {
 
     return (
         <Container dir='column'>
+            <Navigation />
 
             <Content>
                 {children}
             </Content>
 
-            <Navigation />
 
             <Filler onClick={toggleDonateOpen} open={donateOpen} />
             <StyledDonate open={donateOpen} dir='column' ai='center'>

@@ -3,6 +3,7 @@ import { Elements } from '@stripe/react-stripe-js'
 import { loadStripe } from '@stripe/stripe-js'
 import { createGlobalStyle, ThemeProvider } from 'styled-components'
 import AppStateProvider from 'context/AppStateProvider'
+import { UserContext } from 'context/UserContext'
 import { theme1 } from 'styles'
 import Layout from 'components/layout/Layout'
 
@@ -36,7 +37,7 @@ const key = process.env.NODE_ENV === 'production' ? (
 const stripePromise = loadStripe(key);
 
 function MyApp({ Component, pageProps }) {
-
+  const [user, setUser] = useState();
   // useEffect(() => {
   //   fetch('/api/createSiteView')
   // }, [])
@@ -45,13 +46,15 @@ function MyApp({ Component, pageProps }) {
     <>
       <GlobalStyle />
       <AppStateProvider>
-        <Elements stripe={stripePromise}>
-          <ThemeProvider theme={theme1}>
-            <Layout>
-              <Component {...pageProps} />
-            </Layout>
-          </ThemeProvider>
-        </Elements>
+        <UserContext.Provider value={[user, setUser]}>
+          <Elements stripe={stripePromise}>
+            <ThemeProvider theme={theme1}>
+              <Layout>
+                <Component {...pageProps} />
+              </Layout>
+            </ThemeProvider>
+          </Elements>
+        </UserContext.Provider>
       </AppStateProvider>
     </>
   )
