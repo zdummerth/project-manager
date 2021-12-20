@@ -1,8 +1,10 @@
+import styled from 'styled-components'
 
 
 export const theme1 = {
   colors: {
     brand: '#6FFFB0',
+    spacer: 'radial-gradient(#6FFFB0, #000000);',
     text: 'white',
     error: '#C00A0A',
     background: 'black',
@@ -40,6 +42,19 @@ export const breakpoints = {
 export const dimensions = {
   navHeight: '60px',
 };
+
+export const spacing = {
+  sm: '5px',
+  md: '10px',
+  lg: '15px',
+  xl: '20px',
+};
+
+export const Spacer = styled.div`
+  background: ${({theme}) => theme.colors.spacer};
+  height: 8px;
+  margin: 8px 0;
+`
 
 
 

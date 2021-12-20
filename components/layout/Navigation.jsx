@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import styled from 'styled-components'
 import useAppState from 'hooks/useAppState'
-import { BookOpen, DollarCircle, User } from '@styled-icons/boxicons-regular'
+import { BookOpen, Cart, User } from '@styled-icons/boxicons-regular'
 import Flex from 'components/shared/Flex'
 import { useUser } from 'hooks/useUser'
 
@@ -44,9 +44,13 @@ const Navigation = () => {
                     </NavItem>
                 </a>
             </Link>
-            <NavItem onClick={toggleDonateOpen}>
-                <DollarCircle size={fontSizes.icons} />
-            </NavItem>
+            <Link href='/cart'>
+                <a>
+                    <NavItem dir='column' ai='center'>
+                        <Cart size={fontSizes.icons} />
+                    </NavItem>
+                </a>
+            </Link>
         </Container>
     )
 }

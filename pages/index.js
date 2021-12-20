@@ -1,9 +1,10 @@
 import React from 'react'
-import faunadb from 'faunadb'
 import styled from 'styled-components'
 import Flex from 'components/shared/Flex'
-// import { getAllPosts } from 'lib/api'
-import StoryListing from 'components/stories/Listing'
+import { getAllProductsInCollection } from 'lib/shopify'
+import ProductListings from 'components/products/ProductListings'
+
+// import StoryListing from 'components/stories/Listing'
 // import RichTextEditor from 'components/cms/RichTextEditor'
 
 
@@ -12,28 +13,24 @@ const Container = styled(Flex)`
   width: 100%;
 `
 
-export default function Home({ allPosts, all_posts }) {
+export default function Home({ products }) {
 
-  // console.log({ all_posts })
+  console.log({ products })
   return (
     <Container>
-      <StoryListing stories={all_posts} />
+      {/* <StoryListing stories={all_posts} /> */}
+      <ProductListings products={products} />
+      Index Page
     </Container>
   )
 }
 
 export async function getStaticProps() {
-  const client = new faunadb.Client({ secret: process.env.TESTING_ADMIN_KEY })
-  const q = faunadb.query
-
-  const all_posts = await client.query(
-    q.Call(q.Function("getAllPosts"))
-  )
-
+  const products = await getAllProductsInCollection('featured')
+  console.log('products: ', products)
   return {
-    props: { all_posts: all_posts.data.map(p => ({
-      id: p.ref.id,
-      ...p.data
-    })) },
+    props: {
+      products
+    },
   }
 }

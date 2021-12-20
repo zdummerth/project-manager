@@ -1,19 +1,52 @@
-import styled from 'styled-components'
+import styled, { createGlobalStyle } from 'styled-components'
 import { XCircle } from '@styled-icons/boxicons-regular'
+import { CartProvider } from 'context/Store'
 import { fontSizes } from 'styles'
 import Flex from 'components/shared/Flex'
 import Navigation from 'components/layout/Navigation'
 import DonateForm from 'components/forms/donate/form/Controls'
 import useAppState from 'hooks/useAppState'
 
+const GlobalStyle = createGlobalStyle`
+  body {
+    box-sizing: border-box;
+    margin: 0;
+    color: ${({ theme }) => theme.colors.text};
+    background: ${({ theme }) => theme.colors.background};
+  }
 
+  *,
+  *:before,
+  *:after {
+    box-sizing: inherit;
+  }
+
+
+  a {
+    text-decoration: none;
+    color: inherit;
+    font-weight: inherit;
+    font-size: inherit;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: Cinzel, 'Playfair Display SC', serif;
+  }
+
+  main {
+    width: 100%;
+  }
+
+`
 
 
 const Container = styled(Flex)`
-    color: ${({ theme }) => theme.colors.text};
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     min-height: 100vh;
-    max-width: 700px;
-    margin: 0 auto;
+    overflow: hidden;
+    color: ${({ theme }) => theme.colors.text};
 `
 
 const FormContainer = styled.div`
@@ -67,25 +100,31 @@ const Layout = ({ children }) => {
 
 
     return (
-        <Container dir='column'>
-            <Navigation />
+        <>
+            <GlobalStyle />
 
-            <Content>
-                {children}
-            </Content>
+            <CartProvider>
+                <Container dir='column'>
+                    <Navigation />
+
+                    <Content>
+                        {children}
+                    </Content>
 
 
-            <Filler onClick={toggleDonateOpen} open={donateOpen} />
-            <StyledDonate open={donateOpen} dir='column' ai='center'>
+                    <Filler onClick={toggleDonateOpen} open={donateOpen} />
+                    {/* <StyledDonate open={donateOpen} dir='column' ai='center'>
                 <BlankButton onClick={toggleDonateOpen}>
                     <XCircle size={fontSizes.icons} />
                 </BlankButton>
                 <FormContainer open={donateOpen}>
                     <DonateForm />
                 </FormContainer>
-            </StyledDonate>
+            </StyledDonate> */}
 
-        </Container>
+                </Container>
+            </CartProvider>
+        </>
     )
 }
 
