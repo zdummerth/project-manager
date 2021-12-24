@@ -8,8 +8,8 @@ import Title from 'components/shared/Title'
 import styled from 'styled-components'
 import CommentForm from 'components/forms/comments/index'
 
-const client = new faunadb.Client({ secret: process.env.TESTING_ADMIN_KEY })
-const q = faunadb.query
+// const client = new faunadb.Client({ secret: process.env.TESTING_ADMIN_KEY })
+// const q = faunadb.query
 
 const Container = styled(Flex)`
     width: 100%;
@@ -36,7 +36,7 @@ export default function Post({ post, morePosts, preview }) {
     // console.log('the post', post)
     return (
         <Container dir='column' ai='center'>
-            <Title>{post?.title}</Title>
+            {/* <Title>{post?.title}</Title> */}
             {/* <ImageContainer>
                 <Image
                     src={post.coverImage}
@@ -45,7 +45,7 @@ export default function Post({ post, morePosts, preview }) {
                     objectFit='contain'
                 />
             </ImageContainer> */}
-            {post.content.map((c, ind) => {
+            {/* {post.content.map((c, ind) => {
                 if (c.type === 'html') {
                     return (
                         <Content
@@ -54,35 +54,39 @@ export default function Post({ post, morePosts, preview }) {
                         />
                     )
                 }
-            })}
-            <CommentForm />
+            })} */}
+
+
+            {/* <CommentForm /> */}
+
+            <div>Post Page</div>
         </Container>
     )
 }
 
-export async function getStaticProps({ params }) {
-    const post = await client.query(
-        q.Call(q.Function("findPostBySlug"), params.slug)
-    )
+// export async function getStaticProps({ params }) {
+//     const post = await client.query(
+//         q.Call(q.Function("findPostBySlug"), params.slug)
+//     )
 
-    return {
-        props: {
-            post: post.data
-        },
-    }
-}
+//     return {
+//         props: {
+//             post: post.data
+//         },
+//     }
+// }
 
-export async function getStaticPaths() {
-    const slugs = await client.query(q.Call(q.Function("getAllPostSlugs")))
+// export async function getStaticPaths() {
+//     const slugs = await client.query(q.Call(q.Function("getAllPostSlugs")))
 
-    return {
-        paths: slugs.data.map((slug) => {
-            return {
-                params: {
-                    slug,
-                },
-            }
-        }),
-        fallback: false,
-    }
-}
+//     return {
+//         paths: slugs.data.map((slug) => {
+//             return {
+//                 params: {
+//                     slug,
+//                 },
+//             }
+//         }),
+//         fallback: false,
+//     }
+// }
