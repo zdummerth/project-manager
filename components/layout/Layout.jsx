@@ -1,4 +1,6 @@
+import React, { useState, useEffect } from 'react'
 import styled, { createGlobalStyle } from 'styled-components'
+import { getCollectionSlugs } from 'lib/shopify'
 import { XCircle } from '@styled-icons/boxicons-regular'
 import { CartProvider } from 'context/Store'
 import { fontSizes } from 'styles'
@@ -92,6 +94,17 @@ const Filler = styled.div`
 
 const Layout = ({ children }) => {
     // console.log('', )
+    const [collectionlinks, setCollectionlinks] = useState([])
+
+    useEffect(() => {
+        const init = async () => {
+            const nodes = await getCollectionSlugs()
+            const slugs = nodes.map(n => n.node)
+            console.log({ slugs })
+            setCollectionlinks(slugs)
+        }
+        init()
+    }, [])
 
     const {
         donateOpen,
@@ -105,7 +118,7 @@ const Layout = ({ children }) => {
 
             <CartProvider>
                 <Container dir='column'>
-                    <Navigation />
+                    <Navigation collections={collectionlinks} />
 
                     <Content>
                         {children}

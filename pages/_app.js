@@ -15,6 +15,7 @@ import Layout from 'components/layout/Layout'
 // const stripePromise = loadStripe(key);
 
 function MyApp({ Component, pageProps }) {
+  console.log('page props', pageProps)
   const [user, setUser] = useState();
   // useEffect(() => {
   //   fetch('/api/createSiteView')

@@ -5,6 +5,7 @@ export const AppStateContext = React.createContext()
 const AppStateProvider = ({ children }) => {
     const initState = {
         donateOpen: false,
+        menuOpen: false
     }
 
     const [appState, setAppState] = useState(initState)
@@ -15,6 +16,12 @@ const AppStateProvider = ({ children }) => {
             setAppState(prev => ({
                 ...prev,
                 donateOpen: !appState.donateOpen
+            }))
+        },
+        toggleMenuOpen: () => {
+            setAppState(prev => ({
+                ...prev,
+                menuOpen: !appState.menuOpen
             }))
         }
     }

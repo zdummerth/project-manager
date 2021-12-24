@@ -46,6 +46,7 @@ function ProductCard({ product }) {
             <Image
               src={imageNode.originalSrc}
               alt={imageNode.altText}
+              objectFit='contain'
               layout="fill"
             />
           </ImageWrapper>
