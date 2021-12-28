@@ -1,4 +1,5 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
+import { useRouter } from 'next/router'
 export const AppStateContext = React.createContext()
 
 
@@ -8,7 +9,25 @@ const AppStateProvider = ({ children }) => {
         menuOpen: false
     }
 
+    const router = useRouter()
     const [appState, setAppState] = useState(initState)
+
+    useEffect(() => {
+        const handleRouteChange = (url, { shallow }) => {
+            if (appState.menuOpen) {
+                setAppState(prev => ({
+                    ...prev,
+                    menuOpen: false
+                }))
+            }
+        }
+
+        router.events.on('routeChangeStart', handleRouteChange)
+
+        return () => {
+            router.events.off('routeChangeStart', handleRouteChange)
+        }
+    })
 
     const value = {
         ...appState,

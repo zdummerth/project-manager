@@ -116,7 +116,7 @@ const MobileNavbox = styled.div`
 `
 
 
-const Header = ({ open, setOpen, collections }) => {
+const Header = ({ open, collections }) => {
   const appState = useAppState()
   console.log({ appState })
   const navItems = (
@@ -227,17 +227,13 @@ const Header = ({ open, setOpen, collections }) => {
           className='menuButton'
           onClick={appState.toggleMenuOpen}
         >
-          <Menu
-            open={!open}
-            size='28'
-          />
+          <Menu size='28'/>
           {/* <I>Menu</I> */}
         </Flex>
         <Link
           href='/cart'
           name='Play Disc Golf'
           className='menu-item'
-        // onClick={() => setOpen(false)}
         >
           <a>
             <Cart size='22' />

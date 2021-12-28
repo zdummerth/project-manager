@@ -16,10 +16,8 @@ import Layout from 'components/layout/Layout'
 
 function MyApp({ Component, pageProps }) {
   console.log('page props', pageProps)
-  const [user, setUser] = useState();
-  // useEffect(() => {
-  //   fetch('/api/createSiteView')
-  // }, [])
+  const [user, setUser] = useState()
+  const [isNavOpen, setIsNavOpen] = useState()
 
   return (
     <>
@@ -27,7 +25,7 @@ function MyApp({ Component, pageProps }) {
         <UserContext.Provider value={[user, setUser]}>
           {/* <Elements stripe={stripePromise}> */}
           <ThemeProvider theme={theme1}>
-            <Layout>
+            <Layout isNavOpen={isNavOpen}>
               <Component {...pageProps} />
             </Layout>
           </ThemeProvider>
