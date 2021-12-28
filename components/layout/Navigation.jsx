@@ -1,13 +1,11 @@
 import PropTypes from 'prop-types'
-import React, { useState } from 'react'
+import React from 'react'
 import Link from "next/link"
 import styled from 'styled-components'
-import { ShoppingBag, Trophy, Message, Home, X, CaretDownCircle, Pencil, UserPin, Menu, NetworkChart, Cart } from '@styled-icons/boxicons-regular'
+import { ShoppingBag, Message, Home, X, UserPin, Menu, NetworkChart, Cart } from '@styled-icons/boxicons-regular'
 import Flex from 'components/shared/Flex'
 import useAppState from 'hooks/useAppState'
-// import Logo from 'components/layout/logo'
 import { dimensions, colors, breakpoints } from 'styles';
-// import CartIcon from 'src/components/cart/cart-icon'
 
 const FullWidth = styled(Flex)`
   background: ${({ theme }) => theme.colors.background}; 
@@ -26,9 +24,6 @@ const Nav = styled(Flex)`
   background: ${({ theme }) => theme.colors.background}; 
   width: 100%;
   max-width: 800px;
-//   position: absolute;
-  top: 0;
-  z-index: 5;
 
   .hide-mobile {
     display: none;
@@ -73,9 +68,9 @@ const MobileNavbox = styled.div`
   .content {
     display: flex;
     flex-direction: column;
-    align-items: center;
     width: 85%;
     background: ${({ theme }) => theme.colors.background}; 
+    border-top: 1px solid gray;
 
     #close-button {
       align-self: flex-end;
@@ -89,17 +84,22 @@ const MobileNavbox = styled.div`
 
   .filler {
     flex: 1;
-    background: rgba(0,0,0,.8);
+    background: rgba(0,0,0,.75);
     display: ${({ open }) => open ? 'block' : 'none'};
   }
 
   .menu-item {
-    display: flex;
-    align-items: center;
-    // flex-direction: row;
-    width: 100%;
     padding: 15px 0 15px 20px;
     border-bottom: 1px solid gray;
+  }
+
+  .first {
+    border-top: 1px solid gray;
+  }
+
+  li {
+    padding: 15px 0 15px 20px;
+    list-style-type: none;
   }
 
   #close-button:hover {
@@ -136,32 +136,17 @@ const Header = ({ open, collections }) => {
           href='/'
           name='Play Disc Golf'
           id='first'
-          className='menu-item'
-        // onClick={() => setOpen(false)}
         >
-          <a>
+          <a className='menu-item first'>
             <Home size='22' />
             <I>Home</I>
           </a>
         </Link>
         <Link
-          href='/shop/collection/featured'
-          name='Play Disc Golf'
-          className='menu-item'
-        // onClick={() => setOpen(false)}
-        >
-          <a>
-            <ShoppingBag size='22' />
-            <I>Shop</I>
-          </a>
-        </Link>
-        <Link
           href='/cart'
           name='Play Disc Golf'
-          className='menu-item'
-        // onClick={() => setOpen(false)}
         >
-          <a>
+          <a className='menu-item'>
             <Cart size='22' />
             <I>Cart</I>
           </a>
@@ -169,10 +154,8 @@ const Header = ({ open, collections }) => {
         <Link
           href='/about-us'
           name='Play Disc Golf'
-          className='menu-item'
-        // onClick={() => setOpen(false)}
         >
-          <a>
+          <a className='menu-item'>
             <UserPin size='22' />
             <I>About Us</I>
           </a>
@@ -180,10 +163,8 @@ const Header = ({ open, collections }) => {
         <Link
           href='/partners'
           name='Play Disc Golf'
-          className='menu-item'
-        // onClick={() => setOpen(false)}
         >
-          <a>
+          <a className='menu-item'>
             <NetworkChart size='22' />
             <I>Our Partners</I>
           </a>
@@ -191,29 +172,38 @@ const Header = ({ open, collections }) => {
         <Link
           href='/contact'
           name='Play Disc Golf'
-          className='menu-item'
-        // onClick={() => setOpen(false)}
         >
-          <a>
+          <a className='menu-item'>
             <Message size='22' />
             <I>Contact</I>
           </a>
         </Link>
-        {collections.map(c => {
-          return (
-            <Link
-              href={`/collections/${c.handle}`}
-              name={c.title}
-              key={c.title + c.handle}
-              className='menu-item'
-            // onClick={() => setOpen(false)}
-            >
-              <a>
-                <I>{c.title}</I>
-              </a>
-            </Link>
-          )
-        })}
+        <Link
+          href='/shop/collection/featured'
+          name='Play Disc Golf'
+        >
+          <a className='menu-item'>
+            <ShoppingBag size='22' />
+            <I>Shop</I>
+          </a>
+        </Link>
+        <ul>
+          {collections.map(c => {
+            return (
+              <li>
+                <Link
+                  href={`/collections/${c.handle}`}
+                  name={c.title}
+                  key={c.title + c.handle}
+                >
+                  <a>
+                    <I>{c.title}</I>
+                  </a>
+                </Link>
+              </li>
+            )
+          })}
+        </ul>
       </div>
     </>
   )
@@ -227,7 +217,7 @@ const Header = ({ open, collections }) => {
           className='menuButton'
           onClick={appState.toggleMenuOpen}
         >
-          <Menu size='28'/>
+          <Menu size='28' />
           {/* <I>Menu</I> */}
         </Flex>
         <Link

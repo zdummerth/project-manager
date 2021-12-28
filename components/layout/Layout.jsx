@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import styled, { createGlobalStyle } from 'styled-components'
+import useAppState from 'hooks/useAppState'
 import { getCollectionSlugs } from 'lib/shopify'
 import { XCircle } from '@styled-icons/boxicons-regular'
 import { CartProvider } from 'context/Store'
@@ -72,7 +73,8 @@ const Filler = styled.div`
 const Layout = ({ children }) => {
     // console.log('', )
     const [collectionlinks, setCollectionlinks] = useState([])
-    const [navbarOpen, setNavbarOpen] = useState(false)
+    const { menuOpen } = useAppState()
+
 
 
     useEffect(() => {
@@ -88,7 +90,7 @@ const Layout = ({ children }) => {
 
     return (
         <>
-            <GlobalStyle />
+            <GlobalStyle open={menuOpen} />
             <CartProvider>
                 <Container dir='column'>
                     <Navigation collections={collectionlinks} />
