@@ -63,6 +63,8 @@ function ProductForm({ className, title, options, handle, selectedVariant, setSe
   const [quantity, setQuantity] = useState(1)
   const isLoading = useCartContext()[2]
   const addToCart = useAddToCartContext()
+  const [available, setAvailable] = useState(true)
+
 
   useEffect(() => {
     const init = async () => {
