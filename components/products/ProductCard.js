@@ -2,6 +2,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import styled from 'styled-components'
 import Price from 'components/products/Price'
+import { useAvailability } from 'hooks/useProductAvailability'
 
 const Container = styled.div`
  text-align: center;
@@ -14,6 +15,19 @@ const ImageWrapper = styled.div`
   position: relative;
   width: 300px;
   height: 300px;
+
+  .sold-out {
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    width: 50%;
+    padding: 10px;
+    z-index: 3;
+    color: white;
+    border: 1px solid red;
+    border-radius: 5px;
+    background: red;
+  }
 `
 
 function ProductCard({ product }) {
@@ -22,6 +36,9 @@ function ProductCard({ product }) {
   const price = product.node.variants.edges[0].node.price
 
   const imageNode = product.node.images.edges[0].node
+
+  const { pAvailable } = useAvailability(handle)
+  console.log('product avail', pAvailable)
 
   return (
     <Container>
@@ -43,6 +60,11 @@ function ProductCard({ product }) {
             </div>
           </div>
           <ImageWrapper>
+            {!pAvailable && (
+              <div className='sold-out'>
+                Sold Out
+              </div>
+            )}
             <Image
               src={imageNode.originalSrc}
               alt={imageNode.altText}

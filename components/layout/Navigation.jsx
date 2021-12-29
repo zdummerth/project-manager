@@ -32,6 +32,13 @@ const Nav = styled(Flex)`
     }
   }
 
+  .hide-desktop {
+    display: block;
+    @media (min-width: ${breakpoints.tablet}) {
+      display: none;
+    }
+  }
+
   .menuButton {
     @media (min-width: ${breakpoints.tablet}) {
       display: none;
@@ -127,6 +134,7 @@ const Header = ({ open, collections }) => {
           dir='column'
           id='close-button'
           onClick={appState.toggleMenuOpen}
+          className='hide-desktop'
 
         >
           <X size='28' />
@@ -190,11 +198,10 @@ const Header = ({ open, collections }) => {
         <ul>
           {collections.map(c => {
             return (
-              <li>
+              <li key={c.title + c.handle}>
                 <Link
                   href={`/collections/${c.handle}`}
                   name={c.title}
-                  key={c.title + c.handle}
                 >
                   <a>
                     <I>{c.title}</I>
@@ -230,6 +237,8 @@ const Header = ({ open, collections }) => {
             <I>Cart</I>
           </a>
         </Link>
+        {/* {navItems} */}
+
       </Nav>
       <MobileNavbox open={appState.menuOpen}>
         {navItems}

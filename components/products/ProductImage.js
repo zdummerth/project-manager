@@ -12,6 +12,8 @@ const Container = styled.div`
     position: relative;
     display: flex;
     justify-content: center;
+    flex-wrap: wrap;
+
   }
 
 
@@ -83,6 +85,7 @@ function ProductImage({ images, mainImg, setMainImg }) {
                   src={imgItem.node.originalSrc}
                   alt={imgItem.node.altText}
                   layout="fill"
+                  objectFit='contain'
                 />
               </button>
             ))

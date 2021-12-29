@@ -11,8 +11,8 @@ const Container = styled.div`
   width: 100%;
 
   .checkout {
-    background: ${({ theme }) => theme.colors.brand};
-    color: ${({ theme }) => theme.colors.background};
+    background: ${({ theme }) => theme.colors.gradient};
+    color: ${({ theme }) => theme.colors.text};
     padding: 10px;
     width: 150px;
     // margin: 30px;
