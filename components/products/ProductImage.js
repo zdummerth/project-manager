@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react'
+import { useRef } from 'react'
 import Image from 'next/image'
 import styled from 'styled-components'
 
@@ -20,6 +20,9 @@ const Container = styled.div`
     height: 70px;
     width: 70px;
     min-width: 70px;
+    background: none;
+    border: none;
+    margin: 3px;
     // flex-basis: 70px;
   }
 
@@ -46,8 +49,7 @@ const ImageContainer = styled.div`
 `
 
 
-function ProductImage({ images }) {
-  const [mainImg, setMainImg] = useState(images[0].node)
+function ProductImage({ images, mainImg, setMainImg }) {
   const ref = useRef()
 
   function scroll(scrollOffset) {

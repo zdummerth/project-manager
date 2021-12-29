@@ -1,68 +1,81 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import styled from 'styled-components'
 import { useCartContext, useAddToCartContext } from 'context/Store'
+import { getProductAvailability } from 'lib/shopify'
 import find from 'lodash/find'
 import isEqual from 'lodash/isEqual'
+import Quantity from 'components/products/Quantity'
+import LoadingIndicator from 'components/shared/LoadingIndicator'
+import { colors } from 'styles'
 
 const Container = styled.div`
   display: flex;
   flex-direction: column;
-  .qty {
-    margin-bottom: 10px;
-
-    input {
-      width: 60px;
-      margin-left: 10px;
-      color: ${({ theme }) => theme.colors.text};
-      background: transparent;
-      border: 1px solid ${({ theme }) => theme.colors.brand};
-      border-radius: 5px;
-      padding: 5px;
-      font-size: 16px;
-
-    }
-  }
-
-  .select-wrapper {
-    margin-bottom: 10px;
-
-    select {
-      color: ${({ theme }) => theme.colors.text};
-      background: transparent;
-      border: 1px solid ${({ theme }) => theme.colors.brand};
-      border-radius: 5px;
-      margin-left: 10px;
-      padding: 5px;
-      font-size: 16px;
-
-    }
-
-     select option {
-      background-color: ${({ theme }) => theme.colors.background};
-    }
-  }
 
   .add-to-cart {
     align-self: center;
-    background: ${({ theme }) => theme.colors.brand};
+    background: ${({ theme }) => theme.colors.gradient};
     border: 1px solid ${({ theme }) => theme.colors.brand};
     border-radius: 5px;
+    color: inherit;
     margin-left: 10px;
     padding: 8px;
-    margin: 20px 0;
+    margin: 30px 0;
     width: 200px;
+
+    :hover {
+      cursor: pointer;
+    }
+  }
+
+  .options {
+    display: flex;
+    margin-top: 15px;
+  }
+
+  .option-wrapper {
+    margin: 15px 0;
+  }
+
+  .qty {
+    margin-top: 15px;
   }
 `
-function ProductForm({ className, title, options, handle, selectedVariant, setSelectedVariant, variants, setVariantPrice, mainImg }) {
+
+const OptionValue = styled.button`
+  border: ${props => (props.selected ? `none` : '1px solid rgba(232, 232, 232, .3)')};
+  background: ${({ selected, theme }) => (selected ? `${theme.colors.rgradient}` : 'black')};
+  // box-shadow: ${({ selected, theme }) => selected ? ` 0 0 3px ${theme.colors.lightest}` : ''};
+
+  display: flex;
+  justify - content: center;
+  align - items: center;
+  color: inherit;
+
+  padding: 10px;
+  margin-right: 8px;
+  border-radius: 5px;
+  :hover {
+    cursor: pointer;
+  }
+`
+function ProductForm({ className, title, options, handle, selectedVariant, setSelectedVariant, variants, mainImg, setMainImg }) {
   const [quantity, setQuantity] = useState(1)
-  const [variantId, setVariantId] = useState(variants[0].node.id)
   const isLoading = useCartContext()[2]
   const addToCart = useAddToCartContext()
-  console.log('selected variant', selectedVariant.node.title)
+
+  useEffect(() => {
+    const init = async () => {
+      const avail = await getProductAvailability(handle)
+      console.log({ avail })
+    }
+
+    init()
+  }, [])
+  // console.log('selected variant', selectedVariant.node.title)
 
 
-  function handleSizeChange(e) {
-    const { name, value } = JSON.parse(e)
+  function handleOptionClick(name, value) {
     const currentOptions = [...selectedVariant.node.selectedOptions]
 
     const index = currentOptions.findIndex(opt => opt.name === name)
@@ -74,7 +87,22 @@ function ProductForm({ className, title, options, handle, selectedVariant, setSe
     const desiredVariant = find(variants, ({ node }) =>
       isEqual(currentOptions, node.selectedOptions)
     )
+    console.log({ desiredVariant })
+    setMainImg(desiredVariant.node.image)
     setSelectedVariant(desiredVariant)
+  }
+
+  const checkSelected = (name, value) => {
+    const currentOptions = [...selectedVariant.node.selectedOptions]
+    // console.log('Curr Opt', currentOptions)
+
+    const index = selectedVariant.node.selectedOptions.findIndex(opt => opt.name === name)
+    // console.log('Selected', currentOptions[index].value === value)
+
+    if (currentOptions[index].value === value) {
+      return true
+    }
+    return false
   }
 
   async function handleAddToCart() {
@@ -88,63 +116,51 @@ function ProductForm({ className, title, options, handle, selectedVariant, setSe
         variantId: selectedVariant.node.id,
         variantPrice: selectedVariant.node.price,
         variantTitle: selectedVariant.node.title,
+        variantImage: selectedVariant.node.image,
         variantQuantity: quantity
       })
     }
   }
 
-  function updateQuantity(e) {
-    if (e === '') {
-      setQuantity('')
-    } else {
-      setQuantity(Math.floor(e))
-    }
+  function increaseQuantity() {
+    setQuantity(prev => prev + 1)
+  }
+  function decreaseQuantity() {
+    if (quantity > 1) setQuantity(prev => prev - 1)
+  }
+
+  const getCurrentValue = optionName => {
+    return selectedVariant.node.selectedOptions.find(opt => opt.name === optionName)?.value
   }
 
   return (
     <Container>
-      <div className='qty'>
-        <label>Qty:</label>
-        <input
-          type="number"
-          inputMode="numeric"
-          id="quantity"
-          name="quantity"
-          min="1"
-          step="1"
-          value={quantity}
-          onChange={(e) => updateQuantity(e.target.value)}
-          className=''
-        />
-      </div>
-
+      <Quantity
+        quantity={quantity}
+        increase={increaseQuantity}
+        decrease={decreaseQuantity}
+        set={setQuantity}
+        className='qty'
+      />
       {options.map(opt => {
-        const value = selectedVariant.node.selectedOptions.find(sopt => sopt.name === opt.name).value
-        // const value = selectedVariant.node.selectedOptions
-        console.log('value', value)
+        if (opt.values.length < 2) return null
         return (
-          <div key={opt.name} className='select-wrapper'>
-            <label className=''>{opt.name}:</label>
-            <select
-              id="size-selector"
-              name="size-selector"
-              onChange={(event) => handleSizeChange(JSON.stringify({ name: opt.name, value: event.target.value }))}
-              value={value}
-            >
+          <div key={opt.name} className='option-wrapper'>
+            <div className=''>{`${opt.name}: ${getCurrentValue(opt.name).toUpperCase()}`}</div>
+            <div className='options'>
               {
                 opt.values.map(v => (
-                  <option
-                    id={v}
-                    key={v}
+                  <OptionValue
                     value={v}
-                    className='option'
-                  // value={`${opt.name}:${v}`}
+                    key={`${opt.name} -${v} `}
+                    selected={checkSelected(opt.name, v)}
+                    onClick={() => handleOptionClick(opt.name, v)}
                   >
-                    {v}
-                  </option>
+                    {v.toUpperCase()}
+                  </OptionValue>
                 ))
               }
-            </select>
+            </div>
           </div>
         )
       })}
@@ -154,7 +170,11 @@ function ProductForm({ className, title, options, handle, selectedVariant, setSe
         onClick={handleAddToCart}
         className='add-to-cart'
       >
-        Add To Cart
+        {isLoading ? (
+          <LoadingIndicator />
+        ) : (
+          <div>Add To Cart</div>
+        )}
       </button>
     </Container>
   )

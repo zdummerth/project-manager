@@ -23,7 +23,7 @@ export function CartProvider({ children }) {
   const [checkoutUrl, setCheckoutUrl] = useState('')
   const [isLoading, setisLoading] = useState(false)
 
-  console.log('cart: ', cart)
+  // console.log('cart: ', cart)
   useEffect(() => {
     setLocalData(setCart, setCheckoutId, setCheckoutUrl)
   }, [])

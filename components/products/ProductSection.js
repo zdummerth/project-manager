@@ -1,3 +1,4 @@
+import React, { useState } from 'react'
 import ProductImage from 'components/products/ProductImage'
 import ProductDetails from 'components/products/ProductDetails'
 import styled from 'styled-components'
@@ -18,11 +19,25 @@ const Container = styled.div`
 `
 
 function ProductSection({ productData }) {
+  const [variant, setVariant] = useState(productData.variants.edges[0])
+  const [mainImg, setMainImg] = useState(productData.images.edges[0].node)
+  // console.log({ variant })
+
   return (
     <Container>
-      <ProductImage images={productData.images.edges} />
+      <ProductImage
+        images={productData.images.edges}
+        mainImg={mainImg}
+        setMainImg={setMainImg}
+      />
       <Spacer />
-      <ProductDetails className='details' productData={productData} />
+      <ProductDetails
+        className='details'
+        productData={productData}
+        variant={variant}
+        setVariant={setVariant}
+        setMainImg={setMainImg}
+      />
       <Spacer />
     </Container>
   )

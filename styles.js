@@ -1,10 +1,16 @@
 import styled from 'styled-components'
 
+export const colors = {
+  brand: '#C00A0A',
+  gradient: `linear-gradient(to bottom right, #020202, #C00A0A 25%, #020202)`,
+}
 
 export const theme1 = {
   colors: {
-    brand: '#6FFFB0',
-    spacer: 'radial-gradient(#6FFFB0, #000000);',
+    brand: colors.brand,
+    spacer: `radial-gradient(${colors.brand}, #000000)`,
+    gradient: `linear-gradient(to bottom right, #020202, ${colors.brand} 45%, #020202)`,
+    rgradient: `linear-gradient(to bottom right, ${colors.brand}, #020202 40%, #020202 60%,  ${colors.brand})`,
     text: 'white',
     error: '#C00A0A',
     background: 'black',
@@ -51,7 +57,7 @@ export const spacing = {
 };
 
 export const Spacer = styled.div`
-  background: ${({theme}) => theme.colors.spacer};
+  background: ${({ theme }) => theme.colors.spacer};
   height: 8px;
   margin: 8px 0;
 `

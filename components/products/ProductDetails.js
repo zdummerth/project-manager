@@ -11,17 +11,20 @@ const Container = styled.div`
 
 `
 
-function ProductDetails({ productData, className }) {
-  const [variantPrice, setVariantPrice] = useState(productData.variants.edges[0].node.price)
-  const [variant, setVariant] = useState(productData.variants.edges[0])
-  // console.log('selected variant', variant)
+function ProductDetails({
+  productData,
+  className,
+  variant,
+  setVariant,
+  setMainImg
+}) {
 
   return (
     <Container className={className}>
       <ProductInfo
         title={productData.title}
         description={productData.description}
-        price={variantPrice}
+        price={variant.node.price}
       />
       <ProductForm
         title={productData.title}
@@ -30,7 +33,7 @@ function ProductDetails({ productData, className }) {
         selectedVariant={variant}
         setSelectedVariant={setVariant}
         mainImg={productData.images.edges[0].node}
-        setVariantPrice={setVariantPrice}
+        setMainImg={setMainImg}
         options={productData.options}
       />
     </Container>

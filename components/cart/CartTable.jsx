@@ -84,7 +84,7 @@ function CartTable({ cart }) {
         <div key={item.variantId} className='row'>
           <div className='image-wrapper'>
             <Image
-              src={item.productImage.originalSrc}
+              src={item.variantImage.originalSrc}
               alt={item.productImage.altText}
               layout='fill'
               objectFit='contain'
