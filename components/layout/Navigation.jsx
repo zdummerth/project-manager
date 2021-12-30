@@ -7,23 +7,21 @@ import Flex from 'components/shared/Flex'
 import useAppState from 'hooks/useAppState'
 import { dimensions, colors, breakpoints } from 'styles';
 
-const FullWidth = styled(Flex)`
-  background: ${({ theme }) => theme.colors.background}; 
-  width: 100vw;
-//   position: fixed;
-  top: 0;
-  z-index: 5;
-`
 const I = styled.i`
   position: relative;
-  font-size: 12px;
+  padding-left: 30px;
+
+  @media (min-width: ${breakpoints.tablet}) {
+    font-size: 16px;
+    padding-left: 5px;
+    padding-right: 30px;
+  }
 `
 
 const Nav = styled(Flex)`
-  height: ${dimensions.navHeight};
+  // height: ${dimensions.navHeight};
   background: ${({ theme }) => theme.colors.background}; 
   width: 100%;
-  max-width: 800px;
 
   .hide-mobile {
     display: none;
@@ -34,12 +32,6 @@ const Nav = styled(Flex)`
 
   .hide-desktop {
     display: block;
-    @media (min-width: ${breakpoints.tablet}) {
-      display: none;
-    }
-  }
-
-  .menuButton {
     @media (min-width: ${breakpoints.tablet}) {
       display: none;
     }
@@ -58,6 +50,8 @@ const Nav = styled(Flex)`
 const MobileNavbox = styled.div`
   position: fixed;
   display: flex;
+  flex-direction: column;
+  background: ${({ theme }) => theme.colors.background};
   width: 100%;
   z-index: 6;
   height: 100%;
@@ -67,42 +61,20 @@ const MobileNavbox = styled.div`
 
   transition: all 0.2s ease-in;
 
-  ${I} {
-    font-size: 18px;
-    padding-left: 30px;
-  }
+  #close-button {
+    align-self: flex-end;
+    padding: 8px; 
 
-  .content {
-    display: flex;
-    flex-direction: column;
-    width: 85%;
-    background: ${({ theme }) => theme.colors.background}; 
-    border-top: 1px solid gray;
-
-    #close-button {
-      align-self: flex-end;
-      padding: 8px; 
-
-      ${I} {
-        padding: 0;
-      }
+    ${I} {
+      padding: 0;
     }
-  }
-
-  .filler {
-    flex: 1;
-    background: rgba(0,0,0,.75);
-    display: ${({ open }) => open ? 'block' : 'none'};
   }
 
   .menu-item {
     padding: 15px 0 15px 20px;
-    border-bottom: 1px solid gray;
-  }
-
-  .first {
     border-top: 1px solid gray;
   }
+
 
   li {
     padding: 15px 0 15px 20px;
@@ -113,89 +85,101 @@ const MobileNavbox = styled.div`
     cursor: pointer;
   }
 
-  #first {
-    border-top: 1px solid gray;
+  #last {
+    border-bottom: 1px solid gray;
   }
 
+
   @media (min-width: ${breakpoints.tablet}) {
-    display: none;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    position: static;
+    // height: 60px;
+    background: ${({ theme }) => theme.colors.rgradient};
+    padding-left: 10px;
+
+    .menu-item {
+      display: flex;
+      align-items: center;
+      border: none;
+      font-size: 10px;
+      padding: 10px;
+    }
+
+    #shop {
+      display: flex;
+      align-items: center;
+    }
+
+
+    #last, #shop {
+      border: none;
+    }
+    
+    #shop {
+      // height: 100%;
+    }
+
+    #shop-wrapper {
+      position: relative;
+      // height: 100%;
+    }
+
+    #shop-wrapper:hover {
+      ul {
+        display: block;
+        position: absolute;
+        top: 25px;
+        background: ${({ theme }) => theme.colors.rgradient};
+        width: 200px;
+
+        li {
+          padding: 15px 0;
+        }
+      }
+    }
   }
 `
 
 
 const Header = ({ open, collections }) => {
   const appState = useAppState()
-  console.log({ appState })
+  // console.log({ appState })
   const navItems = (
     <>
-      <div className="content">
-        <Flex
-          ai='center'
-          dir='column'
-          id='close-button'
-          onClick={appState.toggleMenuOpen}
-          className='hide-desktop'
+      <Flex
+        ai='center'
+        dir='column'
+        id='close-button'
+        onClick={appState.toggleMenuOpen}
+        className='hide-desktop'
 
-        >
-          <X size='28' />
-          <I>Close</I>
-        </Flex>
-        <Link
-          href='/'
-          name='Play Disc Golf'
-          id='first'
-        >
-          <a className='menu-item first'>
-            <Home size='22' />
-            <I>Home</I>
-          </a>
-        </Link>
-        <Link
-          href='/cart'
-          name='Play Disc Golf'
-        >
-          <a className='menu-item'>
-            <Cart size='22' />
-            <I>Cart</I>
-          </a>
-        </Link>
-        <Link
-          href='/about-us'
-          name='Play Disc Golf'
-        >
-          <a className='menu-item'>
-            <UserPin size='22' />
-            <I>About Us</I>
-          </a>
-        </Link>
-        <Link
-          href='/partners'
-          name='Play Disc Golf'
-        >
-          <a className='menu-item'>
-            <NetworkChart size='22' />
-            <I>Our Partners</I>
-          </a>
-        </Link>
-        <Link
-          href='/contact'
-          name='Play Disc Golf'
-        >
-          <a className='menu-item'>
-            <Message size='22' />
-            <I>Contact</I>
-          </a>
-        </Link>
+      >
+        <X size='28' />
+        <I>Close</I>
+      </Flex>
+      <Link
+        href='/'
+        name='Play Disc Golf'
+        id='first'
+      >
+        <a className='menu-item first'>
+          <Home size='22' />
+          <I>Home</I>
+        </a>
+      </Link>
+      <div id='shop-wrapper' className='menu-item'>
         <Link
           href='/shop/collection/featured'
           name='Play Disc Golf'
         >
-          <a className='menu-item'>
+          <a className='' id='shop'>
             <ShoppingBag size='22' />
             <I>Shop</I>
           </a>
         </Link>
-        <ul>
+        <ul className='hide-desktop'>
           {collections.map(c => {
             return (
               <li key={c.title + c.handle}>
@@ -212,39 +196,70 @@ const Header = ({ open, collections }) => {
           })}
         </ul>
       </div>
+      <Link
+        href='/cart'
+        name='Play Disc Golf'
+      >
+        <a className='menu-item'>
+          <Cart size='22' />
+          <I>Cart</I>
+        </a>
+      </Link>
+      <Link
+        href='/about-us'
+        name='Play Disc Golf'
+      >
+        <a className='menu-item'>
+          <UserPin size='22' />
+          <I>About Us</I>
+        </a>
+      </Link>
+      <Link
+        href='/partners'
+        name='Play Disc Golf'
+      >
+        <a className='menu-item'>
+          <NetworkChart size='22' />
+          <I>Our Partners</I>
+        </a>
+      </Link>
+      <Link
+        href='/contact'
+        name='Play Disc Golf'
+      >
+        <a className='menu-item' id='last'>
+          <Message size='22' />
+          <I>Contact</I>
+        </a>
+      </Link>
     </>
   )
 
   return (
-    <FullWidth>
-      <Nav jc='space-around'>
-        <Flex
-          ai='center'
-          dir='column'
-          className='menuButton'
-          onClick={appState.toggleMenuOpen}
-        >
-          <Menu size='28' />
-          {/* <I>Menu</I> */}
-        </Flex>
-        <Link
-          href='/cart'
-          name='Play Disc Golf'
-          className='menu-item'
-        >
-          <a>
-            <Cart size='22' />
-            <I>Cart</I>
-          </a>
-        </Link>
-        {/* {navItems} */}
-
-      </Nav>
+    <Nav jc='space-around'>
+      <Flex
+        ai='center'
+        dir='column'
+        className='menuButton hide-desktop'
+        onClick={appState.toggleMenuOpen}
+      >
+        <Menu size='28' />
+        {/* <I>Menu</I> */}
+      </Flex>
+      <Link
+        href='/cart'
+        name='Play Disc Golf'
+        className='menu-item'
+      >
+        <a className='hide-desktop'>
+          <Cart size='22' />
+          <I>Cart</I>
+        </a>
+      </Link>
       <MobileNavbox open={appState.menuOpen}>
         {navItems}
-        <div className="filler" />
       </MobileNavbox>
-    </FullWidth >
+    </Nav>
   )
 }
 

@@ -38,7 +38,7 @@ function ProductCard({ product }) {
   const imageNode = product.node.images.edges[0].node
 
   const { pAvailable } = useAvailability(handle)
-  console.log('product avail', pAvailable)
+  // console.log('product avail', pAvailable, '  :', handle)
 
   return (
     <Container>

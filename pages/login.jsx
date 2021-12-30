@@ -1,5 +1,6 @@
 
 import { useState } from 'react'
+import SEO from 'components/SEO'
 import Router from 'next/router'
 import { useUser } from 'hooks/useUser'
 import LoginForm from 'components/forms/LoginForm';
@@ -47,6 +48,7 @@ const Login = () => {
 
   return (
     <>
+      <SEO title={"Login"} />
       <div className="login">
         <LoginForm errorMessage={errorMsg} onSubmit={handleSubmit} />
       </div>

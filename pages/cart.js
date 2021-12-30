@@ -1,5 +1,4 @@
-// import SEO from '@/components/SEO'
-import Link from 'next/link'
+import SEO from 'components/SEO'
 import styled from 'styled-components'
 import CartTable from 'components/cart/CartTable'
 import { useCartContext } from 'context/Store'
@@ -22,12 +21,11 @@ const Container = styled.div`
   }
 `
 function CartPage() {
-  const pageTitle = `Cart | ${process.env.siteTitle}`
   const [cart, checkoutUrl] = useCartContext()
 
   return (
     <Container>
-      {/* <SEO title={pageTitle} /> */}
+      <SEO title={"Cart"} />
       <a className='checkout' href={checkoutUrl}>
         Go To Checkout
       </a>

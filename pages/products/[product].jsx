@@ -1,10 +1,11 @@
 import { getProductSlugs, getProduct } from 'lib/shopify'
 import ProductSection from 'components/products/ProductSection'
+import SEO from 'components/SEO'
 
 function ProductPage({ productData }) {  
-
   return (
-    <div className="min-h-screen py-12 sm:pt-20">
+    <div>
+      <SEO title={productData.title} />
       <ProductSection productData={productData} />
     </div>
   )

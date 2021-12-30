@@ -1,5 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
+import SEO from 'components/SEO'
 import Flex from 'components/shared/Flex'
 import { getAllProductsInCollection } from 'lib/shopify'
 import ProductListings from 'components/products/ProductListings'
@@ -18,9 +19,9 @@ export default function Home({ products }) {
   console.log({ products })
   return (
     <Container>
+      <SEO title={"Home"} />
       {/* <StoryListing stories={all_posts} /> */}
       <ProductListings products={products} />
-      Index Page
     </Container>
   )
 }

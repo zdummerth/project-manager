@@ -1,35 +1,39 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 import { getProductAvailability } from 'lib/shopify'
 
 
-export function useAvailability(handle = '', selectedVariant) {
+export function useAvailability(handle, selectedVariant) {
     const [vAvailable, setVAvailable] = useState(true)
     const [pAvailable, setPAvailable] = useState(true)
 
 
+    const checkAvailabilty = useCallback(
+        (handle, selectedVariant) => {
+            setPAvailable(true)
+            getProductAvailability(handle).then(res => {
+                console.log('avail res', res)
+                if (res.totalInventory === 0) {
+                    setPAvailable(false)
+                } else if (selectedVariant) {
+                    const a = res.variants.edges.find(({ node }) => node.id === selectedVariant.node.id)
+                    // console.log({ a })
+                    // console.log('var avail', a.node.availableForSale)
+
+                    setVAvailable(a.node.availableForSale)
+                }
+            })
+        }, [handle, selectedVariant, getProductAvailability]
+    )
+
+
     useEffect(() => {
-        const init = async () => {
-            const avail = await getProductAvailability(handle)
-            console.log({ avail })
-            // console.log('avail', avail.totalInventory)
-            if (avail.totalInventory === 0) {
-                setPAvailable(false)
-            } else if (selectedVariant) {
-                const a = avail.variants.edges.find(({ node }) => node.id === selectedVariant.node.id)
-                // console.log({ a })
-                // console.log('var avail', a.node.availableForSale)
-
-                setVAvailable(a.node.availableForSale)
-            }
-        }
-
         try {
-            init()
-        } catch {
+            checkAvailabilty(handle, selectedVariant)
+        } catch (e) {
             setPAvailable(false)
             setVAvailable(false)
         }
-    }, [handle, selectedVariant])
+    }, [handle, selectedVariant, checkAvailabilty, getProductAvailability])
 
     return { pAvailable, vAvailable }
 }
