@@ -18,15 +18,18 @@ const ImageWrapper = styled.div`
 
   .sold-out {
     position: absolute;
-    top: 3px;
-    left: 3px;
+    top: 50%;
+    // top: 15px;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
     width: 50%;
     padding: 10px;
     z-index: 3;
     color: white;
-    border: 1px solid red;
+    border: 3px double red;
     border-radius: 5px;
-    background: red;
+    background: rgba(15, 15, 15, 1);
   }
 `
 
@@ -62,7 +65,7 @@ function ProductCard({ product }) {
           <ImageWrapper>
             {!pAvailable && (
               <div className='sold-out'>
-                Sold Out
+                Sold Out!
               </div>
             )}
             <Image

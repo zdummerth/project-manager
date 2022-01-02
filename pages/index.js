@@ -18,16 +18,16 @@ export default function Home({ products }) {
 
   console.log({ products })
   return (
-    <Container>
+    <Container dir='column' ai='center'>
       <SEO title={"Home"} />
-      {/* <StoryListing stories={all_posts} /> */}
+      <h2>Featured</h2>
       <ProductListings products={products} />
     </Container>
   )
 }
 
 export async function getStaticProps() {
-  const products = await getAllProductsInCollection('featured')
+  const { products } = await getAllProductsInCollection('featured')
   console.log('products: ', products)
   return {
     props: {

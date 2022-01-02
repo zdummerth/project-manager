@@ -7,6 +7,7 @@ import { CartProvider } from 'context/Store'
 import { fontSizes } from 'styles'
 import Flex from 'components/shared/Flex'
 import Navigation from 'components/layout/Navigation'
+import Footer from './Footer'
 
 const GlobalStyle = createGlobalStyle`
   body {
@@ -22,6 +23,7 @@ const GlobalStyle = createGlobalStyle`
   html {
     box-sizing: border-box;
   }
+
   *, *:before, *:after {
     box-sizing: inherit;
   }
@@ -57,50 +59,43 @@ const Container = styled(Flex)`
 const Content = styled(Flex)`
     flex: 1;
     width: 100%;
-`
+    min-height: calc(100vh - 50px);
+    max-width: 1400px;
 
-const Filler = styled.div`
-    position: fixed;    
-    height: 100vh;
-    width: 100%;
-    bottom: 48px;
-    background: rgba(0,0,0,.95);
-    opacity: ${({ open }) => open ? '1' : '0'};
-    z-index: ${({ open }) => open ? '0' : '-1'};
-    transition: opacity .5s ease-in-out;
 `
 
 const Layout = ({ children }) => {
-    // console.log('', )
-    const [collectionlinks, setCollectionlinks] = useState([])
-    const { menuOpen } = useAppState()
+  // console.log('', )
+  const [collectionlinks, setCollectionlinks] = useState([])
+  const { menuOpen } = useAppState()
 
 
 
-    useEffect(() => {
-        const init = async () => {
-            const nodes = await getCollectionSlugs()
-            const slugs = nodes.map(n => n.node)
-            console.log({ slugs })
-            setCollectionlinks(slugs)
-        }
-        init()
-    }, [])
+  useEffect(() => {
+    const init = async () => {
+      const nodes = await getCollectionSlugs()
+      const slugs = nodes.map(n => n.node)
+      console.log({ slugs })
+      setCollectionlinks(slugs)
+    }
+    init()
+  }, [])
 
 
-    return (
-        <>
-            <GlobalStyle open={menuOpen} />
-            <CartProvider>
-                <Container dir='column'>
-                    <Navigation collections={collectionlinks} />
-                    <Content>
-                        {children}
-                    </Content>
-                </Container>
-            </CartProvider>
-        </>
-    )
+  return (
+    <>
+      <GlobalStyle open={menuOpen} />
+      <CartProvider>
+        <Container dir='column'>
+          <Navigation collections={collectionlinks} />
+          <Content>
+            {children}
+          </Content>
+          <Footer />
+        </Container>
+      </CartProvider>
+    </>
+  )
 }
 
 export default Layout

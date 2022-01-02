@@ -1,11 +1,13 @@
 import PropTypes from 'prop-types'
 import React from 'react'
 import Link from "next/link"
+import Image from 'next/image'
 import styled from 'styled-components'
 import { ShoppingBag, Message, Home, X, UserPin, Menu, NetworkChart, Cart } from '@styled-icons/boxicons-regular'
 import Flex from 'components/shared/Flex'
 import useAppState from 'hooks/useAppState'
-import { dimensions, colors, breakpoints } from 'styles';
+import { useCartContext } from 'context/Store'
+import { dimensions, colors, breakpoints } from 'styles'
 
 const I = styled.i`
   position: relative;
@@ -19,9 +21,28 @@ const I = styled.i`
 `
 
 const Nav = styled(Flex)`
-  // height: ${dimensions.navHeight};
-  background: ${({ theme }) => theme.colors.background}; 
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+
+  padding: 5px;
+  background: ${({ theme }) => theme.colors.rgradient};
   width: 100%;
+
+  .cart-length {
+    background: ${({ theme }) => theme.colors.background};
+    position: absolute;
+    bottom: 7px;
+    left: 20px;
+    padding: 5px;
+    font-weight: bold;
+    border-radius: 50%;
+    // border: 1px solid ${({ theme }) => theme.colors.text};
+  }
+
+  .relative {
+    position: relative;
+  }
 
   .hide-mobile {
     display: none;
@@ -43,7 +64,7 @@ const Nav = styled(Flex)`
 
   @media (min-width: ${breakpoints.tablet}) {
     position: static;
-    background: transparent;
+    // background: transparent;
   }
 `
 
@@ -95,7 +116,6 @@ const MobileNavbox = styled.div`
     align-items: center;
     justify-content: center;
     position: static;
-    // height: 60px;
     background: ${({ theme }) => theme.colors.rgradient};
     padding-left: 10px;
 
@@ -112,18 +132,12 @@ const MobileNavbox = styled.div`
       align-items: center;
     }
 
-
     #last, #shop {
       border: none;
-    }
-    
-    #shop {
-      // height: 100%;
     }
 
     #shop-wrapper {
       position: relative;
-      // height: 100%;
     }
 
     #shop-wrapper:hover {
@@ -145,6 +159,7 @@ const MobileNavbox = styled.div`
 
 const Header = ({ open, collections }) => {
   const appState = useAppState()
+  const [cart] = useCartContext()
   // console.log({ appState })
   const navItems = (
     <>
@@ -247,13 +262,28 @@ const Header = ({ open, collections }) => {
         {/* <I>Menu</I> */}
       </Flex>
       <Link
-        href='/cart'
-        name='Play Disc Golf'
-        className='menu-item'
+        href='/'
+        name='Home'
       >
         <a className='hide-desktop'>
-          <Cart size='22' />
-          <I>Cart</I>
+          <Image
+            src={'/images/da-logo-square.png'}
+            alt={"Logo"}
+            height={50}
+            width={50}
+          />
+        </a>
+      </Link>
+      <Link
+        href='/cart'
+        name='Shopping Cart'
+      // className='menu-item'
+      >
+        <a className='hide-desktop'>
+          <div className='relative'>
+            <Cart size='22' />
+            <span className='cart-length'>{cart.length}</span>
+          </div>
         </a>
       </Link>
       <MobileNavbox open={appState.menuOpen}>

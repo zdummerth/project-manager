@@ -1,5 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
+import CollectionNavigation from 'components/layout/CollectionNavigation'
 import Flex from 'components/shared/Flex'
 import { getAllProductsInCollection, getCollectionSlugs } from 'lib/shopify'
 import ProductListings from 'components/products/ProductListings'
@@ -11,12 +12,14 @@ const Container = styled(Flex)`
   width: 100%;
 `
 
-export default function Home({ products, collectionTitle }) {
+export default function Home({ products, collectionTitle, collections }) {
+  // console.log({ collections })
   return (
-    <Container>
+    <Container dir='column' ai='center'>
       <SEO title={collectionTitle} />
+      <CollectionNavigation collections={collections}/>
+      <h2>{collectionTitle}</h2>
       <ProductListings products={products} />
-      Index Page
     </Container>
   )
 }
@@ -40,11 +43,14 @@ export async function getStaticPaths() {
 
 export async function getStaticProps({ params }) {
   const { products, collectionTitle } = await getAllProductsInCollection(params.collection)
-  console.log('products: ', products)
+  // console.log('products: ', products)
+  const collections = await getCollectionSlugs()
+
   return {
     props: {
       products,
-      collectionTitle
+      collectionTitle,
+      collections
     },
   }
 }

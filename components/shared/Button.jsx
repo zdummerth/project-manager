@@ -4,7 +4,7 @@ import styled from 'styled-components'
 const getColor = ({ cancel, remove, theme }) => {
     if(cancel) return theme.colors.button.cancel
     if(remove) return theme.colors.button.remove
-    return theme.colors.button.background
+    return theme.colors.gradient
 }
 
 const StyledButton = styled.button`
