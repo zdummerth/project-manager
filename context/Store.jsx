@@ -94,11 +94,10 @@ export function CartProvider({ children }) {
       }
     })
 
+    await updateShopifyCheckout(newCart, checkoutId)
     // take out zeroes items
     newCart = newCart.filter(i => i.variantQuantity !== 0)
     setCart(newCart)
-
-    await updateShopifyCheckout(newCart, checkoutId)
     saveLocalData(newCart, checkoutId, checkoutUrl)
     setisLoading(false)
   }

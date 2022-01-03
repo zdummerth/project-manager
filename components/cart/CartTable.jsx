@@ -4,6 +4,7 @@ import Image from 'next/image'
 import { useUpdateCartQuantityContext } from 'context/Store'
 import Link from 'next/link'
 import Price from 'components/products/Price'
+import Quantity from 'components/products/Quantity'
 import { getCartSubTotal } from 'utils/helpers'
 
 const Container = styled.div`
@@ -68,18 +69,40 @@ function CartTable({ cart }) {
   const updateCartQuantity = useUpdateCartQuantityContext()
   const [cartItems, setCartItems] = useState([])
   const [subtotal, setSubtotal] = useState(0)
+  const [loading, setLoading] = useState("")
 
   useEffect(() => {
     setCartItems(cart)
     setSubtotal(getCartSubTotal(cart))
   }, [cart])
 
-  function updateItem(id, quantity) {
-    updateCartQuantity(id, quantity)
+  async function updateItem(id, quantity) {
+    setLoading(id)
+    await updateCartQuantity(id, quantity)
+    setLoading("")
   }
 
   return (
     <Container>
+      {
+        subtotal === 0 ?
+          null
+          :
+          <div className='subtotal'>
+            <div>Subtotal</div>
+            <div>
+              <Price
+                currency="$"
+                num={subtotal}
+                numSize="text-xl"
+              />
+            </div>
+          </div>
+      }
+      <div className='taxes'>
+        <i>Taxes and shipping calculated at checkout</i>
+
+      </div>
       {cartItems.map(item => (
         <div key={item.variantId} className='row'>
           <div className='image-wrapper'>
@@ -98,20 +121,15 @@ function CartTable({ cart }) {
                 {item.productTitle}, {item.variantTitle}
               </a>
             </Link>
-            <div>
-              <span>Qty: </span>
-              <input
-                type="number"
-                inputMode="numeric"
-                id="variant-quantity"
-                name="variant-quantity"
-                className='quantity'
-                min="1"
-                step="1"
-                value={item.variantQuantity}
-                onChange={(e) => updateItem(item.variantId, e.target.value)}
-              />
-            </div>
+            <Quantity
+              quantity={item.variantQuantity}
+              increase={() => updateItem(item.variantId, item.variantQuantity + 1)}
+              decrease={() => updateItem(item.variantId, item.variantQuantity - 1)}
+              disabled={loading !== ""}
+              loading={loading === item.variantId}
+              // set={setQuantity}
+              className='qty'
+            />
 
             <div>
               <Price
@@ -132,25 +150,6 @@ function CartTable({ cart }) {
           </div>
         </div>
       ))}
-      {
-        subtotal === 0 ?
-          null
-          :
-          <div className='subtotal'>
-            <div>Subtotal</div>
-            <div>
-              <Price
-                currency="$"
-                num={subtotal}
-                numSize="text-xl"
-              />
-            </div>
-          </div>
-      }
-      <div className='taxes'>
-        <i>Taxes and shipping calculated at checkout</i>
-
-      </div>
     </Container>
   )
 }

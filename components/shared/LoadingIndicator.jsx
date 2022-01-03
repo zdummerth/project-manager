@@ -18,8 +18,10 @@ const Spinner = styled.div`
   border-bottom: 4px solid white;
   border-left: 4px solid transparent;
   background: transparent;
-  width: 24px;
-  height: 24px;
+  // width: 24px;
+  // height: 24px;
+  width: ${({ size }) => `${size}px`};
+  height: ${({ size }) => `${size}px`};
   border-radius: 50%;
 `
 
@@ -30,10 +32,10 @@ const Centering = styled(Flex)`
     align-items: center;
 `
 
-const LoadingIndicator = () => {
+const LoadingIndicator = ({ size = "24" }) => {
   return (
     <Centering>
-      <Spinner />
+      <Spinner size={size} />
     </Centering>
   )
 }
