@@ -71,6 +71,7 @@ function ProductCard({ product }) {
             <Image
               src={imageNode.originalSrc}
               alt={imageNode.altText}
+              placeholder='blur'
               objectFit='contain'
               layout="fill"
             />
