@@ -34,6 +34,8 @@ const ImageWrapper = styled.div`
 `
 
 function ProductCard({ product }) {
+  console.log(product)
+
   const handle = product.node.handle
   const title = product.node.title
   const price = product.node.variants.edges[0].node.price

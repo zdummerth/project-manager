@@ -21,8 +21,8 @@ function ProductListings({ products }) {
   return (
     <StyledListing>
       {
-        products.map((product, index) => (
-          <ProductCard key={index} product={product} />
+        products.map((product) => (
+          < ProductCard key={product.node.id} product={product} />
         ))
       }
     </StyledListing>
