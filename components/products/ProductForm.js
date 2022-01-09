@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import styled from 'styled-components'
-import { useCartContext, useAddToCartContext } from 'context/Store'
+import Link from 'next/link'
+import { useCartContext } from 'context/Store'
 import find from 'lodash/find'
 import isEqual from 'lodash/isEqual'
 import Quantity from 'components/products/Quantity'
@@ -15,25 +16,31 @@ const Container = styled.div`
   .add-to-cart-wrapper {
     display: flex; 
     flex-direction: column;
+    align-items: center;
     justify-content: center;
-    font-size: 1.2rem;
+    // font-size: 1.2rem;
     height: 100px;
   }
 
-  .add-to-cart {
+  .actions {
     align-self: center;
     background: ${({ theme }) => theme.colors.gradient};
     border: 1px solid ${({ theme }) => theme.colors.brand};
     border-radius: 5px;
     color: inherit;
-    // margin-left: 10px;
+    font-size: 14px;
+    text-align: center;
     padding: 8px;
-    // margin: 30px 0;
+    margin: 5px 0;
     width: 200px;
 
     :hover {
       cursor: pointer;
     }
+  }
+
+  .cart-button {
+    background: ${({ theme, showCheckout }) => showCheckout ? 'transparent' : theme.colors.gradient};
   }
 
   .options {
@@ -73,8 +80,9 @@ const OptionValue = styled.button`
 `
 function ProductForm({ className, title, options, handle, selectedVariant, setSelectedVariant, variants, mainImg, setMainImg }) {
   const [quantity, setQuantity] = useState(1)
-  const isLoading = useCartContext()[2]
-  const addToCart = useAddToCartContext()
+  const [showCheckout, setShowCheckout] = useState(false)
+  const [addToCartError, setAddToCartError] = useState(false)
+  const { isLoading, addToCart } = useCartContext()
 
   const { pAvailable, vAvailable } = useAvailability(handle, selectedVariant)
 
@@ -111,17 +119,23 @@ function ProductForm({ className, title, options, handle, selectedVariant, setSe
   async function handleAddToCart() {
     const varId = selectedVariant.node.id
     // update store context
-    if (quantity !== '') {
-      addToCart({
-        productTitle: title,
-        productHandle: handle,
-        productImage: mainImg,
-        variantId: selectedVariant.node.id,
-        variantPrice: selectedVariant.node.price,
-        variantTitle: selectedVariant.node.title,
-        variantImage: selectedVariant.node.image,
-        variantQuantity: quantity
-      })
+    try {
+      if (quantity !== '') {
+        setAddToCartError(false)
+        await addToCart({
+          productTitle: title,
+          productHandle: handle,
+          productImage: mainImg,
+          variantId: selectedVariant.node.id,
+          variantPrice: selectedVariant.node.price,
+          variantTitle: selectedVariant.node.title,
+          variantImage: selectedVariant.node.image,
+          variantQuantity: quantity
+        })
+        setShowCheckout(true)
+      }
+    } catch {
+      setAddToCartError(true)
     }
   }
 
@@ -137,7 +151,7 @@ function ProductForm({ className, title, options, handle, selectedVariant, setSe
   }
 
   return (
-    <Container>
+    <Container showCheckout={showCheckout}>
       {pAvailable ? (
         <>
           <Quantity
@@ -147,42 +161,60 @@ function ProductForm({ className, title, options, handle, selectedVariant, setSe
             set={setQuantity}
             className='qty'
           />
-          {options.map(opt => {
-            // if (opt.values.length < 2) return null
-            return (
-              <div key={opt.name} className='option-wrapper'>
-                <div className=''>{`${opt.name}: ${getCurrentValue(opt.name).toUpperCase()}`}</div>
-                <div className='options'>
-                  {
-                    opt.values.map(v => (
-                      <OptionValue
-                        value={v}
-                        key={`${opt.name} -${v} `}
-                        selected={checkSelected(opt.name, v)}
-                        onClick={() => handleOptionClick(opt.name, v)}
-                      >
-                        {v.toUpperCase()}
-                      </OptionValue>
-                    ))
-                  }
-                </div>
-              </div>
-            )
-          })}
+          {selectedVariant.node.selectedOptions[0].name !== 'Title' && (
+            <>
+              {
+                options.map(opt => {
+                  // if (opt.values.length < 2) return null
+                  return (
+                    <div key={opt.name} className='option-wrapper'>
+                      <div className=''>{`${opt.name}: ${getCurrentValue(opt.name).toUpperCase()}`}</div>
+                      <div className='options'>
+                        {
+                          opt.values.map(v => (
+                            <OptionValue
+                              value={v}
+                              key={`${opt.name} -${v} `}
+                              selected={checkSelected(opt.name, v)}
+                              onClick={() => handleOptionClick(opt.name, v)}
+                            >
+                              {v.toUpperCase()}
+                            </OptionValue>
+                          ))
+                        }
+                      </div>
+                    </div>
+                  )
+                })
+              }
+            </>
+          )}
+
           <div className='add-to-cart-wrapper'>
             {vAvailable ? (
-              <button
-                className='add_to_cart'
-                aria-label="cart-button"
-                onClick={handleAddToCart}
-                className='add-to-cart'
-              >
-                {isLoading ? (
-                  <LoadingIndicator />
-                ) : (
-                  <div>Add To Cart</div>
+              <>
+                {addToCartError && (
+                  <div>Unable to add to cart. Please try again.</div>
                 )}
-              </button>
+                <button
+                  aria-label="cart-button"
+                  onClick={handleAddToCart}
+                  className='actions cart-button'
+                >
+                  {isLoading ? (
+                    <LoadingIndicator />
+                  ) : (
+                    <div>Add To Cart</div>
+                  )}
+                </button>
+                {(showCheckout) && (
+                  <Link href='/cart'>
+                    <a className='actions'>
+                      <div>View Cart</div>
+                    </a>
+                  </Link>
+                )}
+              </>
             ) : (
               <div>
                 {`Out of Stock! `}

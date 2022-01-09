@@ -1,7 +1,7 @@
-import { useState, useEffect } from 'react'
+import React from 'react'
 import styled from 'styled-components'
 import Image from 'next/image'
-import { useUpdateCartQuantityContext } from 'context/Store'
+import { useCartContext } from 'context/Store'
 import Link from 'next/link'
 import Price from 'components/products/Price'
 import Quantity from 'components/products/Quantity'
@@ -10,18 +10,14 @@ import { getCartSubTotal } from 'utils/helpers'
 const Container = styled.div`
   width: 100%;
   .quantity {
-    // flex: 1;
     width: 40px;
   }
 
   .row {
     position: relative;
     display: flex;
-    // height: 120px;
-    // width: 95%;
     border: 1px solid gray;
     border-radius: 5px;
-    // padding-right: 50px;
     margin: 10px;
   }
 
@@ -65,22 +61,9 @@ const Container = styled.div`
   }
 `
 
-function CartTable({ cart }) {
-  const updateCartQuantity = useUpdateCartQuantityContext()
-  const [cartItems, setCartItems] = useState([])
-  const [subtotal, setSubtotal] = useState(0)
-  const [loading, setLoading] = useState("")
-
-  useEffect(() => {
-    setCartItems(cart)
-    setSubtotal(getCartSubTotal(cart))
-  }, [cart])
-
-  async function updateItem(id, quantity) {
-    setLoading(id)
-    await updateCartQuantity(id, quantity)
-    setLoading("")
-  }
+function CartTable() {
+  const { updateCartItemQuantity, cart, isLoading, error } = useCartContext()
+  const subtotal = getCartSubTotal(cart)
 
   return (
     <Container>
@@ -101,9 +84,8 @@ function CartTable({ cart }) {
       }
       <div className='taxes'>
         <i>Taxes and shipping calculated at checkout</i>
-
       </div>
-      {cartItems.map(item => (
+      {cart.map(item => (
         <div key={item.variantId} className='row'>
           <div className='image-wrapper'>
             <Image
@@ -111,8 +93,6 @@ function CartTable({ cart }) {
               alt={item.productImage.altText}
               layout='fill'
               objectFit='contain'
-            // height={75}
-            // width={75}
             />
           </div>
           <div className='info'>
@@ -121,16 +101,19 @@ function CartTable({ cart }) {
                 {item.productTitle}, {item.variantTitle}
               </a>
             </Link>
-            <Quantity
-              quantity={item.variantQuantity}
-              increase={() => updateItem(item.variantId, item.variantQuantity + 1)}
-              decrease={() => updateItem(item.variantId, item.variantQuantity - 1)}
-              disabled={loading !== ""}
-              loading={loading === item.variantId}
-              // set={setQuantity}
-              className='qty'
-            />
-
+            <div>
+              <Quantity
+                quantity={item.variantQuantity}
+                increase={() => updateCartItemQuantity(item.variantId, item.variantQuantity + 1)}
+                decrease={() => updateCartItemQuantity(item.variantId, item.variantQuantity - 1)}
+                disabled={isLoading !== ""}
+                loading={isLoading === item.variantId}
+                className='qty'
+              />
+              {(error === item.variantId) && (
+                <div className='error'>Try again</div>
+              )}
+            </div>
             <div>
               <Price
                 currency="$"
@@ -143,7 +126,8 @@ function CartTable({ cart }) {
             <button
               aria-label="delete-item"
               className=""
-              onClick={() => updateItem(item.variantId, 0)}
+              disabled={isLoading !== ""}
+              onClick={() => updateCartItemQuantity(item.variantId, 0)}
             >
               X
             </button>

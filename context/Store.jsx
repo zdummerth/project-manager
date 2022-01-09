@@ -2,26 +2,18 @@ import { createContext, useContext, useState, useEffect } from 'react'
 import { createShopifyCheckout, updateShopifyCheckout, setLocalData, saveLocalData } from 'utils/helpers'
 
 const CartContext = createContext()
-const AddToCartContext = createContext()
-const UpdateCartQuantityContext = createContext()
 
 export function useCartContext() {
   return useContext(CartContext)
 }
 
-export function useAddToCartContext() {
-  return useContext(AddToCartContext)
-}
-
-export function useUpdateCartQuantityContext() {
-  return useContext(UpdateCartQuantityContext)
-}
-
 export function CartProvider({ children }) {
+
   const [cart, setCart] = useState([])
   const [checkoutId, setCheckoutId] = useState('')
   const [checkoutUrl, setCheckoutUrl] = useState('')
-  const [isLoading, setisLoading] = useState(false)
+  const [isLoading, setisLoading] = useState('')
+  const [error, setError] = useState("")
 
   // console.log('cart: ', cart)
   useEffect(() => {
@@ -42,18 +34,25 @@ export function CartProvider({ children }) {
   }, [])
 
   async function addToCart(newItem) {
-    setisLoading(true)
+    setisLoading('loading')
     // empty cart
     if (cart.length === 0) {
-      setCart([
-        ...cart,
-        newItem
-      ])
+      try {
+        const response = await createShopifyCheckout(newItem)
+        setCart([
+          ...cart,
+          newItem
+        ])
+        setCheckoutId(response.id)
+        setCheckoutUrl(response.webUrl)
+        saveLocalData(newItem, response.id, response.webUrl)
+      } catch {
+        setError({
+          id: '',
+          msg: 'Unable to add to cart. Please try again'
+        })
+      }
 
-      const response = await createShopifyCheckout(newItem)
-      setCheckoutId(response.id)
-      setCheckoutUrl(response.webUrl)
-      saveLocalData(newItem, response.id, response.webUrl)
 
     } else {
       let newCart = [...cart]
@@ -74,15 +73,22 @@ export function CartProvider({ children }) {
         newCartWithItem = [...newCart, newItem]
       }
 
-      setCart(newCartWithItem)
-      await updateShopifyCheckout(newCartWithItem, checkoutId)
-      saveLocalData(newCartWithItem, checkoutId, checkoutUrl)
+      try {
+        await updateShopifyCheckout(newCartWithItem, checkoutId)
+        setCart(newCartWithItem)
+        saveLocalData(newCartWithItem, checkoutId, checkoutUrl)
+      } catch {
+        setError({
+          id: '',
+          msg: 'Unable to add to cart. Please try again'
+        })
+      }
     }
-    setisLoading(false)
+    setisLoading('')
   }
 
   async function updateCartItemQuantity(id, quantity) {
-    setisLoading(true)
+    setisLoading(id)
     let newQuantity = Math.floor(quantity)
     if (quantity === '') {
       newQuantity = ''
@@ -94,21 +100,31 @@ export function CartProvider({ children }) {
       }
     })
 
-    await updateShopifyCheckout(newCart, checkoutId)
-    // take out zeroes items
-    newCart = newCart.filter(i => i.variantQuantity !== 0)
-    setCart(newCart)
-    saveLocalData(newCart, checkoutId, checkoutUrl)
-    setisLoading(false)
+    try {
+      await updateShopifyCheckout(newCart, checkoutId)
+      newCart = newCart.filter(i => i.variantQuantity !== 0)
+      setCart(newCart)
+      saveLocalData(newCart, checkoutId, checkoutUrl)
+      setisLoading('')
+    } catch {
+      setError({
+        id,
+        msg: "Unable to update product. Please try again."
+      })
+    }
   }
 
   return (
-    <CartContext.Provider value={[cart, checkoutUrl, isLoading]}>
-      <AddToCartContext.Provider value={addToCart}>
-        <UpdateCartQuantityContext.Provider value={updateCartItemQuantity}>
-          {children}
-        </UpdateCartQuantityContext.Provider>
-      </AddToCartContext.Provider>
+    <CartContext.Provider value={{
+      cart,
+      checkoutUrl,
+      isLoading,
+      error,
+      setisLoading,
+      addToCart,
+      updateCartItemQuantity
+    }}>
+      {children}
     </CartContext.Provider>
   )
 }

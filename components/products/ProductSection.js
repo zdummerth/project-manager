@@ -6,6 +6,7 @@ import { breakpoints, Spacer } from 'styles'
 
 const Container = styled.div`
   display: flex;
+  width: 100%;
   flex-direction: column;
   // border: 1px solid gray;
 
@@ -15,6 +16,13 @@ const Container = styled.div`
 
   @media (min-width: ${breakpoints.desktop}) {
     flex-direction: row;
+    .details {
+      width: 40%;
+    }
+
+    .images {
+      flex: 1;
+    }
   }
 `
 
@@ -29,8 +37,8 @@ function ProductSection({ productData }) {
         images={productData.images.edges}
         mainImg={mainImg}
         setMainImg={setMainImg}
+        className='images'
       />
-      <Spacer />
       <ProductDetails
         className='details'
         productData={productData}
@@ -38,7 +46,6 @@ function ProductSection({ productData }) {
         setVariant={setVariant}
         setMainImg={setMainImg}
       />
-      <Spacer />
     </Container>
   )
 }

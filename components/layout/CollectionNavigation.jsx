@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { useRouter } from 'next/router'
 import React from 'react'
 import styled from 'styled-components'
 
@@ -10,14 +11,14 @@ const Nav = styled.nav`
   align-content: center;
   flex-wrap: wrap;
   margin: 10px 0;
+`
 
-  a {
-    border: 1px solid ${colors.brand};
-    border-radius: 50px;
-    padding: 5px 10px;
-    margin: 5px;
-    background: ${({ selected }) => selected ? colors.gradient : colors.darkGradient};
-  }
+const A = styled.a`
+  border: 1px solid ${colors.brand};
+  border-radius: 50px;
+  padding: 5px 10px;
+  margin: 5px;
+  background: ${({ active, theme }) => active ? colors.gradient : colors.darkGradient};
 `
 
 
@@ -25,24 +26,31 @@ const Nav = styled.nav`
 
 const ProductNav = ({ collections = [], className }) => {
   // console.log('de arrya', featured)
-  console.log({ collections })
+  const router = useRouter()
+  console.log('router', router.query?.collection)
+
+  // console.log({ collections })
 
   return (
     <Nav className={className}>
-      {collections.map((c, index) => (
-        <Link
-          key={c.node.handle + index}
-          href={`/collections/${c.node.handle}`}
-          activeStyle={{
-            background: colors.gradient,
-            // border: 'none'
-          }}
-        >
-          <a>
-            {c.node.title}
-          </a>
-        </Link>
-      ))}
+      {collections.map((c, index) => {
+        const path = c.node.handle === 'gift-card'
+          ? '/products/dark-ace-gift-card'
+          : `/collections/${c.node.handle}`
+        return (
+          <Link
+            key={c.node.handle + index}
+            href={path}
+          // active={c.node.handle === router.query?.collection}
+          >
+            <A
+              active={c.node.handle === router.query?.collection}
+            >
+              {c.node.title}
+            </A>
+          </Link>
+        )
+      })}
     </Nav>
   )
 }

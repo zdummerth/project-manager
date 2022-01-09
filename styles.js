@@ -60,6 +60,7 @@ export const Spacer = styled.div`
   background: ${({ theme }) => theme.colors.spacer};
   height: 8px;
   margin: 8px 0;
+  width: 100%;
 `
 
 

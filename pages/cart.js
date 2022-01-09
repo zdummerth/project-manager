@@ -28,8 +28,7 @@ const Container = styled.div`
   }
 `
 function CartPage({ collections }) {
-  const [cart, checkoutUrl] = useCartContext()
-  console.log('cart', cart)
+  const { cart, checkoutUrl } = useCartContext()
 
   return (
     <Container>
@@ -49,9 +48,7 @@ function CartPage({ collections }) {
           <a className='checkout' href={checkoutUrl}>
             Go To Checkout
           </a>
-          <CartTable
-            cart={cart}
-          />
+          <CartTable />
         </>
       )}
     </Container>

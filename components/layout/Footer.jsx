@@ -40,7 +40,7 @@ const Footer = () => {
                     </a>
                 </Link>
                 <Link
-                    href='/shop/collection/featured'
+                    href='/collections/featured'
                     name='Play Disc Golf'
                 >
                     <a className='' id='shop'>

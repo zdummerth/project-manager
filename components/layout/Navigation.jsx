@@ -159,7 +159,7 @@ const MobileNavbox = styled.div`
 
 const Header = ({ open, collections }) => {
   const appState = useAppState()
-  const [cart] = useCartContext()
+  const { cart } = useCartContext()
   // console.log({ appState })
   const navItems = (
     <>
@@ -186,7 +186,7 @@ const Header = ({ open, collections }) => {
       </Link>
       <div id='shop-wrapper' className='menu-item'>
         <Link
-          href='/shop/collection/featured'
+          href='/collections/featured'
           name='Play Disc Golf'
         >
           <a className='' id='shop'>

@@ -1,6 +1,7 @@
 import { useRef } from 'react'
 import Image from 'next/image'
 import styled from 'styled-components'
+import { breakpoints } from 'styles'
 
 
 const Container = styled.div`
@@ -48,10 +49,14 @@ const ImageContainer = styled.div`
   position: relative;
   width: 100%;
   height: 50vh;
+
+  @media (min-width: ${breakpoints.desktop}) {
+    height: 65vh;
+  }
 `
 
 
-function ProductImage({ images, mainImg, setMainImg }) {
+function ProductImage({ images, mainImg, setMainImg, className }) {
   const ref = useRef()
 
   function scroll(scrollOffset) {
@@ -59,7 +64,7 @@ function ProductImage({ images, mainImg, setMainImg }) {
   }
 
   return (
-    <Container>
+    <Container className={className}>
       <ImageContainer>
         <Image
           src={mainImg.originalSrc}
