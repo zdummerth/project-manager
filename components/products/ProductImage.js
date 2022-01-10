@@ -48,10 +48,10 @@ const Container = styled.div`
 const ImageContainer = styled.div`
   position: relative;
   width: 100%;
-  height: 50vh;
+  height: 65vh;
 
   @media (min-width: ${breakpoints.desktop}) {
-    height: 65vh;
+    height: 75vh;
   }
 `
 
@@ -67,7 +67,7 @@ function ProductImage({ images, mainImg, setMainImg, className }) {
     <Container className={className}>
       <ImageContainer>
         <Image
-          src={mainImg.originalSrc}
+          src={mainImg.url}
           alt={mainImg.altText}
           layout="fill"
           objectFit='contain'
@@ -87,7 +87,7 @@ function ProductImage({ images, mainImg, setMainImg, className }) {
                 onClick={() => setMainImg(imgItem.node)}
               >
                 <Image
-                  src={imgItem.node.originalSrc}
+                  src={imgItem.node.url}
                   alt={imgItem.node.altText}
                   layout="fill"
                   objectFit='contain'

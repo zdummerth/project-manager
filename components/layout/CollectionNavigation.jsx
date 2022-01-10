@@ -34,14 +34,14 @@ const ProductNav = ({ collections = [], className }) => {
   return (
     <Nav className={className}>
       {collections.map((c, index) => {
-        const path = c.node.handle === 'gift-card'
-          ? '/products/dark-ace-gift-card'
-          : `/collections/${c.node.handle}`
+        // const path = c.node.handle === 'gift-card'
+        //   ? '/products/dark-ace-gift-card'
+        //   : `/collections/${c.node.handle}`
+        const path = `/collections/${c.node.handle}`
         return (
           <Link
             key={c.node.handle + index}
             href={path}
-          // active={c.node.handle === router.query?.collection}
           >
             <A
               active={c.node.handle === router.query?.collection}

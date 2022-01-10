@@ -7,6 +7,7 @@ import { breakpoints, Spacer } from 'styles'
 const Container = styled.div`
   display: flex;
   width: 100%;
+  height: 100%;
   flex-direction: column;
   // border: 1px solid gray;
 
@@ -18,10 +19,13 @@ const Container = styled.div`
     flex-direction: row;
     .details {
       width: 40%;
+      border: 1px solid gray;
+      padding: 20px;
     }
 
     .images {
       flex: 1;
+      border: 1px solid gray;
     }
   }
 `

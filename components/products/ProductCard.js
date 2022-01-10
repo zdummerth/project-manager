@@ -13,8 +13,8 @@ const Container = styled.div`
 `
 const ImageWrapper = styled.div`
   position: relative;
-  width: 300px;
-  height: 300px;
+  max-width: 400px;
+  // height: 300px;
 
   .sold-out {
     position: absolute;
@@ -71,11 +71,13 @@ function ProductCard({ product }) {
               </div>
             )}
             <Image
-              src={imageNode.originalSrc}
+              src={imageNode.url}
               alt={imageNode.altText}
-              placeholder='blur'
-              objectFit='contain'
-              layout="fill"
+              width={imageNode.width}
+              height={imageNode.height}
+              // placeholder='blur'
+              // objectFit='contain'
+              // layout="fill"
             />
           </ImageWrapper>
         </a>

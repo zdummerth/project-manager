@@ -4,6 +4,8 @@ import useAppState from 'hooks/useAppState'
 import { getCollectionSlugs } from 'lib/shopify'
 import { XCircle } from '@styled-icons/boxicons-regular'
 import { CartProvider } from 'context/Store'
+import CollectionNavigation from 'components/layout/CollectionNavigation'
+import { useRouter } from 'next/router'
 import { fontSizes } from 'styles'
 import Flex from 'components/shared/Flex'
 import Navigation from 'components/layout/Navigation'
@@ -22,6 +24,8 @@ const GlobalStyle = createGlobalStyle`
 
   html {
     box-sizing: border-box;
+    margin: 0;
+
   }
 
   *, *:before, *:after {
@@ -58,6 +62,8 @@ const Container = styled(Flex)`
 
 const Content = styled(Flex)`
     flex: 1;
+    // align-items: center;
+    // justify-content: center;
     width: 100%;
     min-height: calc(100vh - 50px);
     max-width: 1400px;
@@ -68,6 +74,8 @@ const Layout = ({ children }) => {
   // console.log('', )
   const [collectionlinks, setCollectionlinks] = useState([])
   const { menuOpen } = useAppState()
+  const router = useRouter()
+  console.log('router', router)
 
 
 
@@ -88,6 +96,9 @@ const Layout = ({ children }) => {
       <CartProvider>
         <Container dir='column'>
           <Navigation collections={collectionlinks} />
+          {/* {router.pathname.includes('collections') && (
+            <CollectionNavigation collections={collectionlinks} />
+          )} */}
           <Content>
             {children}
           </Content>
