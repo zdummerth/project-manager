@@ -4,6 +4,7 @@ import isEmail from 'validator/lib/isEmail'
 import Input from 'components/shared/Inputs'
 import Button from 'components/shared/Button'
 import Loading from 'components/shared/LoadingIndicator'
+import LoadingIndicator from 'components/shared/LoadingIndicator'
 
 
 const Form = styled.form`
@@ -20,6 +21,8 @@ const SubmitError = styled.div`
     margin: 20px 0;
 `
 
+
+
 export default function EmailSubscriberForm({ reset }) {
 
     // console.log('reset', reset)
@@ -33,10 +36,10 @@ export default function EmailSubscriberForm({ reset }) {
     const handleSubmit = async (e) => {
         e.preventDefault()
         console.log('email submitted', email)
-        // if (!isEmail(email)) {
-        //     setError('* Must be a valid email')
-        //     return
-        // }
+        if (!isEmail(email)) {
+            setError('* Must be a valid email')
+            return
+        }
 
         setSubmitting(true)
         try {
@@ -55,11 +58,11 @@ export default function EmailSubscriberForm({ reset }) {
             }
 
             setSubmitted(true)
-            setSubmitError(false)
+            setError("")
 
         } catch (err) {
             console.log({ err })
-            setSubmitError(true)
+            setError("Unable To Connect. Try Again")
         } finally {
             setSubmitting(false)
         }
@@ -88,29 +91,43 @@ export default function EmailSubscriberForm({ reset }) {
                     </i>
                 )}
             </Label>
-            {submitting ? (
-                <Loading />
-            ) : (
+            <>
                 <>
-                    {submitted ? (
-                        <div style={{ margin: '10px 0' }}>
-                            Thank you for signing up!
-                        </div>
-                    ) : (
-                        <>
-                            <Input
-                                name='email'
-                                id='email'
-                                placeholder='email'
-                                value={email}
-                                error={error}
-                                onChange={(e) => setEmail(e.target.value)}
-                            />
-                            <Button style={{ marginTop: '15px' }}>Subscribe</Button>
-                        </>
-                    )}
+                    <div style={{ marginTop: '10px', height: '15px', color: "red", fontSize: '14px'}}>
+                        {error && error}
+                    </div>
+                    <Input
+                        name='email'
+                        id='email'
+                        placeholder='email'
+                        value={email}
+                        error={error}
+                        onChange={(e) => setEmail(e.target.value)}
+                    />
+                    <div style={{ margin: '5px 0', height: '20px' }}>
+                        {submitted && "Thank you for signing up!"}
+                    </div>
+                    <Button
+                        style={{
+                            // marginTop: '15px',
+                            width: '100px'
+                        }}
+                    >
+                        {
+                            submitting ? (
+                                <>
+                                    <LoadingIndicator />
+                                </>
+                            ) : (
+                                <>
+                                    Subscribe
+                                </>
+                            )
+                        }
+                    </Button>
                 </>
-            )}
+            </>
+
         </Form>
     )
 }

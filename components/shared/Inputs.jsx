@@ -18,11 +18,14 @@ const Label = styled.label`
   margin-bottom: 10px;
 `
 
-const Input = ({ id, label, ...rest }) => {
+const Input = ({ id, label, error, ...rest }) => {
 
   return (
     <>
       <Label htmlFor={id}>{label}</Label>
+      <div style={{ marginTop: '10px', marginBottom: '5px', height: '14px', color: "red", fontSize: '14px' }}>
+        {error && error}
+      </div>
       <StyledInput id={id} {...rest} />
     </>
   )

@@ -34,7 +34,8 @@ export default async function handler(req, res) {
       personalizations: [{
         to: [
           {
-            email: process.env.SITE_ADMIN_CONTACT_EMAIL,
+            // email: process.env.SITE_ADMIN_CONTACT_EMAIL,
+            email: 'zdummerth@gmail.com',
           },
         ],
         bcc: [

@@ -31,7 +31,8 @@ export default function ContactForm() {
     const [error, setError] = useState({
         email: null,
         name: null,
-        message: null
+        message: null,
+        submit: null
     })
     const [formState, setFormState] = useState({
         email: '',
@@ -70,7 +71,10 @@ export default function ContactForm() {
             console.log({ formState })
             resetError()
             setSubmitted(false)
-            setSubmitError(false)
+            setError({
+                ...error,
+                submit: null
+            })
             setIsSubmitting(true)
             const response = await fetch('/api/fauna/submit-contact-form', {
                 method: 'POST',
@@ -88,7 +92,10 @@ export default function ContactForm() {
                     message: ''
                 })
             } else {
-                setSubmitError(true)
+                setError({
+                    ...error,
+                    submit: "There was an error. Please try again."
+                })
             }
             setIsSubmitting(false)
         }
@@ -132,20 +139,21 @@ export default function ContactForm() {
                     rows='5'
                     cols='50'
                 />
+                <div style={{ margin: '10px', height: '20px' }}>
+                    {
+                        error.submit ? error.submit : submitted
+                            ? "Thank you for the message. We'll get back to you soon."
+                            : null
+                    }
+                </div>
+
                 <StyledButton
-                    // disabled={formState.email === '' || formState.name === '' || formState.message === ''}
                     disabled={isSubmitting}
                 >
                     {isSubmitting ? (
                         <LoadingIndicator />
                     ) : <>Submit</>}
                 </StyledButton>
-                {submitted && (
-                    <div style={{ margin: '20px' }}>Thank you for the message. We'll get back to you soon.</div>
-                )}
-                {submitError && (
-                    <div style={{ margin: '20px', color: 'red' }}>There was an error submitting your message. Please try again.</div>
-                )}
             </Form>
         </Container>
     )
