@@ -18,7 +18,7 @@ export default async function handler(req, res) {
       email: email.trim(),
       name,
       message,
-      secret: process.env.TESTING_ADMIN_KEY,
+      secret: process.env.FAUNA_FORMS_SUBMIT,
     })
 
     console.log('create subscriber fauna response', faunares)
@@ -34,8 +34,7 @@ export default async function handler(req, res) {
       personalizations: [{
         to: [
           {
-            // email: process.env.SITE_ADMIN_CONTACT_EMAIL,
-            email: 'zdummerth@gmail.com',
+            email: process.env.SITE_ADMIN_CONTACT_EMAIL,
           },
         ],
         bcc: [

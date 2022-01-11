@@ -11,14 +11,12 @@ export function useAvailability(handle, selectedVariant) {
         (handle, selectedVariant) => {
             setPAvailable(true)
             getProductAvailability(handle).then(res => {
-                console.log('avail res', res)
+                // console.log('avail res', res)
                 if (res.totalInventory === 0) {
                     setPAvailable(false)
                 } else if (selectedVariant) {
                     const a = res.variants.edges.find(({ node }) => node.id === selectedVariant.node.id)
                     // console.log({ a })
-                    // console.log('var avail', a.node.availableForSale)
-
                     setVAvailable(a.node.availableForSale)
                 }
             })

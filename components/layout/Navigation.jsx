@@ -1,9 +1,10 @@
 import PropTypes from 'prop-types'
+import { useUser } from 'hooks/useUser'
 import React from 'react'
 import Link from "next/link"
 import Image from 'next/image'
 import styled from 'styled-components'
-import { ShoppingBag, Message, Home, X, UserPin, Menu, NetworkChart, Cart } from '@styled-icons/boxicons-regular'
+import { ShoppingBag, Message, Home, X, UserPin, Menu, NetworkChart, Cart, Cog } from '@styled-icons/boxicons-regular'
 import Flex from 'components/shared/Flex'
 import useAppState from 'hooks/useAppState'
 import { useCartContext } from 'context/Store'
@@ -106,7 +107,7 @@ const MobileNavbox = styled.div`
     cursor: pointer;
   }
 
-  #last {
+  .last {
     border-bottom: 1px solid gray;
   }
 
@@ -127,12 +128,12 @@ const MobileNavbox = styled.div`
       padding: 10px;
     }
 
-    #shop {
+    .shop {
       display: flex;
       align-items: center;
     }
 
-    #last, #shop {
+    .last, .shop {
       border: none;
     }
 
@@ -156,8 +157,22 @@ const MobileNavbox = styled.div`
   }
 `
 
+const BlankButton = styled.button`
+  border: none;
+  background: transparent;
+  color: inherit;
+`
+
 
 const Header = ({ open, collections }) => {
+  const { user, mutate } = useUser({ redirectTo: '/login' })
+
+  const handleLogout = async () => {
+    const loggedOut = await fetch('/api/logout')
+    console.log('logged out: ', loggedOut)
+    if (loggedOut) mutate(null, false)
+  }
+
   const appState = useAppState()
   const { cart } = useCartContext()
   // console.log({ appState })
@@ -174,10 +189,20 @@ const Header = ({ open, collections }) => {
         <X size='28' />
         <I>Close</I>
       </Flex>
+      {user?.isAdmin && (
+        <Link
+          href='/admin/dashboard'
+          name='Home'
+        >
+          <a className='menu-item first'>
+            <Cog size='22' />
+            <I>Admin</I>
+          </a>
+        </Link>
+      )}
       <Link
         href='/'
-        name='Play Disc Golf'
-        id='first'
+        name='Home'
       >
         <a className='menu-item first'>
           <Home size='22' />
@@ -189,7 +214,7 @@ const Header = ({ open, collections }) => {
           href='/collections/featured'
           name='Play Disc Golf'
         >
-          <a className='' id='shop'>
+          <a className='shop'>
             <ShoppingBag size='22' />
             <I>Shop</I>
           </a>
@@ -242,11 +267,29 @@ const Header = ({ open, collections }) => {
         href='/contact'
         name='Play Disc Golf'
       >
-        <a className='menu-item' id='last'>
+        <a className='menu-item last'>
           <Message size='22' />
           <I>Contact</I>
         </a>
       </Link>
+
+      {user ? (
+        <BlankButton
+          onClick={handleLogout}
+        >
+          <I>Logout</I>
+        </BlankButton>
+      ) : (
+        <Link
+          href='/login'
+          name='Login'
+        >
+          <a>
+            <I>Login</I>
+          </a>
+        </Link>
+      )}
+
     </>
   )
 

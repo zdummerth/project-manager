@@ -1,15 +1,15 @@
 
 import { useState } from 'react'
+import { useSWRConfig } from 'swr'
 import SEO from 'components/SEO'
 import Router from 'next/router'
 import { useUser } from 'hooks/useUser'
 import LoginForm from 'components/forms/LoginForm';
-
-
 import { Magic } from 'magic-sdk'
 
 const Login = () => {
-  useUser({ redirectTo: '/', redirectIfFound: true })
+  const { user } = useUser({ redirectTo: '/', redirectIfFound: true })
+  const { mutate } = useSWRConfig()
 
   const [errorMsg, setErrorMsg] = useState('')
 
@@ -27,6 +27,7 @@ const Login = () => {
       const didToken = await magic.auth.loginWithMagicLink({
         email: body.email,
       })
+
       const res = await fetch('/api/login', {
         method: 'POST',
         headers: {
@@ -36,9 +37,11 @@ const Login = () => {
         body: JSON.stringify(body),
       })
       if (res.status === 200) {
+        const userData = await res.json()
+        mutate('/api/user')
         Router.push('/')
       } else {
-        throw new Error(await res.text())
+        throw new Error()
       }
     } catch (error) {
       console.error('An unexpected error happened occurred:', error)

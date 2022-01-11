@@ -2,11 +2,7 @@ import React, { useState, useEffect } from 'react'
 import styled, { createGlobalStyle } from 'styled-components'
 import useAppState from 'hooks/useAppState'
 import { getCollectionSlugs } from 'lib/shopify'
-import { XCircle } from '@styled-icons/boxicons-regular'
 import { CartProvider } from 'context/Store'
-import CollectionNavigation from 'components/layout/CollectionNavigation'
-import { useRouter } from 'next/router'
-import { fontSizes } from 'styles'
 import Flex from 'components/shared/Flex'
 import Navigation from 'components/layout/Navigation'
 import Footer from './Footer'
@@ -47,9 +43,7 @@ const GlobalStyle = createGlobalStyle`
   main {
     width: 100%;
   }
-
 `
-
 
 const Container = styled(Flex)`
     display: flex;
@@ -74,16 +68,11 @@ const Layout = ({ children }) => {
   // console.log('', )
   const [collectionlinks, setCollectionlinks] = useState([])
   const { menuOpen } = useAppState()
-  const router = useRouter()
-  console.log('router', router)
-
-
 
   useEffect(() => {
     const init = async () => {
       const nodes = await getCollectionSlugs()
       const slugs = nodes.map(n => n.node)
-      console.log({ slugs })
       setCollectionlinks(slugs)
     }
     init()
@@ -96,9 +85,6 @@ const Layout = ({ children }) => {
       <CartProvider>
         <Container dir='column'>
           <Navigation collections={collectionlinks} />
-          {/* {router.pathname.includes('collections') && (
-            <CollectionNavigation collections={collectionlinks} />
-          )} */}
           <Content>
             {children}
           </Content>

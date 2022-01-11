@@ -66,8 +66,6 @@ const AllImagesWrapper = styled.div`
 `
 
 export default function Home({ products }) {
-
-  console.log({ products })
   return (
     <Container dir='column' ai='center'>
       <SEO title={"Home"} />

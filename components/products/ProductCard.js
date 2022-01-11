@@ -6,10 +6,24 @@ import { useAvailability } from 'hooks/useProductAvailability'
 
 const Container = styled.div`
  text-align: center;
+ border: 1px solid ${({ theme }) => theme.colors.brand};
 
  .price {
    margin: 8px 0;
  }
+
+  .info {
+    // position: absolute;
+    // top: 0;
+    text-align: center;
+    width: 100%;
+    padding: 10px;
+    z-index: 3;
+    color: white;
+    // border: 1px solid red;
+    // border-radius: 5px;
+    background: rgba(15, 15, 15, 1);
+  }
 `
 const ImageWrapper = styled.div`
   position: relative;
@@ -34,12 +48,10 @@ const ImageWrapper = styled.div`
 `
 
 function ProductCard({ product }) {
-  console.log(product)
-
+  // console.log(product)
   const handle = product.node.handle
   const title = product.node.title
   const price = product.node.variants.edges[0].node.price
-
   const imageNode = product.node.images.edges[0].node
 
   const { pAvailable } = useAvailability(handle)
@@ -47,23 +59,23 @@ function ProductCard({ product }) {
 
   return (
     <Container>
+      <div className='info'>
+        <h3>
+          {title}
+        </h3>
+        <div className='price'>
+          <Price
+            currency="$"
+            num={price}
+            numSize="text-lg"
+          />
+        </div>
+      </div>
       <Link
         href={`/products/${handle}`}
         passHref
       >
         <a>
-          <div>
-            <div>
-              {title}
-            </div>
-            <div className='price'>
-              <Price
-                currency="$"
-                num={price}
-                numSize="text-lg"
-              />
-            </div>
-          </div>
           <ImageWrapper>
             {!pAvailable && (
               <div className='sold-out'>
@@ -76,8 +88,8 @@ function ProductCard({ product }) {
               width={imageNode.width}
               height={imageNode.height}
               // placeholder='blur'
-              // objectFit='contain'
-              // layout="fill"
+            // objectFit='contain'
+            // layout="fill"
             />
           </ImageWrapper>
         </a>

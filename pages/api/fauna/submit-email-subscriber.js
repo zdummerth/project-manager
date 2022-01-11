@@ -14,7 +14,7 @@ export default async function handler(req, res) {
 
     const faunares = await createContact({
       email: email.trim(),
-      secret: process.env.TESTING_ADMIN_KEY,
+      secret: process.env.FAUNA_FORMS_SUBMIT,
     })
 
     console.log('create subscriber fauna resonse', faunares)

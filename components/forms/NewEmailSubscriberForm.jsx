@@ -28,14 +28,12 @@ export default function EmailSubscriberForm({ reset }) {
     // console.log('reset', reset)
 
     const [email, setEmail] = useState('')
-    const [error, setError] = useState(null)
-    const [submitError, setSubmitError] = useState(null)
+    const [error, setError] = useState('')
     const [submitting, setSubmitting] = useState(null)
     const [submitted, setSubmitted] = useState(null)
 
     const handleSubmit = async (e) => {
         e.preventDefault()
-        console.log('email submitted', email)
         if (!isEmail(email)) {
             setError('* Must be a valid email')
             return
@@ -54,15 +52,21 @@ export default function EmailSubscriberForm({ reset }) {
             console.log('client res for new email sub', res)
 
             if (!res.ok) {
-                throw new Error('an error adding contact')
+                const { error } = await res.json()
+                throw error
             }
 
             setSubmitted(true)
             setError("")
+            setEmail("")
 
         } catch (err) {
-            console.log({ err })
-            setError("Unable To Connect. Try Again")
+            console.log(err.trim())
+            if (err === ('Instance is not unique.')) {
+                setError('Email is already subscribed')
+            } else {
+                setError("Unable To Connect. Try Again")
+            }
         } finally {
             setSubmitting(false)
         }
@@ -80,22 +84,13 @@ export default function EmailSubscriberForm({ reset }) {
     return (
         <Form onSubmit={handleSubmit}>
             <Label htmlFor='email'>
-                {submitError ? (
-                    <SubmitError>
-                        There was an error, please try again
-                    </SubmitError>
-                ) : (
-                    <i>
-                        Sign up to receive emails about
-                        our latest products and events
-                    </i>
-                )}
+                <i>
+                    Sign up to receive emails about
+                    our latest products and events
+                </i>
             </Label>
             <>
                 <>
-                    <div style={{ marginTop: '10px', height: '15px', color: "red", fontSize: '14px'}}>
-                        {error && error}
-                    </div>
                     <Input
                         name='email'
                         id='email'

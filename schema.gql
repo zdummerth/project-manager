@@ -1,0 +1,23 @@
+type User {
+    email: String! @unique
+    roles: [UserRole]
+}
+
+enum UserRole {
+    admin
+}
+
+type Contact {
+    email: String! @unique
+}
+
+type FormSubmission {
+    name: String!
+    email: String!
+    message: String!
+}
+
+type Query {
+    allContacts: [Contact]
+    allFormSubmissions: [FormSubmission]
+}
