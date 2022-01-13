@@ -47,7 +47,7 @@ const ImageWrapper = styled.div`
   }
 `
 
-function ProductCard({ product }) {
+function ProductCard({ product, blurDataURL }) {
   // console.log(product)
   const handle = product.node.handle
   const title = product.node.title
@@ -87,7 +87,8 @@ function ProductCard({ product }) {
               alt={imageNode.altText}
               width={imageNode.width}
               height={imageNode.height}
-              // placeholder='blur'
+              placeholder='blur'
+              blurDataURL={blurDataURL}
             // objectFit='contain'
             // layout="fill"
             />

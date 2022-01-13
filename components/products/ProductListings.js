@@ -17,12 +17,12 @@ const StyledListing = styled.div`
   }
 `
 
-function ProductListings({ products }) {
+function ProductListings({ products, blurDataUrl }) {
   return (
     <StyledListing>
       {
         products.map((product) => (
-          < ProductCard key={product.node.id} product={product} />
+          < ProductCard key={product.node.id} product={product} blurDataUrl={blurDataUrl} />
         ))
       }
     </StyledListing>

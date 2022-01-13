@@ -7,6 +7,7 @@ import { LinkExternal } from '@styled-icons/boxicons-regular'
 import { getAllProductsInCollection } from 'lib/shopify'
 import ProductListings from 'components/products/ProductListings'
 import { breakpoints, Spacer } from 'styles'
+import fs from 'fs'
 
 const Container = styled(Flex)`
   width: 100%;
@@ -65,12 +66,12 @@ const AllImagesWrapper = styled.div`
   }
 `
 
-export default function Home({ products }) {
+export default function Home({ products, blurDataUrl }) {
   return (
     <Container dir='column' ai='center'>
       <SEO title={"Home"} />
       <h2>Featured</h2>
-      <ProductListings products={products} />
+      <ProductListings products={products} blurDataUrl={blurDataUrl} />
       <Spacer />
       <Flex id='league' dir='column' ai='center'>
         <h2>Putting League At 4 Hands Brewery</h2>
@@ -143,10 +144,22 @@ export default function Home({ products }) {
 
 export async function getStaticProps() {
   const { products } = await getAllProductsInCollection('featured')
-  // console.log('products: ', products)
+  // const imageAsBase64 = fs.readFileSync('../public/images/biofreezearmy.jpg', 'base64');
+  var path = require("path");
+  // const configDirectory = path.resolve(process.cwd(), "config");
+  const configDirectory = path.join(process.cwd(), "/public/icons/da-logo-square-32.png");
+  const file = fs.readFileSync(
+    configDirectory,
+    "base64"
+  );
+
+  const dataUrl = 'data:image/jpg;base64,' + file
+
+  console.log('image: ', dataUrl.substring(0,30))
   return {
     props: {
-      products
+      products,
+      blurDataUrl: dataUrl
     },
   }
 }
