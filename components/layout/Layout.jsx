@@ -1,11 +1,7 @@
-import React, { useState, useEffect } from 'react'
+import React from 'react'
 import styled, { createGlobalStyle } from 'styled-components'
-import useAppState from 'hooks/useAppState'
-import { getCollectionSlugs } from 'lib/shopify'
-import { CartProvider } from 'context/Store'
 import Flex from 'components/shared/Flex'
 import Navigation from 'components/layout/Navigation'
-import Footer from './Footer'
 
 const GlobalStyle = createGlobalStyle`
   body {
@@ -56,8 +52,6 @@ const Container = styled(Flex)`
 
 const Content = styled(Flex)`
     flex: 1;
-    // align-items: center;
-    // justify-content: center;
     width: 100%;
     min-height: calc(100vh - 50px);
     max-width: 1400px;
@@ -65,32 +59,17 @@ const Content = styled(Flex)`
 `
 
 const Layout = ({ children }) => {
-  // console.log('', )
-  const [collectionlinks, setCollectionlinks] = useState([])
-  const { menuOpen } = useAppState()
-
-  useEffect(() => {
-    const init = async () => {
-      const nodes = await getCollectionSlugs()
-      const slugs = nodes.map(n => n.node)
-      setCollectionlinks(slugs)
-    }
-    init()
-  }, [])
 
 
   return (
     <>
-      <GlobalStyle open={menuOpen} />
-      <CartProvider>
-        <Container dir='column'>
-          <Navigation collections={collectionlinks} />
-          <Content>
-            {children}
-          </Content>
-          <Footer />
-        </Container>
-      </CartProvider>
+      <GlobalStyle />
+      <Container dir='column'>
+        <Navigation />
+        <Content>
+          {children}
+        </Content>
+      </Container>
     </>
   )
 }

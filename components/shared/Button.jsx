@@ -36,6 +36,12 @@ const DisabledOverlay = styled.div`
     background: ${({ theme }) => theme.colors.button.disabled};
 `
 
+export const BlankButton = styled.button`
+    border: none;
+    background: transparent;
+    color: inherit;
+`
+
 const Button = ({ children, disabled, onClick, ...rest }) => {
     return (
         <StyledButton disabled={disabled} onClick={onClick} {...rest} >

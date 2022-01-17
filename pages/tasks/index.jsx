@@ -8,13 +8,12 @@ const Container = styled(Flex)`
   margin: 20px;
 `
 
-const Profile = () => {
+const TasksIndex = () => {
     const user = useUser()
 
     return (
-        <Container>
-            <h1>Profile</h1>
-
+        <Container dir='column'>
+            <h1>Tasks</h1>
             {user && (
                 <>
                     User is logged in
@@ -24,4 +23,4 @@ const Profile = () => {
     )
 }
 
-export default Profile
+export default TasksIndex

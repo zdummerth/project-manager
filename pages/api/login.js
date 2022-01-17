@@ -28,7 +28,6 @@ export default async function loginHandler(req, res) {
     res.status(200).json({
       email: session.email,
       faunaId: session.id,
-      isAdmin: session.roles.includes('admin')
     });
 
     // res.status(200).send({ user: "success" });

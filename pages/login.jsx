@@ -1,14 +1,13 @@
 
 import { useState } from 'react'
 import { useSWRConfig } from 'swr'
-import SEO from 'components/SEO'
 import Router from 'next/router'
 import { useUser } from 'hooks/useUser'
 import LoginForm from 'components/forms/LoginForm';
 import { Magic } from 'magic-sdk'
 
 const Login = () => {
-  const { user } = useUser({ redirectTo: '/', redirectIfFound: true })
+  const { user } = useUser()
   const { mutate } = useSWRConfig()
 
   const [errorMsg, setErrorMsg] = useState('')
@@ -51,7 +50,6 @@ const Login = () => {
 
   return (
     <>
-      <SEO title={"Login"} />
       <div className="login">
         <LoginForm errorMessage={errorMsg} onSubmit={handleSubmit} />
       </div>

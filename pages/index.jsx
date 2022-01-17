@@ -1,165 +1,58 @@
 import React from 'react'
 import styled from 'styled-components'
-import SEO from 'components/SEO'
+import { useSWRConfig } from 'swr'
 import Flex from 'components/shared/Flex'
-import Image from 'next/image'
-import { LinkExternal } from '@styled-icons/boxicons-regular'
-import { getAllProductsInCollection } from 'lib/shopify'
-import ProductListings from 'components/products/ProductListings'
-import { breakpoints, Spacer } from 'styles'
-import fs from 'fs'
+import { useProjects } from 'lib/hooks'
+import SingleFieldForm from 'components/forms/SingleFieldForm'
+import { getLoginSession } from 'lib/auth'
+import ProjectCard from 'components/projects/ProjectCard'
 
 const Container = styled(Flex)`
-  width: 100%;
-
-  #portraits {
-    width: 100%;
-  }
-
-  #register {
-    background: ${({ theme }) => theme.colors.gradient};
-    color: ${({ theme }) => theme.colors.text};
-    padding: 10px;
-    width: 150px;
-    margin: 20px;
-    display: flex;
-    align-items: center;
-    justify-content: space-around;
-    border-radius: 5px;
-    text-align: center;
-  }
-
-  #league {
-    text-align: center;
-  }
-`
-const ImagesWrapper = styled.div`
-  position: relative;
-  display: flex;
-  width: 100%;
-  height: 40vh;
-  max-height: 40vh;
-
-  &.portrait {
-    width: 50%;
-    height: 45vh;
-  }
-
-  @media (min-width: ${breakpoints.desktop}) {
-    height: 45vh
-  }
 
 `
 
-const AllImagesWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-top: 50px;
-  width: 100%;
+export default function Home({ userId }) {
+  const { projects } = useProjects({ userId })
+  const { mutate } = useSWRConfig()
+  // console.log('projects: ', projects)
 
-  @media (min-width: ${breakpoints.desktop}) {
-    flex-direction: row;
-    & > * {
-      flex: 1;
-    }
+  const handleMutate = () => {
+    mutate(['/api/projects', userId], async prev => {
+      console.log('old data: ', prev)
+      return prev
+    }, false)
   }
-`
-
-export default function Home({ products, blurDataUrl }) {
   return (
     <Container dir='column' ai='center'>
-      <SEO title={"Home"} />
-      <h2>Featured</h2>
-      <ProductListings products={products} blurDataUrl={blurDataUrl} />
-      <Spacer />
-      <Flex id='league' dir='column' ai='center'>
-        <h2>Putting League At 4 Hands Brewery</h2>
-        <p>
-          Random Draw Doubles
-        </p>
-        <p>
-          The top three teams will receive cash payout as well as all 4Hands products and well liquor comped from their tab!
-        </p>
-        <p>
-          Each player will receive their first beer (either City Wide or Full Life) free as well as 25% off their tab.
-        </p>
-        <h3>Upcoming Dates</h3>
-        <p>
-          - January 24th
-        </p>
-        <p>
-          - January 31st
-        </p>
-        <p>
-          <a
-            id='register'
-            href="https://www.eventbrite.com/e/dark-ace-weekly-putting-league-tickets-238956213467"
-          >
-            Register
-            <LinkExternal size='22' />
-          </a>
-        </p>
-      </Flex>
-      <Spacer />
-      <AllImagesWrapper>
-        <ImagesWrapper>
-          <Image
-            src='/images/group.jpg'
-            alt='logo'
-            layout="fill"
-            objectFit='cover'
-          />
-        </ImagesWrapper>
-        <Flex id='portraits'>
-          <ImagesWrapper className='portrait'>
-            <Image
-              src='/images/burrs.jpg'
-              alt='logo'
-              layout="fill"
-              objectFit='cover'
-            />
-          </ImagesWrapper>
-          <ImagesWrapper className='portrait'>
-            <Image
-              src='/images/homies.jpg'
-              alt='logo'
-              layout="fill"
-              objectFit='cover'
-            />
-          </ImagesWrapper>
-        </Flex>
-        <ImagesWrapper>
-          <Image
-            src='/images/biofreezearmy.jpg'
-            alt='logo'
-            layout="fill"
-            objectFit='cover'
-          />
-        </ImagesWrapper>
-      </AllImagesWrapper>
+      <h1>Home</h1>
+      {/* <SingleFieldForm /> */}
+      {projects && projects.map(p => {
+        return (
+          <ProjectCard project={p.data} id={p._id} key={p._id} />
+        )
+      })}
+      <button onClick={handleMutate}>
+        Test Mutate
+      </button>
     </Container>
   )
 }
 
-export async function getStaticProps() {
-  const { products } = await getAllProductsInCollection('featured')
-  // const imageAsBase64 = fs.readFileSync('../public/images/biofreezearmy.jpg', 'base64');
-  var path = require("path");
-  // const configDirectory = path.resolve(process.cwd(), "config");
-  const configDirectory = path.join(process.cwd(), "/public/icons/da-logo-square-32.png");
-  const file = fs.readFileSync(
-    configDirectory,
-    "base64"
-  );
-
-  const dataUrl = 'data:image/jpg;base64,' + file
-
-  console.log('image: ', dataUrl.substring(0,30))
-  return {
-    props: {
-      products,
-      blurDataUrl: dataUrl
-    },
+export async function getServerSideProps({ req, res }) {
+  try {
+    const session = await getLoginSession(req, 'auth_cookie_name')
+    return {
+      props: {
+        userId: session.userId
+      },
+    }
+  } catch {
+    return {
+      redirect: {
+        permanent: false,
+        destination: "/login",
+      },
+      props: {},
+    };
   }
 }

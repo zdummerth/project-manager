@@ -1,23 +1,30 @@
+type Account {
+    email: String! @unique
+    user: User
+}
+
 type User {
-    email: String! @unique
-    roles: [UserRole]
+    projects: [Project] @relation(name: "project_member")
+    managedProjects: [Project] @relation(name: "project_manager")
+    tasks: [Task] @relation
+    handle: String @unique
+    account: Account
 }
 
-enum UserRole {
-    admin
+type Project {
+    tasks: [Task] @relation
+    manager: User! @relation(name: "project_manager")
+    members: [User] @relation(name: "project_member")
+    name: String
 }
 
-type Contact {
-    email: String! @unique
-}
-
-type FormSubmission {
-    name: String!
-    email: String!
-    message: String!
+type Task {
+    completed: Boolean
+    project: Project
+    name: String
+    assignedTo: [User] @relation
 }
 
 type Query {
-    allContacts: [Contact]
-    allFormSubmissions: [FormSubmission]
+    allProjects: [Project]
 }
