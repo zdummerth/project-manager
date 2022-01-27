@@ -5,14 +5,12 @@ import { getLoginSession } from 'lib/auth'
 const isString = i => typeof i === 'string'
 
 export default async function handler(req, res) {
-    console.log('in project function', req.query)
-    console.log('method: ', req.method)
+    // console.log('in project function', req.query)
+    // console.log('method: ', req.method)
     // console.log('body: ', req.body)
 
     const {
         name,
-        assignedTo,
-        project
     } = req.body
 
     const { id } = req.query
@@ -33,8 +31,7 @@ export default async function handler(req, res) {
             case 'POST': {
                 const faunares = await createProject({
                     name,
-                    assignedTo: [session.userId],
-                    project,
+                    userId: session.userId,
                     secret: session.accessToken,
                 })
 

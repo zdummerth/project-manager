@@ -1,21 +1,26 @@
 import React from 'react'
 import styled from 'styled-components'
 
-const getColor = ({ cancel, remove, theme }) => {
-    if(cancel) return theme.colors.button.cancel
-    if(remove) return theme.colors.button.remove
+const getColor = ({ cancel, remove, theme, outline }) => {
+    if (cancel) return theme.colors.button.cancel
+    if (remove) return theme.colors.button.remove
+    if (outline) return 'transparent'
     return theme.colors.gradient
 }
 
 const StyledButton = styled.button`
     position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     background: ${getColor};
-    color: ${({ theme }) => theme.colors.button.color};
-    border: ${({ cancel }) => cancel ? `2px solid gray` : 'none'};
+    // color: ${({ theme }) => theme.colors.button.color};
+    color: inherit;
+    border: ${({ outline, theme }) => outline ? `2px solid ${theme.colors.brand}` : 'none'};
     min-width: 70px;
-    height: 40px;
+    // height: 100%;
     text-align: center;
-    padding: 10px;
+    padding: 8px;
     border-radius: 5px;
     font-size: 16px;
     font-weight: bold;
@@ -42,9 +47,9 @@ export const BlankButton = styled.button`
     color: inherit;
 `
 
-const Button = ({ children, disabled, onClick, ...rest }) => {
+const Button = ({ children, disabled, ...rest }) => {
     return (
-        <StyledButton disabled={disabled} onClick={onClick} {...rest} >
+        <StyledButton disabled={disabled} {...rest} >
             {children}
             {disabled && <DisabledOverlay />}
         </StyledButton>

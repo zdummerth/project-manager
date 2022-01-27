@@ -55,12 +55,11 @@ const Content = styled(Flex)`
     width: 100%;
     min-height: calc(100vh - 50px);
     max-width: 1400px;
+    padding: 5px;
 
 `
 
 const Layout = ({ children }) => {
-
-
   return (
     <>
       <GlobalStyle />

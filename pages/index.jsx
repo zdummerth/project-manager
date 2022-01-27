@@ -1,39 +1,46 @@
-import React from 'react'
+import React, { useState } from 'react'
 import styled from 'styled-components'
-import { useSWRConfig } from 'swr'
 import Flex from 'components/shared/Flex'
-import { useProjects } from 'lib/hooks'
-import SingleFieldForm from 'components/forms/SingleFieldForm'
 import { getLoginSession } from 'lib/auth'
-import ProjectCard from 'components/projects/ProjectCard'
+import TaskList from 'components/tasks/TaskList'
+import ProjectList from 'components/projects/ProjectList'
+import { BlankButton } from 'components/shared/Button'
 
 const Container = styled(Flex)`
+  width: 100%;
+`
 
+const StyledFilterButton = styled(BlankButton)`
+  color: ${({ active, theme }) => active ? theme.colors.text : 'gray'};
+  text-decoration: ${({ active }) => active ? 'underline' : 'none'};
 `
 
 export default function Home({ userId }) {
-  const { projects } = useProjects({ userId })
-  const { mutate } = useSWRConfig()
+  const [showList, setShowList] = useState('tasks')
   // console.log('projects: ', projects)
 
-  const handleMutate = () => {
-    mutate(['/api/projects', userId], async prev => {
-      console.log('old data: ', prev)
-      return prev
-    }, false)
-  }
   return (
     <Container dir='column' ai='center'>
-      <h1>Home</h1>
-      {/* <SingleFieldForm /> */}
-      {projects && projects.map(p => {
-        return (
-          <ProjectCard project={p.data} id={p._id} key={p._id} />
-        )
-      })}
-      <button onClick={handleMutate}>
-        Test Mutate
-      </button>
+      <Flex className='filters' jc='space-between'>
+        <StyledFilterButton
+          onClick={() => setShowList('tasks')}
+          active={showList === 'tasks'}
+        >
+          <h2>tasks</h2>
+        </StyledFilterButton>
+        <StyledFilterButton
+          onClick={() => setShowList('projects')}
+          active={showList === 'projects'}
+        >
+          <h2>projects</h2>
+        </StyledFilterButton>
+      </Flex>
+      {showList === 'tasks' ? (
+        <TaskList userId={userId} />
+      ) : (
+        <ProjectList userId={userId} />
+      )}
+
     </Container>
   )
 }

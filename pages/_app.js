@@ -1,18 +1,29 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { ThemeProvider } from 'styled-components'
 import AppStateProvider from 'context/AppStateProvider'
-import { theme1 } from 'styles'
+import { theme1, theme2 } from 'styles'
 import Layout from 'components/layout/Layout'
 
 
 function MyApp({ Component, pageProps }) {
-
+  const [theme, setTheme] = useState('dark')
+  let currentTheme = {}
+  switch (theme) {
+    case 'dark': {
+      currentTheme = theme1
+      break
+    }
+    case 'light': {
+      currentTheme = theme2
+      break
+    }
+  }
   return (
     <>
       <AppStateProvider>
-        <ThemeProvider theme={theme1}>
+        <ThemeProvider theme={currentTheme}>
           <Layout>
-            <Component {...pageProps} />
+            <Component setTheme={setTheme} {...pageProps } />
           </Layout>
         </ThemeProvider>
       </AppStateProvider>

@@ -18,8 +18,21 @@ type Project {
     name: String
 }
 
+type Invite {
+    project: Project
+    to: User! @relation(name: "invite_recipient")
+    from: User! @relation(name: "invite_sender")
+    accepted: Boolean
+}
+
+enum TaskStatus {
+    done
+    todo
+    doing
+}
+
 type Task {
-    completed: Boolean
+    status: TaskStatus
     project: Project
     name: String
     assignedTo: [User] @relation
@@ -27,4 +40,5 @@ type Task {
 
 type Query {
     allProjects: [Project]
+    allUsers: [User]
 }

@@ -1,13 +1,22 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
 import { useProject } from 'lib/hooks'
+import { useTasks } from 'lib/hooks'
+
 import Input from 'components/shared/Inputs'
 import Button from 'components/shared/Button'
 import LoadingIndicator from 'components/shared/LoadingIndicator'
 
 
 const Form = styled.form`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     max-width: 250px;
+
+    input {
+        margin-bottom: 10px;
+    }
 `
 
 const Label = styled.label`
@@ -22,38 +31,22 @@ const SubmitError = styled.div`
 
 
 
-export default function NewTaskForm({ projectId }) {
-    const { createTask } = useProject(projectId)
-
+export default function NewTaskForm({ projectId, status, userId }) {
+    const {
+        createTask,
+        updating,
+        error
+    } = useTasks({
+        projectId,
+        userId,
+        status,
+    })
     const [text, setText] = useState('')
-    const [error, setError] = useState('')
-    const [submitting, setSubmitting] = useState(null)
 
     const handleSubmit = async (e) => {
         e.preventDefault()
-        setSubmitting(true)
-        try {
-            const res = await fetch('/api/fauna/task/create', {
-                method: 'POST',
-                headers: {
-                    'content-type': 'application/json'
-                },
-                body: JSON.stringify({
-                    project: projectId,
-                    name: text,
-                })
-            })
-
-            const newTask = await res.json()
-
-            await createTask(newTask)
-            setError("")
-            setText("")
-        } catch (err) {
-            setError("Unable To Connect. Try Again")
-        } finally {
-            setSubmitting(false)
-        }
+        await createTask(text)
+        setText("")
     }
 
 
@@ -72,15 +65,16 @@ export default function NewTaskForm({ projectId }) {
                     // marginTop: '15px',
                     width: '150px'
                 }}
+                outline
             >
                 {
-                    submitting ? (
+                    updating.creating ? (
                         <>
                             <LoadingIndicator />
                         </>
                     ) : (
                         <>
-                            Create Task
+                            create task
                         </>
                     )
                 }

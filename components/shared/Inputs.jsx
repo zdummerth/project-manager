@@ -2,14 +2,11 @@ import React, { useState } from 'react'
 import styled from 'styled-components'
 
 const StyledInput = styled.input`
-  margin-bottom: 10px;
   width: 100%;
   background: ${({ theme }) => theme.colors.inputBackground};
   color: ${({ theme }) => theme.colors.text};
   padding: 8px;
   border: none;
-  // border-radius: 5px;
-  // border: 1px solid ${({ theme }) => theme.colors.gray};
 `
 
 const Label = styled.label`
@@ -23,7 +20,13 @@ const Input = ({ id, label, error, ...rest }) => {
   return (
     <>
       <Label htmlFor={id}>{label}</Label>
-      <div style={{ marginTop: '10px', marginBottom: '5px', height: '14px', color: "red", fontSize: '14px' }}>
+      <div style={{
+        marginTop: '10px',
+        marginBottom: '5px',
+        height: '14px',
+        color: "red",
+        fontSize: '14px'
+      }}>
         {error && error}
       </div>
       <StyledInput id={id} {...rest} />

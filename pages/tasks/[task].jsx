@@ -1,4 +1,4 @@
-import React from 'React'
+import React from 'react'
 import Flex from 'components/shared/Flex'
 import styled from 'styled-components'
 

@@ -1,29 +1,28 @@
-import { getTasksByAccount } from 'lib/fauna'
+import { updateStatusBulk } from 'lib/fauna'
 import { getLoginSession } from 'lib/auth'
 
 
 const isString = i => typeof i === 'string'
 
 export default async function handler(req, res) {
-    console.log('in tasks status function')
-    // console.log('method: ', req.method)
-    // console.log('params: ', req.params)
-    console.log('body: ', req.body)
+    console.log('in task function', req.query)
+    console.log('method: ', req.method)
+    // console.log('headers: ', req.headers)
+    // console.log('body: ', req.body)
 
-    // console.log('statuses', statuses)
     const {
-        projectId,
+        ids,
         status
     } = req.body
 
     try {
         const session = await getLoginSession(req, 'auth_cookie_name')
 
-        const { data } = await getTasksByAccount({
+        const data = await updateStatusBulk(
+            ids,
             status,
-            projectId,
-            secret: session.accessToken
-        })
+            session.accessToken
+        )
 
         console.log('task response data', data)
 
