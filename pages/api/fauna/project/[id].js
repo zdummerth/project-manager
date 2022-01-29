@@ -1,16 +1,16 @@
-import { createProject, findProjectByID } from 'lib/fauna'
+import { createProject, findProjectByID, updateProjectTitle } from 'lib/fauna'
 import { getLoginSession } from 'lib/auth'
 
 
 const isString = i => typeof i === 'string'
 
 export default async function handler(req, res) {
-    // console.log('in project function', req.query)
-    // console.log('method: ', req.method)
-    // console.log('body: ', req.body)
+    console.log('in project function', req.query)
+    console.log('method: ', req.method)
+    console.log('body: ', req.body)
 
     const {
-        name,
+        title,
     } = req.body
 
     const { id } = req.query
@@ -30,7 +30,7 @@ export default async function handler(req, res) {
             }
             case 'POST': {
                 const faunares = await createProject({
-                    name,
+                    title,
                     userId: session.userId,
                     secret: session.accessToken,
                 })
@@ -39,7 +39,15 @@ export default async function handler(req, res) {
                 break;
             }
             case 'PUT': {
-                // code block
+                const title = req.body.title
+                const { id } = req.query
+                const faunares = await updateProjectTitle({
+                    id,
+                    title,
+                    secret: session.accessToken,
+                })
+
+                data = faunares.updateProjectTitle
                 break;
             }
             case 'DELETE': {
@@ -50,7 +58,7 @@ export default async function handler(req, res) {
             // code block
         }
 
-        // console.log('project response data', data)
+        console.log('project response data', data)
 
         res.status(200).json(data)
 

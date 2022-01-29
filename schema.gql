@@ -15,7 +15,7 @@ type Project {
     tasks: [Task] @relation
     manager: User! @relation(name: "project_manager")
     members: [User] @relation(name: "project_member")
-    name: String
+    title: String
 }
 
 type Invite {
@@ -34,7 +34,7 @@ enum TaskStatus {
 type Task {
     status: TaskStatus
     project: Project
-    name: String
+    title: String
     assignedTo: [User] @relation
 }
 

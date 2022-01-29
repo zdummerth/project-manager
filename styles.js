@@ -15,7 +15,7 @@ export const theme1 = {
     text: 'white',
     error: '#C00A0A',
     background: 'black',
-    altBackground: '#151515',
+    altBackground: '#252525',
     inputBackground: '#252525',
     gray: 'gray',
     darkgray: 'rgb(45,45,45)',

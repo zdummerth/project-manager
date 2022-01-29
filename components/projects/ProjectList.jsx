@@ -7,10 +7,16 @@ import ProjectCard from 'components/projects/ProjectCard'
 
 const Container = styled(Flex)`
   width: 100%;
+
+  #space {
+      margin: 10px;
+  }
 `
 
+
+
 export default function ProjectList({ userId }) {
-    const { projects } = useProjects({ userId })
+    const { projects, createProject } = useProjects({ userId })
     // const { user } = useUser()
 
     return (
@@ -20,7 +26,8 @@ export default function ProjectList({ userId }) {
                     <ProjectCard project={p} id={p._id} key={p._id} />
                 )
             })}
-            <NewProjectForm />
+            <div id='space' />
+            <NewProjectForm createProject={createProject} />
         </Container>
     )
 }

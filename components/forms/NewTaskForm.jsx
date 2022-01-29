@@ -1,27 +1,43 @@
-import React, { useState } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import styled from 'styled-components'
 import { useProject } from 'lib/hooks'
-import { useTasks } from 'lib/hooks'
+import Flex from 'components/shared/Flex'
 
 import Input from 'components/shared/Inputs'
-import Button from 'components/shared/Button'
+import { BlankButton } from 'components/shared/Button'
 import LoadingIndicator from 'components/shared/LoadingIndicator'
+import { Plus, X } from '@styled-icons/boxicons-regular'
+
 
 
 const Form = styled.form`
     display: flex;
-    flex-direction: column;
+    width: 100%;
+    border: 1px solid ${({ theme }) => theme.colors.brand};
+    // flex-direction: column;
     align-items: center;
-    max-width: 250px;
+    // max-width: 250px;
 
-    input {
-        margin-bottom: 10px;
+    i {
+        color: #606060;
+        margin-right: 8px;
     }
 `
 
-const Label = styled.label`
-    display: block;
-    // margin-top: 20px;
+const StyledInput = styled.input`
+  background: ${({ theme }) => theme.colors.inputBackground};
+  color: ${({ theme }) => theme.colors.text};
+  margin-bottom: 0;
+  padding: 10px;
+  border: none;
+  border-left: 1px solid ${({ theme }) => theme.colors.brand};
+  
+  flex: 1;
+
+  :focus {
+      outline: none;
+  }
+
 `
 
 const SubmitError = styled.div`
@@ -31,54 +47,54 @@ const SubmitError = styled.div`
 
 
 
-export default function NewTaskForm({ projectId, status, userId }) {
-    const {
-        createTask,
-        updating,
-        error
-    } = useTasks({
-        projectId,
-        userId,
-        status,
+export default function NewTaskForm({
+    projectId,
+    status,
+    userId,
+    close,
+    loading,
+    createTask
+}) {
+    const inputRef = useRef()
+
+    useEffect(() => {
+        inputRef.current.focus();
     })
+
     const [text, setText] = useState('')
 
     const handleSubmit = async (e) => {
         e.preventDefault()
-        await createTask(text)
+        await createTask(text, status)
         setText("")
     }
 
 
     return (
         <Form onSubmit={handleSubmit}>
-            <Input
+            <BlankButton type='button' onClick={close}>
+                <Flex>
+                    <X size='22' />
+                </Flex>
+            </BlankButton>
+            <BlankButton>
+                <Flex>
+                    <Plus size='22' />
+                </Flex>
+            </BlankButton>
+            <StyledInput
                 name='task'
                 id='task'
                 placeholder='add task'
                 value={text}
-                error={error}
                 onChange={(e) => setText(e.target.value)}
+                ref={inputRef}
             />
-            <Button
-                style={{
-                    // marginTop: '15px',
-                    width: '150px'
-                }}
-                outline
-            >
-                {
-                    updating.creating ? (
-                        <>
-                            <LoadingIndicator />
-                        </>
-                    ) : (
-                        <>
-                            create task
-                        </>
-                    )
-                }
-            </Button>
+            {loading ? (
+                <LoadingIndicator />
+            ) : (
+                <i>{status}</i>
+            )}
         </Form>
     )
 }

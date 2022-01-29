@@ -21,7 +21,7 @@ const ProjectCard = ({ project, id }) => {
         <Container dir='column'>
             <Link href={`/projects/${id}`}>
                 <a>
-                    <div className='name'>{project.name}</div>
+                    <div className='name'>{project.title}</div>
                 </a>
             </Link>
             <Flex className='mgr' jc='space-between'>

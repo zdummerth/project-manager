@@ -42,19 +42,19 @@ const GlobalStyle = createGlobalStyle`
 `
 
 const Container = styled(Flex)`
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+    // display: flex;
+    // flex-direction: column;
+    // align-items: center;
     min-height: 100vh;
     overflow: hidden;
-    color: ${({ theme }) => theme.colors.text};
+    // color: ${({ theme }) => theme.colors.text};
 `
 
 const Content = styled(Flex)`
     flex: 1;
     width: 100%;
-    min-height: calc(100vh - 50px);
-    max-width: 1400px;
+    // min-height: calc(100vh - 50px);
+    // max-width: 1400px;
     padding: 5px;
 
 `

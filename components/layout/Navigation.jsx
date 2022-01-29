@@ -7,7 +7,7 @@ import Flex from 'components/shared/Flex'
 import { useUser, useInvites } from 'lib/hooks'
 import Invite from 'components/invites/Invite'
 import { BlankButton } from 'components/shared/Button'
-import { breakpoints } from 'styles'
+import { breakpoints, dimensions } from 'styles'
 
 const I = styled.i`
   font-size: 12px;
@@ -20,8 +20,10 @@ const Nav = styled(Flex)`
   position: relative;
 
   padding: 5px;
-  background: ${({ theme }) => theme.colors.rgradient};
   width: 100%;
+  background: ${({ theme }) => theme.colors.background};
+  border-bottom: 1px dotted ${({ theme }) => theme.colors.brand};
+  height: ${dimensions.navHeight};
 
   .invite-button {
     // position: relative;
@@ -51,18 +53,8 @@ const Navigation = () => {
   const { user, mutate } = useUser()
   const { invites, acceptInvites, updating, deleteInvite } = useInvites()
   const [showInvites, setShowInvites] = useState(false)
-  const router = useRouter()
 
   // console.log('invites', invites)
-
-
-  const handleLogout = async () => {
-    const loggedOut = await fetch('/api/logout')
-    mutate(null)
-    console.log('logged out', loggedOut)
-    router.push('/login')
-  }
-
   return (
     <Nav jc='space-around' ai='center'>
       <Link
@@ -76,15 +68,6 @@ const Navigation = () => {
           </Flex>
         </a>
       </Link>
-      {/* <Link
-        href='/projects'
-        name='Projects'
-      >
-        <a>
-          <CloudLightRain size='22' />
-          <I>Projects</I>
-        </a>
-      </Link> */}
       <Link
         href='/profile'
         name='profile'
@@ -105,9 +88,6 @@ const Navigation = () => {
           </Flex>
         </Flex>
       </BlankButton>
-      {user && (
-        <BlankButton onClick={handleLogout}>Logout</BlankButton>
-      )}
       <Flex className='invite-container'>
         {showInvites && (
           <>

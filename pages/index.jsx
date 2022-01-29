@@ -16,23 +16,23 @@ const StyledFilterButton = styled(BlankButton)`
 `
 
 export default function Home({ userId }) {
-  const [showList, setShowList] = useState('tasks')
+  const [showList, setShowList] = useState('projects')
   // console.log('projects: ', projects)
 
   return (
     <Container dir='column' ai='center'>
       <Flex className='filters' jc='space-between'>
         <StyledFilterButton
-          onClick={() => setShowList('tasks')}
-          active={showList === 'tasks'}
-        >
-          <h2>tasks</h2>
-        </StyledFilterButton>
-        <StyledFilterButton
           onClick={() => setShowList('projects')}
           active={showList === 'projects'}
         >
           <h2>projects</h2>
+        </StyledFilterButton>
+        <StyledFilterButton
+          onClick={() => setShowList('tasks')}
+          active={showList === 'tasks'}
+        >
+          <h2>tasks</h2>
         </StyledFilterButton>
       </Flex>
       {showList === 'tasks' ? (

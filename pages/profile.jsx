@@ -1,5 +1,6 @@
 import { useUser } from 'lib/hooks'
 import { useState } from 'react'
+import { useRouter } from 'next/router'
 import UpdateHandleForm from 'components/forms/UpdateHandleForm'
 import Button, { BlankButton } from 'components/shared/Button'
 import Flex from 'components/shared/Flex'
@@ -17,8 +18,15 @@ const Container = styled(Flex)`
 `
 
 const Profile = ({ setTheme }) => {
-    const { user, error, loading, updateHandle, updating } = useUser()
+    const { user, error, loading, updateHandle, updating, mutate } = useUser()
     const [edit, setEdit] = useState(null)
+
+    const handleLogout = async () => {
+        const loggedOut = await fetch('/api/logout')
+        mutate(null)
+        console.log('logged out', loggedOut)
+        router.push('/login')
+    }
 
 
     return (
@@ -62,6 +70,7 @@ const Profile = ({ setTheme }) => {
                     )}
                 </>
             )}
+            <BlankButton onClick={handleLogout}>Logout</BlankButton>
         </Container>
     )
 }

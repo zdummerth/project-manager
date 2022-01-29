@@ -1,31 +1,35 @@
 import React, { useState } from 'react'
 import { useRouter } from 'next/router'
 import styled from 'styled-components'
-import { useProject } from 'lib/hooks'
-import { useTasks } from 'lib/hooks'
 
 import Input from 'components/shared/Inputs'
-import Button from 'components/shared/Button'
+import Button, { BlankButton } from 'components/shared/Button'
 import LoadingIndicator from 'components/shared/LoadingIndicator'
 
 
 const Form = styled.form`
-    max-width: 250px;
+    // max-width: 250px;
+    display: flex;
 `
 
-const Label = styled.label`
-    display: block;
-    // margin-top: 20px;
+const StyledInput = styled.input`
+  padding: 5px;
+  border-radius: 10px;
+  border: none;
+  // margin-left: 10px;
+  font-size: 16px;
+  background: ${({ theme }) => theme.colors.altBackground};
+  color: ${({ theme }) => theme.colors.text};
+
+  &:focus {
+    border: 1px solid ${({ theme }) => theme.colors.brand};
+    outline: none;
+  }
 `
 
-const SubmitError = styled.div`
-    color: red;
-    margin: 20px 0;
-`
 
 
-
-export default function NewProjectForm() {
+export default function NewProjectForm({ createProject, loading }) {
     const router = useRouter()
 
     const [text, setText] = useState('')
@@ -36,44 +40,13 @@ export default function NewProjectForm() {
 
     const handleSubmit = async (e) => {
         e.preventDefault()
-        setUpdating({
-            loading: true,
-            error: null
-        })
-        try {
-            const response = await fetch('/api/fauna/project/create', {
-                method: 'POST',
-                headers: {
-                    'content-type': 'application/json'
-                },
-                body: JSON.stringify({
-                    name: text
-                })
-            })
-
-            const newTask = await response.json()
-            console.log('new project', newTask)
-
-            setUpdating({
-                loading: false,
-                error: null
-            })
-            setText("")
-            // router.push(`/projects/${newTask._id}`)
-            // return [...prev, newTask]
-        } catch (e) {
-            console.log('err', e)
-            setUpdating({
-                loading: false,
-                error: e
-            })
-        }
+        await createProject(text)
     }
 
 
     return (
         <Form onSubmit={handleSubmit}>
-            <Input
+            <StyledInput
                 name='project'
                 id='project'
                 placeholder='project name'
@@ -81,24 +54,17 @@ export default function NewProjectForm() {
                 error={updating.error}
                 onChange={(e) => setText(e.target.value)}
             />
-            <Button
-                style={{
-                    // marginTop: '15px',
-                    width: '150px'
-                }}
-            >
+            <BlankButton>
                 {
-                    updating.loading ? (
-                        <>
-                            <LoadingIndicator />
-                        </>
+                    loading ? (
+                        <LoadingIndicator />
                     ) : (
-                        <>
-                            Create Project
-                        </>
+                        <div>
+                            create
+                        </div>
                     )
                 }
-            </Button>
+            </BlankButton>
         </Form>
     )
 }

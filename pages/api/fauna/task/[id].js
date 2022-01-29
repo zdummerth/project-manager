@@ -1,4 +1,4 @@
-import { createTask, findTaskByID } from 'lib/fauna'
+import { createTask, findTaskByID, deleteTask, updateTask } from 'lib/fauna'
 import { getLoginSession } from 'lib/auth'
 
 
@@ -7,15 +7,8 @@ const isString = i => typeof i === 'string'
 export default async function handler(req, res) {
     console.log('in task function', req.query)
     console.log('method: ', req.method)
-    // console.log('body: ', req.body)
+    console.log('body: ', req.body)
 
-    const {
-        name,
-        assignedTo,
-        project
-    } = req.body
-
-    const { id } = req.query
     try {
         const session = await getLoginSession(req, 'auth_cookie_name')
 
@@ -31,10 +24,16 @@ export default async function handler(req, res) {
                 break;
             }
             case 'POST': {
-                const faunares = await createTask({
-                    name,
-                    assignedTo: [session.userId],
+                const {
+                    title,
                     project,
+                    status
+                } = req.body
+
+                const faunares = await createTask({
+                    title,
+                    project,
+                    status,
                     secret: session.accessToken,
                 })
 
@@ -42,18 +41,32 @@ export default async function handler(req, res) {
                 break;
             }
             case 'PUT': {
-                // code block
+                const putdata = req.body
+                const { id } = req.query
+                const faunares = await updateTask({
+                    id,
+                    data: putdata,
+                    secret: session.accessToken,
+                })
+
+                data = faunares.updateTask
                 break;
             }
             case 'DELETE': {
-                // code block
+                const { id } = req.query
+                const faunares = await deleteTask({
+                    id,
+                    secret: session.accessToken,
+                })
+
+                data = faunares.deleteTask
                 break;
             }
             default:
             // code block
         }
 
-        // console.log('task response data', data)
+        console.log('task response data', data)
 
         res.status(200).json(data)
 
