@@ -18,12 +18,10 @@ const I = styled.i`
 
 const Nav = styled(Flex)`
   position: relative;
-
-  padding: 5px;
-  width: 100%;
-  background: ${({ theme }) => theme.colors.background};
-  border-bottom: 1px dotted ${({ theme }) => theme.colors.brand};
-  height: ${dimensions.navHeight};
+  width: 95%;
+  max-width: 1400px;
+  margin: 10px auto;
+  background: ${({ theme }) => theme.colors.altBackground};
 
   .invite-button {
     // position: relative;
@@ -31,20 +29,23 @@ const Nav = styled(Flex)`
 
   .invite-count {
     background: ${({ theme }) => theme.colors.background};
-    // padding: 3px;
     font-weight: bold;
     margin-left: 5px;
   }
 
   .invite-container {
     position: absolute;
-    // left: 50%;
-    // right: 50%;
-    // right: 0;
     top: 100%;
+    width: 100%;
     z-index: 3;
     background: ${({ theme }) => theme.colors.background};
-    width: 100%;
+  }
+
+  .menu-item {
+    background: ${({ theme }) => theme.colors.background};
+    padding: 10px;
+    margin-right: 10px;
+    border-radius: 10px;
   }
 `
 
@@ -56,15 +57,18 @@ const Navigation = () => {
 
   // console.log('invites', invites)
   return (
-    <Nav jc='space-around' ai='center'>
+    <Nav
+      // jc='space-between'
+      ai='center'
+    >
       <Link
         href='/'
         name='Home'
       >
         <a>
-          <Flex dir='column' ai='center'>
-            <Home size='22' />
-            <I>Home</I>
+          <Flex className='menu-item' dir='column' ai='center'>
+            <Home size='20' />
+            {/* <I>Home</I> */}
           </Flex>
         </a>
       </Link>
@@ -73,19 +77,19 @@ const Navigation = () => {
         name='profile'
       >
         <a>
-          <Flex dir='column' ai='center'>
-            <User size='22' />
-            <I>Profile</I>
+          <Flex className='menu-item' dir='column' ai='center'>
+            <User size='20' />
+            {/* <I>Profile</I> */}
           </Flex>
         </a>
       </Link>
-      <BlankButton className='invite-button' onClick={() => setShowInvites(!showInvites)}>
+      <BlankButton className='invite-button menu-item' onClick={() => setShowInvites(!showInvites)}>
         <Flex dir='column' ai='center'>
-          <Message size='22' />
-          <Flex ai='center'>
+          <Message size='20' />
+          {/* <Flex ai='center'>
             <I>Invites</I>
             <I className='invite-count'>{invites.length}</I>
-          </Flex>
+          </Flex> */}
         </Flex>
       </BlankButton>
       <Flex className='invite-container'>

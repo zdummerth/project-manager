@@ -9,10 +9,10 @@ import SendInviteForm from 'components/forms/SendInviteForm'
 import LoadingIndicator from 'components/shared/LoadingIndicator'
 import Task from 'components/tasks/Task'
 import TaskBoard from 'components/tasks/TaskBoard'
-import { dimensions } from 'styles'
+import { dimensions, breakpoints } from 'styles'
 
 
-import { UserPlus, Trash, Cog } from '@styled-icons/boxicons-regular'
+import { UserPlus, CaretDown } from '@styled-icons/boxicons-regular'
 
 import Button, { BlankButton } from 'components/shared/Button'
 
@@ -23,6 +23,9 @@ const Container = styled(Flex)`
   overflow: hidden;
   min-height: calc(100vh - 100px);
   // margin: 20px;
+  background: ${({ theme }) => theme.colors.altBackground};
+  color: ${({ theme }) => theme.colors.text};
+
 
   .new-task-form {
     position: absolute;
@@ -37,7 +40,28 @@ const Container = styled(Flex)`
   .project-details {
     position: relative;
     width: 100%;
-    height: 125px;
+    height: 150px;
+    padding-left: 10px;
+    margin-bottom: 10px;
+    border-radius: 10px;
+    background: ${({ theme }) => theme.colors.background};
+  }
+
+  .users {
+    position: relative;
+    padding: 10px;
+    border-radius: 10px;
+    background: ${({ theme }) => theme.colors.altBackground};
+
+    #members {
+      border-radius: 10px;
+      position: absolute;
+      top: 100%;
+      right: 0;
+      height: 300px;
+      border: 1px solid ${({ theme }) => theme.colors.text};
+      background: ${({ theme }) => theme.colors.background};
+    }
   }
 
   #settings-btn {
@@ -46,37 +70,49 @@ const Container = styled(Flex)`
     right: 5px;
   }
 
+  #expanded-task {
+    max-width: 450px
+  }
+
 `
 
 const BoardsContainer = styled.div`
-  width: 100vw;
+  width: 100%;
   display: flex;
+  justify-content: space-between;
   flex-wrap: nowrap;
   overflow-x: auto;
-  padding: 10px;
-  height: calc(100vh - ${dimensions.navHeight} - 140px);
-  border-top: 1px solid gray;
-  border-bottom: 1px solid gray;
-  background: ${({ theme }) => theme.colors.altBackground};
+  height: calc(100vh - ${dimensions.navHeight} - 160px);
 `
 
 const StyledBoard = styled(TaskBoard)`
+  // flex: 1 1 auto;
   flex: 0 0 auto;
-  border: 1px solid gray;
+  border-radius: 10px;
   width: 80vw;
-  max-width: 400px;
-  margin-right: 15px;
+  max-width: 375px;
+  margin-right: 10px;
   padding: 10px;
   background: ${({ theme }) => theme.colors.background};
+
+  &:last-child {
+    margin-right: 0;
+  }
+
+  @media (min-width: ${breakpoints.desktop}) {
+    flex: 1 1 auto;
+    max-width: 500px;
+  }
 `
 
 const StyledInput = styled.input`
-  padding: 5px 10px;
+  padding: 5px 10px 5px 0;
   border-radius: 10px;
   border: none;
+  padding: 10px;
   // margin-left: 10px;
   font-size: 16px;
-  background: ${({ theme }) => theme.colors.background};
+  background: ${({ theme }) => theme.colors.altBackground};
   color: ${({ theme }) => theme.colors.text};
 
   &:focus {
@@ -101,6 +137,7 @@ function ProjectPage({ proj, userId }) {
   // console.log('project page', project)
 
   const [showForm, setShowForm] = useState('')
+  const [showMembers, setShowMembers] = useState('')
   const [expandedTask, setExpandedTask] = useState('')
   const [title, setTitle] = useState(project ? project.title : proj.title)
 
@@ -125,19 +162,17 @@ function ProjectPage({ proj, userId }) {
           </>
         ) : (
           <>
-            <Flex dir='column' className="project-details">
+            <Flex dir='column' jc='space-around' className="project-details">
               <form className='fwidth'>
                 <Flex ai='center' jc='space-between'>
-                  <h2>
-                    <StyledInput
-                      name='task'
-                      id='task'
-                      className='bg'
-                      placeholder='add task'
-                      value={title}
-                      onChange={(e) => setTitle(e.target.value)}
-                    />
-                  </h2>
+                  <StyledInput
+                    name='task'
+                    id='task'
+                    className='bg'
+                    placeholder='add task'
+                    value={title}
+                    onChange={(e) => setTitle(e.target.value)}
+                  />
                   {title !== project.title && (
                     <Flex jc='space-between' ai='center'>
                       <BlankButton onClick={handleUpdate}>
@@ -150,16 +185,13 @@ function ProjectPage({ proj, userId }) {
                   )}
                 </Flex>
               </form>
-              {/* <h2>
-                {title}
-              </h2> */}
-              <Flex ai='center'>
+              <Flex ai='center' className='users'>
                 <Flex>
-                  <i style={{ marginRight: '5px' }}>Manager: </i>
+                  <i style={{ marginRight: '5px' }}>manager: </i>
                   <i style={{ marginRight: '25px' }}>{project.manager.handle}</i>
                 </Flex>
                 <Flex ai='center'>
-                  <i style={{ marginRight: '5px' }}>Members: </i>
+                  <i style={{ marginRight: '5px' }}>members: </i>
                   {project.members.data.map(m => {
                     return (
                       <i key={m._id}>{m.handle}</i>
@@ -168,19 +200,18 @@ function ProjectPage({ proj, userId }) {
                   <div>
                     {project.members.data.length}
                   </div>
-                  <BlankButton onClick={() => setShowForm('invite')}>
-                    <UserPlus size='24' />
+                  <BlankButton onClick={() => setShowMembers(!showMembers)}>
+                    <CaretDown size='20' />
                   </BlankButton>
+                  {showMembers && (
+                    <Flex dir='column' id='members'>
+                      <SendInviteForm />
+                    </Flex>
+                  )}
                 </Flex>
               </Flex>
-              <Flex id="settings">
-                <BlankButton id='delete-btn' onClick={() => setShowForm('invite')}>
-                  <Trash size='18' />
-                </BlankButton>
-              </Flex>
-              <BlankButton id='settings-btn' onClick={() => setShowForm('invite')}>
-                <Cog size='24' />
-              </BlankButton>
+
+
             </Flex>
             {expandedTask ? (
               <Task
@@ -189,6 +220,7 @@ function ProjectPage({ proj, userId }) {
                 update={updateTask}
                 remove={deleteTask}
                 loading={updating.creating}
+                id='expanded-task'
               />
             ) : (
               <BoardsContainer>

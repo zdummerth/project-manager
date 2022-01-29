@@ -7,8 +7,10 @@ const GlobalStyle = createGlobalStyle`
   body {
     box-sizing: border-box;
     margin: 0;
+    padding: 0;
+    width: 100%;
     color: ${({ theme }) => theme.colors.text};
-    background: ${({ theme }) => theme.colors.background};
+    background: ${({ theme }) => theme.colors.altBackground};
     overflow-y: ${({ open }) => open ? 'hidden' : 'visible'};
     font-family: Roboto, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
     Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
@@ -17,6 +19,8 @@ const GlobalStyle = createGlobalStyle`
   html {
     box-sizing: border-box;
     margin: 0;
+    padding: 0;
+    width: 100%;
 
   }
 
@@ -42,20 +46,17 @@ const GlobalStyle = createGlobalStyle`
 `
 
 const Container = styled(Flex)`
-    // display: flex;
-    // flex-direction: column;
-    // align-items: center;
     min-height: 100vh;
     overflow: hidden;
-    // color: ${({ theme }) => theme.colors.text};
 `
 
 const Content = styled(Flex)`
     flex: 1;
-    width: 100%;
+    width: 95%;
+    margin-right: auto;
+    margin-left: auto;
     // min-height: calc(100vh - 50px);
-    // max-width: 1400px;
-    padding: 5px;
+    max-width: 1400px;
 
 `
 

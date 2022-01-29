@@ -2,7 +2,7 @@ import { getLoginSession } from 'lib/auth'
 import { getInvitesByAccount } from 'lib/fauna'
 
 export default async function user(req, res) {
-  console.log('in invites endpoint')
+  // console.log('in invites endpoint')
   // console.log(req.body)
   // console.log(req.method)
   try {

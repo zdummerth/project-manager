@@ -14,6 +14,7 @@ const Form = styled.form`
     display: flex;
     width: 100%;
     border: 1px solid ${({ theme }) => theme.colors.brand};
+    box-shadow: 0 0 5px 5px ${({ theme }) => theme.colors.brand};
     // flex-direction: column;
     align-items: center;
     // max-width: 250px;
@@ -28,8 +29,9 @@ const StyledInput = styled.input`
   background: ${({ theme }) => theme.colors.inputBackground};
   color: ${({ theme }) => theme.colors.text};
   margin-bottom: 0;
-  padding: 10px;
+  padding: 15px 10px;
   border: none;
+  font-size: 16px;
   border-left: 1px solid ${({ theme }) => theme.colors.brand};
   
   flex: 1;

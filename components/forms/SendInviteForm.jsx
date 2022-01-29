@@ -25,6 +25,22 @@ const Form = styled.form`
     }
 `
 
+const StyledInput = styled.input`
+  padding: 5px 10px 5px 0;
+  border-radius: 10px;
+  border: none;
+  padding: 8px;
+  margin: 10px;
+  font-size: 16px;
+  background: ${({ theme }) => theme.colors.altBackground};
+  color: ${({ theme }) => theme.colors.text};
+
+  &:focus {
+    border: 1px solid ${({ theme }) => theme.colors.brand};
+    outline: none;
+  }
+`
+
 export default function SendInviteForm({
     loading,
     projectId,
@@ -51,7 +67,7 @@ export default function SendInviteForm({
 
         <>
             <Form onSubmit={handleSubmit}>
-                <Input
+                <StyledInput
                     name='invites'
                     id='invites'
                     placeholder='search users'

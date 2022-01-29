@@ -12,7 +12,7 @@ const StyledTask = styled(Flex)`
   margin-bottom: 10px;
   border-radius: 5px;
   padding: 14px;
-  background: ${({ theme }) => theme.colors.altBackground};
+  background: ${({ theme }) => theme.colors.background};
 
   .fwidth {
     width: 100%;
@@ -25,6 +25,7 @@ const StyledTask = styled(Flex)`
 
   .alt-bg {
     background: ${({ theme }) => theme.colors.altBackground};
+    color: ${({ theme }) => theme.colors.text};
   }
 
   #back-button {
@@ -93,7 +94,9 @@ const Task = ({
   close,
   update,
   remove,
-  loading
+  loading,
+  className,
+  id
 }) => {
   if (!t) return null
 
@@ -135,8 +138,10 @@ const Task = ({
 
   return (
     <StyledTask
-      className='task alt-bg'
+      className='task bg'
       key={t._id}
+      id={id}
+      // className={className}
       // jc='space-between'
       dir='column'
       status={t.status}
@@ -158,7 +163,7 @@ const Task = ({
             name='task'
             id='task'
             onKeyDown={onEnterPress}
-            className='bg'
+            className='alt-bg'
             placeholder='add task'
             value={title}
             onChange={(e) => setTitle(e.target.value)}

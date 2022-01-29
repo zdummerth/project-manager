@@ -8,6 +8,15 @@ import { BlankButton } from 'components/shared/Button'
 
 const Container = styled(Flex)`
   width: 100%;
+
+  .filters {
+    position: relative;
+    width: 100%;
+    // width: 95%;
+    padding: 0 10px;
+    border-radius: 10px;
+    background: ${({ theme }) => theme.colors.background};
+  }
 `
 
 const StyledFilterButton = styled(BlankButton)`
@@ -21,7 +30,8 @@ export default function Home({ userId }) {
 
   return (
     <Container dir='column' ai='center'>
-      <Flex className='filters' jc='space-between'>
+      <Flex className='filters'>
+        {/* <Flex id='inner-filters'> */}
         <StyledFilterButton
           onClick={() => setShowList('projects')}
           active={showList === 'projects'}
@@ -34,6 +44,7 @@ export default function Home({ userId }) {
         >
           <h2>tasks</h2>
         </StyledFilterButton>
+        {/* </Flex> */}
       </Flex>
       {showList === 'tasks' ? (
         <TaskList userId={userId} />

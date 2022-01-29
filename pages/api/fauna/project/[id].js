@@ -1,4 +1,4 @@
-import { createProject, findProjectByID, updateProjectTitle } from 'lib/fauna'
+import { createProject, findProjectByID, updateProjectTitle, deleteProjectCascade } from 'lib/fauna'
 import { getLoginSession } from 'lib/auth'
 
 
@@ -51,7 +51,13 @@ export default async function handler(req, res) {
                 break;
             }
             case 'DELETE': {
-                // code block
+                const { id } = req.query
+                const faunares = await deleteProjectCascade({
+                    id,
+                    secret: session.accessToken,
+                })
+
+                data = { _id: faunares }
                 break;
             }
             default:

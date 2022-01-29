@@ -38,6 +38,9 @@ const Profile = ({ setTheme }) => {
             <Button onClick={() => setTheme("dark")} outline>
                 dark
             </Button>
+            <Button onClick={() => setTheme("dark-shade")} outline>
+                dark shade
+            </Button>
             {user && (
                 <>
                     {edit ? (

@@ -27,6 +27,9 @@ const StyledButton = styled(BlankButton)`
   height: 30px;
   margin-top: 5px;
   border: 1px solid gray;
+  border-radius: 10px;
+  background: ${({ theme }) => theme.colors.background};
+
 `
 
 

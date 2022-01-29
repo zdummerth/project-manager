@@ -16,14 +16,19 @@ const Container = styled(Flex)`
 
 
 export default function ProjectList({ userId }) {
-    const { projects, createProject } = useProjects({ userId })
+    const { projects, createProject, deleteProject } = useProjects({ userId })
     // const { user } = useUser()
 
     return (
         <Container dir='column' ai='center'>
             {projects && projects.map(p => {
                 return (
-                    <ProjectCard project={p} id={p._id} key={p._id} />
+                    <ProjectCard
+                        project={p}
+                        id={p._id}
+                        key={p._id}
+                        remove={() => deleteProject(p._id)}
+                    />
                 )
             })}
             <div id='space' />

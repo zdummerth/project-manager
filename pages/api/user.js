@@ -3,7 +3,7 @@ import { findUserByID, updateUserHandle } from 'lib/fauna'
 
 export default async function user(req, res) {
   try {
-    console.log('inuser function')
+    // console.log('inuser function')
     const session = await getLoginSession(req, 'auth_cookie_name')
     // console.log('session', session)
 

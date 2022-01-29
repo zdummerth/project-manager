@@ -2,7 +2,7 @@ import { getLoginSession } from 'lib/auth'
 import { createProject, getProjectsByAccount } from 'lib/fauna'
 
 export default async function user(req, res) {
-  console.log('in projects endpoint')
+  // console.log('in projects endpoint')
   // console.log(req.body)
   // console.log(req.method)
   try {
@@ -15,7 +15,7 @@ export default async function user(req, res) {
       secret: session.accessToken,
       userId: session.userId
     })
-    console.log('projects', data)
+    // console.log('projects', data)
     res.status(200).json([
       ...data.getProjectsByAccount.projects.data,
       ...data.getProjectsByAccount.managedProjects.data
