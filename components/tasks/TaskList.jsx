@@ -1,5 +1,4 @@
 import React, { useState } from 'react'
-import Flex from 'components/shared/Flex'
 import Link from 'next/link'
 import styled from 'styled-components'
 import TaskBoard from 'components/tasks/TaskBoard'
@@ -9,6 +8,7 @@ import LoadingIndicator from 'components/shared/LoadingIndicator'
 import { Trash, BookAdd } from '@styled-icons/boxicons-regular'
 
 import Button, { BlankButton } from 'components/shared/Button'
+import { breakpoints } from 'styles'
 
 
 const Container = styled(Flex)`
@@ -39,42 +39,25 @@ const StyledBoard = styled(TaskBoard)`
   }
 `
 
-function TaskList({ projectId, userId, className, tasks }) {
-
-  const handleChange = (id) => {
-    if (selectedTasks.includes(id)) {
-      setSelectedTasks(prev => (
-        prev.filter(prevTask => prevTask !== id)
-      ))
-    } else {
-      setSelectedTasks(prev => ([
-        ...prev,
-        id
-      ]))
-    }
-  }
-
-  if (error) {
-    return (
-      <div>Error fetching tasks</div>
-    )
-  }
+function TaskList({ className, tasks }) {
 
   return (
-    <BoardsContainer>
-      {['todo', 'doing', 'done'].map(s => {
-        return (
-          <StyledBoard
-            status={s}
-            key={s}
-            tasks={project.tasks.data.filter(t => t.status === s)}
-            setExpandedTask={setExpandedTask}
-            openForm={() => setShowForm(s)}
-            className='alt-bg std-div'
-          />
-        )
-      })}
-    </BoardsContainer>
+    <>
+      {/* <BoardsContainer className={className}>
+        {['todo', 'doing', 'done'].map(s => {
+          return (
+            <StyledBoard
+              status={s}
+              key={s}
+              tasks={tasks.filter(t => t.status === s)}
+              setExpandedTask={setExpandedTask}
+              openForm={() => setShowForm(s)}
+              className='alt-bg std-div'
+            />
+          )
+        })}
+      </BoardsContainer> */}
+    </>
   )
 }
 
