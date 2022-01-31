@@ -1,69 +1,36 @@
 import React, { useState } from 'react'
-import { useRouter } from 'next/router'
 import styled from 'styled-components'
-
-import Input from 'components/shared/Inputs'
-import Button, { BlankButton } from 'components/shared/Button'
+import { BlankButton } from 'components/shared/Button'
 import LoadingIndicator from 'components/shared/LoadingIndicator'
-
+import { Plus, Album } from '@styled-icons/boxicons-regular'
 
 const Form = styled.form`
-    // max-width: 250px;
     display: flex;
+    width: 100%;
 `
-
-const StyledInput = styled.input`
-  padding: 5px;
-  border-radius: 10px;
-  border: none;
-  // margin-left: 10px;
-  font-size: 16px;
-  background: ${({ theme }) => theme.colors.altBackground};
-  color: ${({ theme }) => theme.colors.text};
-
-  &:focus {
-    border: 1px solid ${({ theme }) => theme.colors.brand};
-    outline: none;
-  }
-`
-
-
 
 export default function NewProjectForm({ createProject, loading }) {
-    const router = useRouter()
-
     const [text, setText] = useState('')
-    const [updating, setUpdating] = useState({
-        loading: false,
-        error: null
-    })
 
     const handleSubmit = async (e) => {
         e.preventDefault()
+        if (text === "") return
         await createProject(text)
+        setText('')
     }
-
 
     return (
         <Form onSubmit={handleSubmit}>
-            <StyledInput
+            <input
                 name='project'
+                className='bg'
                 id='project'
-                placeholder='project name'
+                placeholder='new project'
                 value={text}
-                error={updating.error}
                 onChange={(e) => setText(e.target.value)}
             />
-            <BlankButton>
-                {
-                    loading ? (
-                        <LoadingIndicator />
-                    ) : (
-                        <div>
-                            create
-                        </div>
-                    )
-                }
+            <BlankButton disabled={loading} className={`${loading && 'rotate'}`}>
+                {loading ? <Album size='20' /> : <Plus size='20' />}
             </BlankButton>
         </Form>
     )

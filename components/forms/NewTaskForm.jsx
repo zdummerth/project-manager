@@ -11,40 +11,14 @@ import { Plus, X } from '@styled-icons/boxicons-regular'
 
 
 const Form = styled.form`
-    display: flex;
     width: 100%;
-    border: 1px solid ${({ theme }) => theme.colors.brand};
-    box-shadow: 0 0 5px 5px ${({ theme }) => theme.colors.brand};
-    // flex-direction: column;
-    align-items: center;
-    // max-width: 250px;
+    // border: 1px solid ${({ theme }) => theme.colors.brand};
+    // box-shadow: 0 0 5px 5px ${({ theme }) => theme.colors.brand};
 
     i {
         color: #606060;
         margin-right: 8px;
     }
-`
-
-const StyledInput = styled.input`
-  background: ${({ theme }) => theme.colors.inputBackground};
-  color: ${({ theme }) => theme.colors.text};
-  margin-bottom: 0;
-  padding: 15px 10px;
-  border: none;
-  font-size: 16px;
-  border-left: 1px solid ${({ theme }) => theme.colors.brand};
-  
-  flex: 1;
-
-  :focus {
-      outline: none;
-  }
-
-`
-
-const SubmitError = styled.div`
-    color: red;
-    margin: 20px 0;
 `
 
 
@@ -64,39 +38,56 @@ export default function NewTaskForm({
     })
 
     const [text, setText] = useState('')
+    const [statusState, setStatusState] = useState(status)
 
     const handleSubmit = async (e) => {
         e.preventDefault()
-        await createTask(text, status)
+        if(text === "") return
+        await createTask(text, statusState)
         setText("")
     }
 
 
     return (
         <Form onSubmit={handleSubmit}>
-            <BlankButton type='button' onClick={close}>
-                <Flex>
-                    <X size='22' />
+            <Flex dir='column'>
+                <Flex ai='center' jc='center' className='std-div alt-bg mb-s w-100'>
+                    {['todo', 'doing', 'done'].map((s, ind) => {
+                        return (
+                            <BlankButton type='button' onClick={() => setStatusState(s)} key={s} className={`
+                                alt-div-1 bg
+                                ${ind > 0 && 'ml-xs'}
+                                ${s === statusState && 'active'}
+                                `
+                            }
+
+                            >
+                                {s}
+                            </BlankButton>
+                        )
+                    })}
                 </Flex>
-            </BlankButton>
-            <BlankButton>
-                <Flex>
-                    <Plus size='22' />
+                <Flex ai='center' className='std-div alt-bg'>
+                    <BlankButton type='button' onClick={close}>
+                        <Flex>
+                            <X size='22' />
+                        </Flex>
+                    </BlankButton>
+                    <BlankButton>
+                        <Flex>
+                            <Plus size='22' />
+                        </Flex>
+                    </BlankButton>
+                    <input
+                        name='task'
+                        id='task'
+                        placeholder='add task'
+                        value={text}
+                        onChange={(e) => setText(e.target.value)}
+                        ref={inputRef}
+                    />
                 </Flex>
-            </BlankButton>
-            <StyledInput
-                name='task'
-                id='task'
-                placeholder='add task'
-                value={text}
-                onChange={(e) => setText(e.target.value)}
-                ref={inputRef}
-            />
-            {loading ? (
-                <LoadingIndicator />
-            ) : (
-                <i>{status}</i>
-            )}
+            </Flex>
         </Form>
     )
 }

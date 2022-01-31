@@ -5,38 +5,43 @@ import styled from 'styled-components'
 // import LoadingIndicator from 'components/shared/LoadingIndicator'
 // import { Trash, BookAdd } from '@styled-icons/boxicons-regular'
 
-import Button from 'components/shared/Button'
-import { acceptInvites } from 'lib/fauna'
+import { BlankButton } from 'components/shared/Button'
 
 
 const Container = styled(Flex)`
   width: 100%;
-  border: 1px solid gray;
-  padding: 8px;
+  // margin: 10px auto;
+  background: ${({ theme }) => theme.colors.altBackground};
+  border-radius: 10px;
+  // border: 1px solid gray;
+  padding: 10px;
 
   .buttons {
     width: 100%;
     margin: 10px 0;
   }
-
 `
 
-function Invite({ invite, loading, deleteInvite, acceptInvite, userId }) {
+const Button = styled(BlankButton)`
+  margin: 5px;
+  color: ${({ theme, remove }) => remove ?  'red' : theme.colors.text};
+`
+
+function Invite({ invite, loading, deleteInvite, acceptInvite, sent }) {
   // const [selectedTasks, setSelectedTasks] = useState([])
-  console.log('invite', invite)
-  console.log('user id', userId)
-  const sentInvite = userId === invite.from._id
+  // console.log('invite', invite)
+  // console.log('user id', userId)
   // console.log('project page', project)
 
   return (
     <Container dir='column' ai='center'>
-      {sentInvite ? (
-        <Flex>{`You invited @${invite.to.handle} to join ${invite.project.name}`}</Flex>
+      {sent ? (
+        <Flex>{`You invited @${invite.to.handle} to join ${invite.project.title}`}</Flex>
       ) : (
-        <Flex>{`You have been invited to join ${invite.project.name}`}</Flex>
+        <Flex>{`You have been invited to join ${invite.project.title}`}</Flex>
       )}
-      <Flex className='buttons' jc='space-between'>
-        {!sentInvite ? (
+      <Flex className='buttons' jc='flex-end'>
+        {!sent ? (
           <>
             <Button
               onClick={acceptInvite}
@@ -48,7 +53,7 @@ function Invite({ invite, loading, deleteInvite, acceptInvite, userId }) {
             <Button
               onClick={deleteInvite}
               disabled={loading}
-              outline
+              remove
             >
               decline
             </Button>
@@ -58,7 +63,7 @@ function Invite({ invite, loading, deleteInvite, acceptInvite, userId }) {
             <Button
               onClick={deleteInvite}
               disabled={loading}
-              outline
+              remove
             >
               revoke
             </Button>

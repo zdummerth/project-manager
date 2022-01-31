@@ -4,112 +4,103 @@ import { useRouter } from 'next/router'
 import styled from 'styled-components'
 import { Home, User, Message } from '@styled-icons/boxicons-regular'
 import Flex from 'components/shared/Flex'
-import { useUser, useInvites } from 'lib/hooks'
+import { useInvites } from 'lib/hooks'
 import Invite from 'components/invites/Invite'
 import { BlankButton } from 'components/shared/Button'
-import { breakpoints, dimensions } from 'styles'
-
-const I = styled.i`
-  font-size: 12px;
-  @media (min-width: ${breakpoints.tablet}) {
-
-  }
-`
 
 const Nav = styled(Flex)`
   position: relative;
-  width: 95%;
-  max-width: 1400px;
-  margin: 10px auto;
-  background: ${({ theme }) => theme.colors.altBackground};
-
-  .invite-button {
-    // position: relative;
-  }
-
-  .invite-count {
-    background: ${({ theme }) => theme.colors.background};
-    font-weight: bold;
-    margin-left: 5px;
-  }
 
   .invite-container {
     position: absolute;
-    top: 100%;
+    top: 120%;
+    left: 0;
     width: 100%;
+    max-width: 500px;
     z-index: 3;
-    background: ${({ theme }) => theme.colors.background};
-  }
+    box-shadow: 0 0 5px 0px ${({ theme }) => theme.colors.text};
 
-  .menu-item {
-    background: ${({ theme }) => theme.colors.background};
-    padding: 10px;
-    margin-right: 10px;
-    border-radius: 10px;
+    i {
+      margin: 10px 0;
+      align-self: center;
+    }
   }
 `
 
+const InviteBtn = styled(BlankButton)`
+  border: ${({ theme, active }) => active ? `1px solid ${theme.colors.brand}` : 'none'};
+`
 
 const Navigation = () => {
-  const { user, mutate } = useUser()
-  const { invites, acceptInvites, updating, deleteInvite } = useInvites()
+  const { invites, acceptInvite, updating, deleteInvite } = useInvites()
   const [showInvites, setShowInvites] = useState(false)
+
+  const rInvites = invites ? invites.receivedInvites.data : []
+  const sInvites = invites ? invites.sentInvites.data : []
 
   // console.log('invites', invites)
   return (
-    <Nav
-      // jc='space-between'
-      ai='center'
-    >
-      <Link
-        href='/'
-        name='Home'
-      >
+    <Nav ai='center' className='std-div alt-bg w-100'>
+      <Link href='/' name='Home'>
         <a>
-          <Flex className='menu-item' dir='column' ai='center'>
+          <Flex className='std-div bg' dir='column' ai='center'>
             <Home size='20' />
-            {/* <I>Home</I> */}
           </Flex>
         </a>
       </Link>
-      <Link
-        href='/profile'
-        name='profile'
-      >
+      <Link href='/profile' name='profile'>
         <a>
-          <Flex className='menu-item' dir='column' ai='center'>
+          <Flex className='std-div bg ml-xs' dir='column' ai='center'>
             <User size='20' />
-            {/* <I>Profile</I> */}
           </Flex>
         </a>
       </Link>
-      <BlankButton className='invite-button menu-item' onClick={() => setShowInvites(!showInvites)}>
-        <Flex dir='column' ai='center'>
+      <InviteBtn
+        className='invite-button std-div bg ml-xs'
+        onClick={() => setShowInvites(!showInvites)}
+        active={rInvites.length > 0}
+      >
+        <Flex ai='center'>
           <Message size='20' />
-          {/* <Flex ai='center'>
-            <I>Invites</I>
-            <I className='invite-count'>{invites.length}</I>
-          </Flex> */}
         </Flex>
-      </BlankButton>
-      <Flex className='invite-container'>
-        {showInvites && (
-          <>
-            {invites.map(inv => {
+      </InviteBtn>
+      {showInvites && (
+        <Flex dir='column' ai='stretch' className='invite-container std-div bg'>
+          {rInvites.length === 0 && sInvites.length === 0 && <i>you don't have any invites</i>}
+          <Flex dir='column' ai='stretch'>
+            {rInvites.length > 0 && <i>received</i>}
+            {rInvites.map(inv => {
               return (
-                <Invite
-                  invite={inv}
-                  userId={user?._id}
-                  key={inv._id}
-                  acceptInvite={() => acceptInvites([inv._id])}
-                  loading={updating}
-                  deleteInvite={() => deleteInvite(inv._id)}
-                />
+                <Flex dir='column' key={inv._id}>
+                  <Invite
+                    invite={inv}
+                    sent={false}
+                    acceptInvite={() => acceptInvite(inv._id)}
+                    loading={updating}
+                    deleteInvite={() => deleteInvite(inv._id)}
+                  />
+                </Flex>
               )
             })}
-          </>
-        )}
-      </Flex>
+          </Flex>
+          <Flex dir='column' ai='stretch'>
+            {sInvites.length > 0 && <i>sent</i>}
+            {sInvites.map(inv => {
+              return (
+                <Flex dir='column' key={inv._id}>
+                  <Invite
+                    invite={inv}
+                    sent={true}
+                    acceptInvite={() => acceptInvite(inv._id)}
+                    loading={updating}
+                    deleteInvite={() => deleteInvite(inv._id)}
+                  />
+                </Flex>
+              )
+            })}
+          </Flex>
+        </Flex>
+      )}
     </Nav>
   )
 }

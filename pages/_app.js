@@ -6,7 +6,7 @@ import Layout from 'components/layout/Layout'
 
 
 function MyApp({ Component, pageProps }) {
-  const [theme, setTheme] = useState('dark-shade')
+  const [theme, setTheme] = useState('dark')
   let currentTheme = {}
   switch (theme) {
     case 'dark': {

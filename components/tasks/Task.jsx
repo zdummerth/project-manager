@@ -2,92 +2,27 @@ import React, { useState, useRef } from 'react'
 import Flex from 'components/shared/Flex'
 import Link from 'next/link'
 import styled from 'styled-components'
-import { X, ArrowBack, Trash } from '@styled-icons/boxicons-regular'
+import { X, ArrowBack, Trash, UserPlus, Album } from '@styled-icons/boxicons-regular'
 
 import { BlankButton } from 'components/shared/Button'
 import LoadingIndicator from 'components/shared/LoadingIndicator'
+import SendInviteForm from 'components/forms/SendInviteForm'
 
 const StyledTask = styled(Flex)`
-  width: 100%;
-  margin-bottom: 10px;
-  border-radius: 5px;
-  padding: 14px;
-  background: ${({ theme }) => theme.colors.background};
-
-  .fwidth {
-    width: 100%;
-  }
-
-  .bg {
-    background: ${({ theme }) => theme.colors.background};
-    color: ${({ theme }) => theme.colors.text};
-  }
-
-  .alt-bg {
-    background: ${({ theme }) => theme.colors.altBackground};
-    color: ${({ theme }) => theme.colors.text};
-  }
-
-  #back-button {
-    display: flex;
-    align-items: center;
+  textarea {
+    height: 100px;
   }
 
   #delete-button {
-    display: flex;
-    align-items: center;
     color: red;
     margin-top: 30px;
     align-self: end;
   }
-
-  #row1 {
-    width: 100%;
-    margin-bottom: 14px;
-    padding-bottom: 14px;
-    border-bottom: 1px solid gray;
-  }
-
-  #last-row {
-    width: 100%;
-    margin-top: 14px;
-    padding-top: 14px;
-    border-top: 1px solid gray;
-  }
-
-  #title {
-    padding: 5px 10px;;
-    border-radius: 10px;
-    margin-left: 10px;
-  }
-
-  .status {
-    padding: 5px 10px;;
-    // border: 1px solid gray;
-    border-radius: 50px;
-    margin-left: 10px;
-  }
-`
-
-const StyledInput = styled.textarea`
-  padding: 5px 10px;
-  border-radius: 10px;
-  width: 100%;
-  font-size: 14px;
-  height: 100px;
-
-  border: none;
-
-  &:focus {
-    border: 1px solid ${({ theme }) => theme.colors.brand};
-    outline: none;
-  }
 `
 
 const ButtonSelect = styled(BlankButton)`
-  border: ${({ theme, active }) => active ? `1px solid ${theme.colors.brand}` : `1px solid gray`};
+  border: ${({ theme, active }) => active ? `1px solid ${theme.colors.brand}` : `none`};
 `
-
 
 const Task = ({
   t,
@@ -96,12 +31,14 @@ const Task = ({
   remove,
   loading,
   className,
-  id
+  userId,
+  project,
 }) => {
   if (!t) return null
 
   const [title, setTitle] = useState(t.title)
   const [status, setStatus] = useState(false)
+  const [showMembers, setShowMembers] = useState('')
   const formRef = useRef()
 
   const handleDelete = async () => {
@@ -116,7 +53,6 @@ const Task = ({
   }
 
   const handleStatusUpdate = async (status) => {
-    // e.preventDefault()
     if (status === t.status) {
       setStatus(false)
       return
@@ -137,33 +73,29 @@ const Task = ({
 
 
   return (
-    <StyledTask
-      className='task bg'
-      key={t._id}
-      id={id}
-      // className={className}
-      // jc='space-between'
-      dir='column'
-      status={t.status}
-    >
-      <Flex id='row1' jc='space-between' ai='center'>
-        <BlankButton id='back-button' onClick={close}>
-          <ArrowBack size='18' />
-          <i>boards</i>
-        </BlankButton>
+    <StyledTask className='std-div alt-bg w-100' dir='column'>
 
+      <Flex className='mb-s w-100' jc='space-between' ai='center'>
+        <BlankButton onClick={close}>
+          <Flex ai='center'>
+            <ArrowBack size='18' />
+            <i>boards</i>
+          </Flex>
+        </BlankButton>
+        {loading && <Album size='20' className='rotate c-brand' />}
       </Flex>
+
       <form
-        className='fwidth'
+        className='w-100'
         ref={formRef}
         onSubmit={e => handleUpdate(e, { title })}
       >
         <Flex dir='column' ai='center' jc='space-between'>
-          <StyledInput
+          <textarea
             name='task'
             id='task'
             onKeyDown={onEnterPress}
-            className='alt-bg'
+            className='bg'
             placeholder='add task'
             value={title}
             onChange={(e) => setTitle(e.target.value)}
@@ -183,48 +115,92 @@ const Task = ({
         </Flex>
       </form>
 
-      <Flex id='last-row' dir='column'>
-        <Flex ai='center'>
-          <i>{status ? 'set status' : 'status'}:</i>
+      <Flex className='w-100' dir='column' ai='center'>
+
+        <Flex dir='column' ai='center' className='mb-s w-100'>
+          <Flex ai='center'>
+            <i >assigned to</i>
+            <BlankButton className='ml-xs' onClick={() => setShowMembers(!showMembers)}>
+              <UserPlus size='24' />
+            </BlankButton>
+          </Flex>
+          <Flex jc='center' className='std-div alt-bg w-100 mt-s'>
+            {t.assignedTo.data.map((m, ind) => {
+              return (
+                <Flex
+                  key={m._id}
+                  ai='center'
+                  className={`alt-div-1 bg m-xxs`}
+                >
+                  <div>
+                    @{m.handle}
+                  </div>
+                  <BlankButton onClick={() => update(t._id, {
+                    assignedTo: {
+                      disconnect: [m._id]
+                    }
+                  })}>
+                    <X size='20' />
+                  </BlankButton>
+                </Flex>
+              )
+            })}
+          </Flex>
+
+          {showMembers && (
+            <Flex dir='column' className='std-div pop-up bg'>
+
+              <BlankButton onClick={() => setShowMembers(!showMembers)}>
+                <X size='20' />
+              </BlankButton>
+              <p>assign members to task</p>
+              <SendInviteForm
+                userId={userId}
+                updateTask={update}
+                taskId={t._id}
+                task={t}
+                projectId={project._id}
+                isInvite={false}
+                projectMembers={[
+                  ...project.members.data,
+                  project.manager
+                ]}
+              />
+
+            </Flex>
+          )}
+        </Flex>
+
+        <i>{status ? 'set status' : 'status'}</i>
+        <Flex dir='column' ai='center' className='w-100 alt-bg std-div mt-s'>
           {status ? (
             <Flex>
-              <ButtonSelect
-                className="status bg"
-                onClick={() => handleStatusUpdate('todo')}
-                active={t.status === 'todo'}
-              >
-                todo
-              </ButtonSelect>
-              <ButtonSelect
-                className="status bg"
-                onClick={() => handleStatusUpdate('doing')}
-                active={t.status === 'doing'}
-              >
-                doing
-              </ButtonSelect>
-              <ButtonSelect
-                className="status bg"
-                onClick={() => handleStatusUpdate('done')}
-                active={t.status === 'done'}
-              >
-                done
-              </ButtonSelect>
+              {['todo', 'doing', 'done'].map((s, ind) => (
+                <ButtonSelect
+                  key={s}
+                  className={`alt-div-1 bg ${ind > 0 && 'ml-xs'}`}
+                  onClick={() => handleStatusUpdate(s)}
+                  active={t.status === s}
+                >
+                  {s}
+                </ButtonSelect>
+              ))}
             </Flex>
           ) : (
             <ButtonSelect
-              className="status bg"
+              className="alt-div-1 bg"
               onClick={() => setStatus(true)}
-            // active
             >
               {t.status}
             </ButtonSelect>
           )}
         </Flex>
         <BlankButton id='delete-button' onClick={handleDelete} disabled={loading}>
-          <Trash size='18' />
-          <i>delete task</i>
+          <Flex ai='center'>
+            <Trash size='18' />
+            <i>delete task</i>
+          </Flex>
         </BlankButton>
-        {loading && <LoadingIndicator />}
       </Flex>
     </StyledTask >
   )

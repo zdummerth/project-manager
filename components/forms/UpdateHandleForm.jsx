@@ -1,26 +1,15 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
-import { useUser } from 'lib/hooks'
-import Input from 'components/shared/Inputs'
-import Button from 'components/shared/Button'
+import Button, { BlankButton } from 'components/shared/Button'
+import Flex from 'components/shared/Flex'
 import LoadingIndicator from 'components/shared/LoadingIndicator'
 
 
 const Form = styled.form`
-    max-width: 250px;
+    #btns {
+        opacity: ${({ showBtns }) => showBtns ? '1' : '0'};
+    }
 `
-
-const Label = styled.label`
-    display: block;
-    // margin-top: 20px;
-`
-
-const SubmitError = styled.div`
-    color: red;
-    margin: 20px 0;
-`
-
-
 
 export default function UpdateHandleForm({
     onSubmit,
@@ -35,36 +24,29 @@ export default function UpdateHandleForm({
         close()
     }
 
-    return (
+    const disabled = text === initHandle || loading
+    const showBtns = text !== initHandle
 
+    return (
         <>
-            <Form onSubmit={handleSubmit}>
-                <Input
-                    name='task'
-                    id='task'
-                    placeholder='add task'
-                    value={text}
-                    // error={error}
-                    onChange={(e) => setText(e.target.value)}
-                />
-                <Button
-                    style={{
-                        // marginTop: '15px',
-                        width: '150px'
-                    }}
-                >
-                    {
-                        loading ? (
-                            <>
-                                <LoadingIndicator />
-                            </>
-                        ) : (
-                            <>
-                                change handle
-                            </>
-                        )
-                    }
-                </Button>
+            <Form onSubmit={handleSubmit} showBtns={showBtns}>
+                <Flex ai='center'>
+                    <input
+                        name='handle'
+                        id='handle'
+                        placeholder='handle'
+                        value={text}
+                        onChange={(e) => setText(e.target.value)}
+                    />
+                    <Flex id='btns' ai='center' id='btns'>
+                        <BlankButton disabled={disabled}>
+                            save
+                        </BlankButton>
+                        <BlankButton disabled={disabled} type='button' onClick={() => setText(initHandle)}>
+                            cancel
+                        </BlankButton>
+                    </Flex>
+                </Flex>
             </Form>
         </>
     )

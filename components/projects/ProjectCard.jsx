@@ -4,23 +4,9 @@ import styled from 'styled-components'
 import { Trash, Cog } from '@styled-icons/boxicons-regular'
 import Flex from 'components/shared/Flex'
 import { BlankButton } from 'components/shared/Button'
-import { dimensions, colors } from 'styles'
 
 const Container = styled(Flex)`
     position: relative;
-    width: 100%;
-    padding: 10px;
-    margin-top: 10px;
-    border-radius: 10px;
-    background: ${({ theme }) => theme.colors.background};
-    
-    .mgr{
-        margin-top: 20px;
-        // width: 100%;
-        i {
-            margin-right: 10px;
-        }
-    }
 
     #settings {
         position: absolute;
@@ -28,30 +14,22 @@ const Container = styled(Flex)`
         right: 10px;
     }
 
-    #settings-menu {
-        background: ${({ theme }) => theme.colors.altBackground};
-        padding: 10px;
-        border-radius: 10px;
-    }
-
     #trash {
         color: red;
+        border: 1px solid red;
     }
 `
 
-const ProjectCard = ({ project, id, remove }) => {
+const ProjectCard = ({ project, id, remove, className, loading }) => {
     const [showSettings, setShowSettings] = useState('')
 
     return (
-        <Container dir='column'>
+        <Container dir='column' className={`std-div bg w-100 ${className}`}>
             <Flex id='settings'>
                 {showSettings && (
-                    <Flex id='settings-menu'>
+                    <Flex id='trash' className='std-div alt-bg'>
                         <BlankButton onClick={remove}>
-                            <Flex
-                                id='trash'
-                                ai='center'
-                            >
+                            <Flex ai='center'>
                                 <Trash size='18' />
                                 <div>delete project</div>
                             </Flex>
@@ -59,7 +37,12 @@ const ProjectCard = ({ project, id, remove }) => {
                         </BlankButton>
                     </Flex>
                 )}
-                <BlankButton id='settings-btn' onClick={() => setShowSettings(!showSettings)}>
+                <BlankButton
+                    id='settings-btn'
+                    onClick={() => setShowSettings(!showSettings)}
+                    disabled={loading}
+                    className={`${loading && 'rotate'}`}
+                >
                     <Cog size='18' />
                 </BlankButton>
             </Flex>
@@ -69,9 +52,9 @@ const ProjectCard = ({ project, id, remove }) => {
                     <div className='name'>{project.title}</div>
                 </a>
             </Link>
-            <Flex className='mgr' jc='space-between'>
+            <Flex className='mt-s'>
                 <i>manager:</i>
-                <i>{project.manager.handle}</i>
+                <i className='ml-xs'>@{project.manager.handle}</i>
             </Flex>
         </Container>
     )

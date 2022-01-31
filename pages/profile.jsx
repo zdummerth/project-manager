@@ -2,7 +2,7 @@ import { useUser } from 'lib/hooks'
 import { useState } from 'react'
 import { useRouter } from 'next/router'
 import UpdateHandleForm from 'components/forms/UpdateHandleForm'
-import Button, { BlankButton } from 'components/shared/Button'
+import { BlankButton } from 'components/shared/Button'
 import Flex from 'components/shared/Flex'
 import { getLoginSession } from 'lib/auth'
 
@@ -10,7 +10,6 @@ import styled from 'styled-components'
 
 const Container = styled(Flex)`
   width: 100%;
-  margin: 20px;
 
   #handle {
       width: 100%;
@@ -30,50 +29,39 @@ const Profile = ({ setTheme }) => {
 
 
     return (
-        <Container dir='column'>
-            <h1>Profile</h1>
-            <Button onClick={() => setTheme("light")} outline>
-                light
-            </Button>
-            <Button onClick={() => setTheme("dark")} outline>
-                dark
-            </Button>
-            <Button onClick={() => setTheme("dark-shade")} outline>
-                dark shade
-            </Button>
-            {user && (
-                <>
-                    {edit ? (
-                        <>
+        <Container dir='column' ai='center' className='mt-s'>
+            <Flex dir='column' className='std-div alt-bg w-100'>
+                <h2>profile</h2>
+
+                <p>theme</p>
+                <Flex>
+                    {['light', 'dark', 'dark-shade'].map((el, ind) => (
+                        <BlankButton
+                            key={el}
+                            onClick={() => setTheme(el)}
+                            className={`alt-div-1 bg ${ind > 0 && 'ml-xs'}`}
+                        >
+                            {el}
+                        </BlankButton>
+                    ))}
+                </Flex>
+                {user && (
+                    <>
+                        <p>handle</p>
+                        <Flex ai='center'>
+                            @
                             <UpdateHandleForm
                                 initHandle={user.handle}
                                 onSubmit={updateHandle}
                                 loading={updating}
                                 close={() => setEdit(false)}
                             />
-                            <Button onClick={() => setEdit(false)} outline>
-                                cancel
-                            </Button>
-                        </>
-                    ) : (
-                        <Flex id='handle' ai='center' jc='space-between'>
-                            <Flex>
-                                <Flex style={{ marginRight: '5px' }}>
-                                    handle:
-                                </Flex>
-                                <Flex>
-                                    {user.handle}
-                                </Flex>
-                            </Flex>
-
-                            <Button onClick={() => setEdit(true)} outline>
-                                edit
-                            </Button>
                         </Flex>
-                    )}
-                </>
-            )}
-            <BlankButton onClick={handleLogout}>Logout</BlankButton>
+                    </>
+                )}
+            </Flex>
+
+            <BlankButton className='mt-s' onClick={handleLogout}>Logout</BlankButton>
         </Container>
     )
 }

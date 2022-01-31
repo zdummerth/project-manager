@@ -6,6 +6,8 @@ type Account {
 type User {
     projects: [Project] @relation(name: "project_member")
     managedProjects: [Project] @relation(name: "project_manager")
+    receivedInvites: [Invite] @relation(name: "invite_recipient")
+    sentInvites: [Invite] @relation(name: "invite_sender")
     tasks: [Task] @relation
     handle: String @unique
     account: Account
@@ -22,7 +24,6 @@ type Invite {
     project: Project
     to: User! @relation(name: "invite_recipient")
     from: User! @relation(name: "invite_sender")
-    accepted: Boolean
 }
 
 enum TaskStatus {

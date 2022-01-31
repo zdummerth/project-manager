@@ -8,15 +8,6 @@ import { BlankButton } from 'components/shared/Button'
 
 const Container = styled(Flex)`
   width: 100%;
-
-  .filters {
-    position: relative;
-    width: 100%;
-    // width: 95%;
-    padding: 0 10px;
-    border-radius: 10px;
-    background: ${({ theme }) => theme.colors.background};
-  }
 `
 
 const StyledFilterButton = styled(BlankButton)`
@@ -26,25 +17,19 @@ const StyledFilterButton = styled(BlankButton)`
 
 export default function Home({ userId }) {
   const [showList, setShowList] = useState('projects')
-  // console.log('projects: ', projects)
 
   return (
     <Container dir='column' ai='center'>
-      <Flex className='filters'>
-        {/* <Flex id='inner-filters'> */}
-        <StyledFilterButton
-          onClick={() => setShowList('projects')}
-          active={showList === 'projects'}
-        >
-          <h2>projects</h2>
-        </StyledFilterButton>
-        <StyledFilterButton
-          onClick={() => setShowList('tasks')}
-          active={showList === 'tasks'}
-        >
-          <h2>tasks</h2>
-        </StyledFilterButton>
-        {/* </Flex> */}
+      <Flex className=''>
+        {['projects', 'tasks'].map(el => (
+          <StyledFilterButton
+            key={el}
+            onClick={() => setShowList(el)}
+            active={showList === el}
+          >
+            <h2>{el}</h2>
+          </StyledFilterButton>
+        ))}
       </Flex>
       {showList === 'tasks' ? (
         <TaskList userId={userId} />

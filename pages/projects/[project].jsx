@@ -7,14 +7,15 @@ import { findProjectByID } from 'lib/fauna'
 import NewTaskForm from 'components/forms/NewTaskForm'
 import SendInviteForm from 'components/forms/SendInviteForm'
 import LoadingIndicator from 'components/shared/LoadingIndicator'
+import SearchUsers from 'components/SearchUsers'
 import Task from 'components/tasks/Task'
 import TaskBoard from 'components/tasks/TaskBoard'
 import { dimensions, breakpoints } from 'styles'
 
 
-import { UserPlus, CaretDown } from '@styled-icons/boxicons-regular'
+import { UserPlus, CaretDown, X, ArrowBack } from '@styled-icons/boxicons-regular'
 
-import Button, { BlankButton } from 'components/shared/Button'
+import { BlankButton } from 'components/shared/Button'
 
 
 const Container = styled(Flex)`
@@ -22,78 +23,26 @@ const Container = styled(Flex)`
   width: 100%;
   overflow: hidden;
   min-height: calc(100vh - 100px);
-  // margin: 20px;
-  background: ${({ theme }) => theme.colors.altBackground};
-  color: ${({ theme }) => theme.colors.text};
-
-
-  .new-task-form {
-    position: absolute;
-    z-index: 1;
-    bottom: 0;
-    // left: 0;
-    width: 100%;
-    background: ${({ theme }) => theme.colors.altBackground};
-  }
-
-
-  .project-details {
-    position: relative;
-    width: 100%;
-    height: 150px;
-    padding-left: 10px;
-    margin-bottom: 10px;
-    border-radius: 10px;
-    background: ${({ theme }) => theme.colors.background};
-  }
-
-  .users {
-    position: relative;
-    padding: 10px;
-    border-radius: 10px;
-    background: ${({ theme }) => theme.colors.altBackground};
-
-    #members {
-      border-radius: 10px;
-      position: absolute;
-      top: 100%;
-      right: 0;
-      height: 300px;
-      border: 1px solid ${({ theme }) => theme.colors.text};
-      background: ${({ theme }) => theme.colors.background};
-    }
-  }
-
-  #settings-btn {
-    position: absolute;
-    bottom: 10px;
-    right: 5px;
-  }
 
   #expanded-task {
     max-width: 450px
   }
-
 `
 
 const BoardsContainer = styled.div`
   width: 100%;
   display: flex;
+  flex: 1;
   justify-content: space-between;
   flex-wrap: nowrap;
   overflow-x: auto;
-  height: calc(100vh - ${dimensions.navHeight} - 160px);
 `
 
 const StyledBoard = styled(TaskBoard)`
-  // flex: 1 1 auto;
   flex: 0 0 auto;
-  border-radius: 10px;
   width: 80vw;
   max-width: 375px;
   margin-right: 10px;
-  padding: 10px;
-  background: ${({ theme }) => theme.colors.background};
 
   &:last-child {
     margin-right: 0;
@@ -102,22 +51,6 @@ const StyledBoard = styled(TaskBoard)`
   @media (min-width: ${breakpoints.desktop}) {
     flex: 1 1 auto;
     max-width: 500px;
-  }
-`
-
-const StyledInput = styled.input`
-  padding: 5px 10px 5px 0;
-  border-radius: 10px;
-  border: none;
-  padding: 10px;
-  // margin-left: 10px;
-  font-size: 16px;
-  background: ${({ theme }) => theme.colors.altBackground};
-  color: ${({ theme }) => theme.colors.text};
-
-  &:focus {
-    border: 1px solid ${({ theme }) => theme.colors.brand};
-    outline: none;
   }
 `
 
@@ -134,7 +67,14 @@ function ProjectPage({ proj, userId }) {
     updateProjectTitle
   } = useProject(proj._id)
 
-  // console.log('project page', project)
+  console.log('project page loaded')
+
+  if (project) {
+    console.log('project page members', [
+      ...project.members.data,
+      project.manager
+    ])
+  }
 
   const [showForm, setShowForm] = useState('')
   const [showMembers, setShowMembers] = useState('')
@@ -162,12 +102,12 @@ function ProjectPage({ proj, userId }) {
           </>
         ) : (
           <>
-            <Flex dir='column' jc='space-around' className="project-details">
-              <form className='fwidth'>
+            <Flex className="alt-bg std-div mt-s w-100">
+              <form className=''>
                 <Flex ai='center' jc='space-between'>
-                  <StyledInput
-                    name='task'
-                    id='task'
+                  <input
+                    name='title'
+                    id='title'
                     className='bg'
                     placeholder='add task'
                     value={title}
@@ -185,18 +125,18 @@ function ProjectPage({ proj, userId }) {
                   )}
                 </Flex>
               </form>
-              <Flex ai='center' className='users'>
+            </Flex>
+
+
+            <Flex ai='center' className='alt-bg std-div mtb-s w-100'>
+              <Flex ai='center' jc='space-between' className='bg std-div w-100'>
                 <Flex>
                   <i style={{ marginRight: '5px' }}>manager: </i>
                   <i style={{ marginRight: '25px' }}>{project.manager.handle}</i>
                 </Flex>
                 <Flex ai='center'>
                   <i style={{ marginRight: '5px' }}>members: </i>
-                  {project.members.data.map(m => {
-                    return (
-                      <i key={m._id}>{m.handle}</i>
-                    )
-                  })}
+
                   <div>
                     {project.members.data.length}
                   </div>
@@ -204,22 +144,63 @@ function ProjectPage({ proj, userId }) {
                     <CaretDown size='20' />
                   </BlankButton>
                   {showMembers && (
-                    <Flex dir='column' id='members'>
-                      <SendInviteForm />
+                    <Flex dir='column' className='bg std-div pop-up'>
+                      <BlankButton onClick={() => setShowMembers(!showMembers)}>
+                        <X size='20' />
+                      </BlankButton>
+                      {showMembers === 'invites' ? (
+                        <>
+                          <p>
+                            {`send invites for ${project.title}`}
+                          </p>
+                          <SendInviteForm
+                            userId={userId}
+                            projectId={proj._id}
+                            isInvite={true}
+                            projectMembers={[
+                              ...project.members.data,
+                              project.manager
+                            ]}
+                          />
+                        </>
+                      ) : (
+                        <Flex dir='column' ai='center' className='alt-bg std-div w-100 mb-s'>
+                          <i style={{ marginBottom: '8px' }}>all members</i>
+                          <BlankButton onClick={() => setShowMembers('invites')}>
+                            <UserPlus size='24' />
+                          </BlankButton>
+                          <Flex className="">
+                            <div className="alt-div-1 bg m-xxs">
+                              <i>@{project.manager.handle}</i>
+                            </div>
+                            {project.members.data.map(m => {
+                              return (
+                                <div key={m._id} className="alt-div-1 bg m-xxs">
+                                  <i>@{m.handle}</i>
+                                </div>
+                              )
+                            })}
+                          </Flex>
+                        </Flex>
+                      )}
+
+
                     </Flex>
                   )}
                 </Flex>
               </Flex>
-
-
             </Flex>
+
+
             {expandedTask ? (
               <Task
                 t={project.tasks.data.find(t => t._id === expandedTask)}
+                project={project}
                 close={() => setExpandedTask('')}
                 update={updateTask}
                 remove={deleteTask}
                 loading={updating.creating}
+                userId={userId}
                 id='expanded-task'
               />
             ) : (
@@ -232,6 +213,7 @@ function ProjectPage({ proj, userId }) {
                       tasks={project.tasks.data.filter(t => t.status === s)}
                       setExpandedTask={setExpandedTask}
                       openForm={() => setShowForm(s)}
+                      className='alt-bg std-div'
                     />
                   )
                 })}
@@ -240,7 +222,7 @@ function ProjectPage({ proj, userId }) {
           </>
         )}
         {showForm && (
-          <Flex className="new-task-form" ai='center'>
+          <Flex className="std-div bg pop-up" ai='center'>
             <NewTaskForm
               userId={userId}
               projectId={proj._id}

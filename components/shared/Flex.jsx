@@ -4,8 +4,9 @@ import styled from 'styled-components'
 const Flexbox = styled.div`
     display: flex;
     flex-direction: ${({ dir }) => dir ? dir : 'row'};
-    flex-wrap: wrap;
-    // flex-wrap: ${({ wrap }) => wrap ? 'wrap' : 'no-wrap'};
+    flex: ${({ flex }) => flex ? flex : '0 1 auto'};
+    // flex-wrap: wrap;
+    flex-wrap: ${({ wrap }) => wrap ? 'wrap' : 'no-wrap'};
     justify-content: ${({ jc }) => jc ? jc : 'flex-start'};
     align-items: ${({ ai }) => ai ? ai : 'flex-start'};
 `

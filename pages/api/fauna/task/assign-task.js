@@ -1,29 +1,24 @@
-import { sendInvites } from 'lib/fauna'
+import { assignTask } from 'lib/fauna'
 import { getLoginSession } from 'lib/auth'
 
-
-
 export default async function handler(req, res) {
-    console.log('in send invite function', req.query)
-    // console.log('method: ', req.method)
-    // console.log('headers: ', req.headers)
-    // console.log('body: ', req.body)
+    console.log('in task assign function', req.query)
+    console.log('method: ', req.method)
+    console.log('body: ', req.body)
 
     const {
-        projectId,
-        toIds
+        id,
     } = req.body
 
     try {
         const session = await getLoginSession(req, 'auth_cookie_name')
 
-        const data = await sendInvites({
-            projectId,
-            toIds,
+        const data = await assignTask({
+            id,
             secret: session.accessToken
         })
 
-        console.log('send invites response data', data)
+        console.log('task assign response data', data)
 
         res.status(200).json(data)
 
