@@ -1,4 +1,4 @@
-import { createTask, findTaskByID, deleteTask, updateTask } from 'lib/fauna'
+import { createTask, findTaskByID, deleteTask, updateTask, deleteTaskCascade } from 'lib/fauna'
 import { getLoginSession } from 'lib/auth'
 
 
@@ -54,7 +54,7 @@ export default async function handler(req, res) {
             }
             case 'DELETE': {
                 const { id } = req.query
-                const faunares = await deleteTask({
+                const faunares = await deleteTaskCascade({
                     id,
                     secret: session.accessToken,
                 })

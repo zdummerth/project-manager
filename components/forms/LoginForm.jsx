@@ -1,57 +1,27 @@
-const Form = ({ errorMessage, onSubmit }) => (
-    <form onSubmit={onSubmit}>
-      <label>
-        <span>Email</span>
-        <input type="email" name="email" required />
-      </label>
-  
-      <div className="submit">
-        <button type="submit">Sign Up / Login</button>
-      </div>
-  
-      {errorMessage && <p className="error">{errorMessage}</p>}
-  
-      <style jsx>{`
-        form,
-        label {
-          display: flex;
-          flex-flow: column;
-        }
-        label > span {
-          font-weight: 600;
-        }
-        input {
-          padding: 8px;
-          margin: 0.3rem 0 1rem;
-          border: 1px solid #ccc;
-          border-radius: 4px;
-        }
-        .submit {
-          display: flex;
-          justify-content: flex-end;
-          align-items: center;
-          justify-content: space-between;
-        }
-        .submit > a {
-          text-decoration: none;
-        }
-        .submit > button {
-          padding: 0.5rem 1rem;
-          cursor: pointer;
-          background: #fff;
-          border: 1px solid #ccc;
-          border-radius: 4px;
-        }
-        .submit > button:hover {
-          border-color: #888;
-        }
-        .error {
-          color: brown;
-          margin: 1rem 0 0;
-        }
-      `}</style>
-    </form>
-  )
-  
-  export default Form
-  
+import Button, { BlankButton } from "components/shared/Button"
+import Flex from "components/shared/Flex"
+import { Album } from '@styled-icons/boxicons-regular'
+
+const Form = ({ errorMessage, onSubmit, loading }) => (
+  <form onSubmit={onSubmit}>
+    <label>
+      <div className="mb-s">email</div>
+      <input type="email" name="email" required />
+    </label>
+
+    <Flex
+      ai='center'
+      className="mt-s"
+    >
+      <BlankButton className='border std-div bg' type="submit" disabled={loading}>
+        sign Up / login
+      </BlankButton>
+      {loading && <Album size='20' className="c-brand ml-xs rotate" />}
+    </Flex>
+
+    {errorMessage && <p className="error">{errorMessage}</p>}
+
+  </form>
+)
+
+export default Form

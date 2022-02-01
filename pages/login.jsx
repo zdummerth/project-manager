@@ -1,4 +1,3 @@
-
 import { useState } from 'react'
 import { useSWRConfig } from 'swr'
 import Router from 'next/router'
@@ -6,11 +5,13 @@ import { useUser } from 'hooks/useUser'
 import LoginForm from 'components/forms/LoginForm';
 import { Magic } from 'magic-sdk'
 
+
 const Login = () => {
   const { user } = useUser()
   const { mutate } = useSWRConfig()
 
   const [errorMsg, setErrorMsg] = useState('')
+  const [loading, setLoading] = useState(false)
 
   async function handleSubmit(e) {
     e.preventDefault()
@@ -22,6 +23,7 @@ const Login = () => {
     }
 
     try {
+      setLoading(true)
       const magic = new Magic(process.env.NEXT_PUBLIC_MAGIC_PUBLISHABLE_KEY)
       const didToken = await magic.auth.loginWithMagicLink({
         email: body.email,
@@ -44,24 +46,16 @@ const Login = () => {
       }
     } catch (error) {
       console.error('An unexpected error happened occurred:', error)
+      setLoading(false)
       setErrorMsg(error.message)
     }
   }
 
   return (
     <>
-      <div className="login">
-        <LoginForm errorMessage={errorMsg} onSubmit={handleSubmit} />
+      <div className="std-div alt-bg w-100 mt-s">
+        <LoginForm errorMessage={errorMsg} onSubmit={handleSubmit} loading={loading} />
       </div>
-      <style jsx>{`
-        .login {
-          max-width: 21rem;
-          margin: 0 auto;
-          padding: 1rem;
-          border: 1px solid #ccc;
-          border-radius: 4px;
-        }
-      `}</style>
     </>
   )
 }

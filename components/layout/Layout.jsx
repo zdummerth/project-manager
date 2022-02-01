@@ -105,12 +105,10 @@ const GlobalStyle = createGlobalStyle`
 
   .active {
     border: 1px solid ${({ theme }) => theme.colors.brand};
-    // border: 5px solid blue;
   }
 
   .c-brand {
     color ${({ theme }) => theme.colors.brand};
-
   }
 
   .border {
