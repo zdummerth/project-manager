@@ -1,13 +1,11 @@
 import { useState } from 'react'
 import { useSWRConfig } from 'swr'
 import Router from 'next/router'
-import { useUser } from 'hooks/useUser'
 import LoginForm from 'components/forms/LoginForm';
 import { Magic } from 'magic-sdk'
 
 
 const Login = () => {
-  const { user } = useUser()
   const { mutate } = useSWRConfig()
 
   const [errorMsg, setErrorMsg] = useState('')

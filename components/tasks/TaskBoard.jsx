@@ -22,7 +22,6 @@ const Container = styled(Flex)`
 `
 
 const StyledButton = styled(BlankButton)`
-  // background: green;
   width: 100%;
   height: 30px;
   margin-top: 5px;
@@ -70,8 +69,7 @@ function TaskBoard({
                 <TaskBoardItem
                   t={t}
                   key={t._id}
-                  expand={() => setExpandedTask(t._id)}
-                  close={() => setExpandedTask('')}
+                  expand={setExpandedTask}
                 />
 
               )

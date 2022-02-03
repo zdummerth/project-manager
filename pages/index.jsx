@@ -1,42 +1,23 @@
-import React, { useState } from 'react'
+import React from 'react'
 import styled from 'styled-components'
 import Flex from 'components/shared/Flex'
 import { getLoginSession } from 'lib/auth'
-import TaskList from 'components/tasks/TaskList'
 import ProjectList from 'components/projects/ProjectList'
-import { BlankButton } from 'components/shared/Button'
 
 const Container = styled(Flex)`
   width: 100%;
 `
 
-const StyledFilterButton = styled(BlankButton)`
-  color: ${({ active, theme }) => active ? theme.colors.text : 'gray'};
-  text-decoration: ${({ active }) => active ? 'underline' : 'none'};
-`
-
 export default function Home({ userId }) {
-  const [showList, setShowList] = useState('projects')
 
   return (
     <Container dir='column' ai='center'>
-      <Flex className=''>
-        {['projects', 'tasks'].map(el => (
-          <StyledFilterButton
-            key={el}
-            onClick={() => setShowList(el)}
-            active={showList === el}
-          >
-            <h2>{el}</h2>
-          </StyledFilterButton>
-        ))}
-      </Flex>
-      {showList === 'tasks' ? (
-        <TaskList userId={userId} />
-      ) : (
-        <ProjectList userId={userId} />
-      )}
-
+      <div className="std-div alt-bg w-100 mtb-s">
+        <Flex jc='center' className='bg std-div w-100'>
+          <h2>my projects</h2>
+        </Flex>
+      </div>
+      <ProjectList userId={userId} />
     </Container>
   )
 }

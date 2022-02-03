@@ -5,8 +5,8 @@ export const AppStateContext = React.createContext()
 
 const AppStateProvider = ({ children }) => {
     const initState = {
-        donateOpen: false,
-        menuOpen: false
+        menuOpen: false,
+        modalOpen: ''
     }
 
     const router = useRouter()
@@ -17,7 +17,8 @@ const AppStateProvider = ({ children }) => {
             if (appState.menuOpen) {
                 setAppState(prev => ({
                     ...prev,
-                    menuOpen: false
+                    menuOpen: false,
+                    modelOpen: ''
                 }))
             }
         }
@@ -31,16 +32,16 @@ const AppStateProvider = ({ children }) => {
 
     const value = {
         ...appState,
-        toggleDonateOpen: () => {
-            setAppState(prev => ({
-                ...prev,
-                donateOpen: !appState.donateOpen
-            }))
-        },
         toggleMenuOpen: () => {
             setAppState(prev => ({
                 ...prev,
                 menuOpen: !appState.menuOpen
+            }))
+        },
+        setModal: (modal) => {
+            setAppState(prev => ({
+                ...prev,
+                modalOpen: modal
             }))
         }
     }

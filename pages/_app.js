@@ -22,12 +22,13 @@ function MyApp({ Component, pageProps }) {
       break
     }
   }
+
   return (
     <>
       <AppStateProvider>
         <ThemeProvider theme={currentTheme}>
           <Layout>
-            <Component setTheme={setTheme} {...pageProps } />
+            <Component setTheme={setTheme} {...pageProps} />
           </Layout>
         </ThemeProvider>
       </AppStateProvider>

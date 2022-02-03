@@ -11,14 +11,14 @@ const StyledTask = styled(Flex)`
   }
 `
 
-const TaskBoardItem = ({ t, expand }) => {
+const TaskBoardItem = ({ t, onClick }) => {
   return (
     <StyledTask
       className='bg std-div w-100 mb-xs'
       jc='space-between'
     >
       <div id='title'>{t.title}</div>
-      <BlankButton onClick={expand}>
+      <BlankButton id={t._id} onClick={onClick}>
         <Expand size='18' />
       </BlankButton>
     </StyledTask>

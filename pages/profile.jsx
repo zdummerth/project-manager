@@ -30,24 +30,25 @@ const Profile = ({ setTheme }) => {
 
     return (
         <Container dir='column' ai='center' className='mt-s'>
-            <Flex dir='column' className='std-div alt-bg w-100'>
-                <h2>profile</h2>
-
-                <p>theme</p>
-                <Flex>
-                    {['light', 'dark', 'dark-shade'].map((el, ind) => (
-                        <BlankButton
-                            key={el}
-                            onClick={() => setTheme(el)}
-                            className={`alt-div-1 bg ${ind > 0 && 'ml-xs'}`}
-                        >
-                            {el}
-                        </BlankButton>
-                    ))}
-                </Flex>
+            <Flex dir='column' className='std-div w-100'>
+                <h2 className='alt-bg std-div w-100'>profile</h2>
+                <div className="std-div alt-bg w-100 mtb-s">
+                    <h3 className='mb-s'>theme</h3>
+                    <Flex>
+                        {['light', 'dark', 'dark-shade'].map((el, ind) => (
+                            <BlankButton
+                                key={el}
+                                onClick={() => setTheme(el)}
+                                className={`alt-div-1 bg ${ind > 0 && 'ml-xs'}`}
+                            >
+                                {el}
+                            </BlankButton>
+                        ))}
+                    </Flex>
+                </div>
                 {user && (
-                    <>
-                        <p>handle</p>
+                    <div className='std-div alt-bg w-100'>
+                        <h3 className='mb-s'>handle</h3>
                         <Flex ai='center'>
                             @
                             <UpdateHandleForm
@@ -57,7 +58,7 @@ const Profile = ({ setTheme }) => {
                                 close={() => setEdit(false)}
                             />
                         </Flex>
-                    </>
+                    </div>
                 )}
             </Flex>
 

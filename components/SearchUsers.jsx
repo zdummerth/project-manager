@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 // import Link from 'next/link'
 import styled from 'styled-components'
-import { CaretUpCircle, BookOpen, CheckDouble } from '@styled-icons/boxicons-regular'
+import { CheckDouble } from '@styled-icons/boxicons-regular'
 import Flex from 'components/shared/Flex'
 import { BlankButton } from './shared/Button'
 
@@ -44,58 +44,51 @@ const SearchUsers = ({
             flex='1'
             className={className}
         >
-            <div className="alt-bg std-div w-100">
-                <input
-                    name='invites'
-                    id='invites'
-                    placeholder='search users'
-                    value={value}
-                    onChange={(e) => setValue(e.target.value)}
-                />
-            </div>
-            <p>suggestions</p>
-            <Flex
-                className='std-div alt-bg w-100 suggestions'
-                dir='column'
-            // flex={'1 1 auto'}
-            >
-                {
-                    filteredUsers.map((u, ind) => {
-                        const inviteSent = invites
-                            .find(inv => (
-                                inv.to._id === u._id
-                            ))
+            <input
+                name='invites'
+                id='invites'
+                placeholder='search users'
+                value={value}
+                onChange={(e) => setValue(e.target.value)}
+            />
+            <p className='mtb-s'>suggestions</p>
+            <Flex className='w-100 suggestions std-div bg' dir='column'>
+                {filteredUsers.map((u, ind) => {
+                    const inviteSent = invites
+                        .find(inv => (
+                            inv.to._id === u._id
+                        ))
 
-                        const checked = checkedUsers.includes(u._id)
-                        return (
-                            <Flex
-                                key={u._id}
-                                jc='space-between'
-                                className={`
+                    const checked = checkedUsers.includes(u._id)
+                    return (
+                        <Flex
+                            key={u._id}
+                            jc='space-between'
+                            className={`
                                     std-div
                                     bg 
-                                    w-100 
+                                    w-100
+                                    border
                                     ${ind > 0 && 'mt-xs'}
                                 `}
-                            >
-                                <div>@{u.handle}</div>
-                                {checked ? (
-                                    <Flex>
-                                        <CheckDouble className='check' size='20' />
-                                    </Flex>
-                                ) : (
-                                    <BlankButton
-                                        type='button'
-                                        onClick={() => onUserClick(u._id)}
-                                    >
-                                        {isInvite ? 'invite' : 'assign'}
-                                    </BlankButton>
-                                )}
+                        >
+                            <div>@{u.handle}</div>
+                            {checked ? (
+                                <Flex>
+                                    <CheckDouble className='check' size='20' />
+                                </Flex>
+                            ) : (
+                                <BlankButton
+                                    type='button'
+                                    onClick={() => onUserClick(u._id)}
+                                >
+                                    {isInvite ? 'invite' : 'assign'}
+                                </BlankButton>
+                            )}
 
-                            </Flex>
-                        )
-                    })
-                }
+                        </Flex>
+                    )
+                })}
             </Flex>
         </Container>
     )

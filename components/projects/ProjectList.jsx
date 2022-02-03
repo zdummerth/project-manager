@@ -5,20 +5,24 @@ import { useProjects } from 'lib/hooks'
 import NewProjectForm from 'components/forms/NewProjectForm'
 import ProjectCard from 'components/projects/ProjectCard'
 
-const Container = styled(Flex)``
+const Container = styled(Flex)`
+    position: relative;
+    
+    #form {
+        position fixed;
+        bottom: 10px;
+        right: 10px;
+        left: 10px;
+        box-shadow: 0 0 5px 1px ${({ theme }) => theme.colors.text};
+    }
+`
 
-export default function ProjectList({ userId }) {
+export default function ProjectList({ userId, className }) {
     const { projects, createProject, deleteProject, updating } = useProjects({ userId })
 
     console.log('prod updating', updating)
     return (
-        <Container dir='column' ai='center' className='w-100'>
-            <div className='std-div alt-bg w-100 mb-s'>
-                <NewProjectForm
-                    createProject={createProject}
-                    loading={updating.creating}
-                />
-            </div>
+        <Container dir='column' ai='center' className={`w-100 ${className}`}>
             <div className='std-div alt-bg w-100'>
                 {projects && projects.map((p, ind) => {
                     return (
@@ -32,6 +36,12 @@ export default function ProjectList({ userId }) {
                         />
                     )
                 })}
+            </div>
+            <div id='form' className='std-div alt-bg mt-s'>
+                <NewProjectForm
+                    createProject={createProject}
+                    loading={updating.creating}
+                />
             </div>
         </Container>
     )

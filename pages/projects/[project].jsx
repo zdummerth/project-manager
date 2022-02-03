@@ -2,18 +2,12 @@ import React, { useState } from 'react'
 import Flex from 'components/shared/Flex'
 import styled from 'styled-components'
 import { getLoginSession } from 'lib/auth'
-import { useProject, useInvites } from 'lib/hooks'
+import { useProject } from 'lib/hooks'
 import { findProjectByID } from 'lib/fauna'
-import NewTaskForm from 'components/forms/NewTaskForm'
 import SendInviteForm from 'components/forms/SendInviteForm'
-import LoadingIndicator from 'components/shared/LoadingIndicator'
-import SearchUsers from 'components/SearchUsers'
-import Task from 'components/tasks/Task'
-import TaskBoard from 'components/tasks/TaskBoard'
-import { dimensions, breakpoints } from 'styles'
-
-
-import { UserPlus, CaretDown, X, ArrowBack } from '@styled-icons/boxicons-regular'
+import { Sent } from 'components/invites/InviteList'
+import TaskList from 'components/tasks/TaskList'
+import { Album } from '@styled-icons/boxicons-regular'
 
 import { BlankButton } from 'components/shared/Button'
 
@@ -21,37 +15,18 @@ import { BlankButton } from 'components/shared/Button'
 const Container = styled(Flex)`
   position: relative;
   width: 100%;
-  overflow: hidden;
-  min-height: calc(100vh - 100px);
+  height: calc(100vh - 100px);
 
   #expanded-task {
     max-width: 450px
   }
 `
 
-const BoardsContainer = styled.div`
-  width: 100%;
-  display: flex;
-  flex: 1;
-  justify-content: space-between;
-  flex-wrap: nowrap;
-  overflow-x: auto;
-`
 
-const StyledBoard = styled(TaskBoard)`
-  flex: 0 0 auto;
-  width: 80vw;
-  max-width: 375px;
-  margin-right: 10px;
 
-  &:last-child {
-    margin-right: 0;
-  }
-
-  @media (min-width: ${breakpoints.desktop}) {
-    flex: 1 1 auto;
-    max-width: 500px;
-  }
+const StyledFilterButton = styled(BlankButton)`
+  color: ${({ active, theme }) => active ? theme.colors.text : 'gray'};
+  text-decoration: ${({ active }) => active ? 'underline' : 'none'};
 `
 
 function ProjectPage({ proj, userId }) {
@@ -67,18 +42,13 @@ function ProjectPage({ proj, userId }) {
     updateProjectTitle
   } = useProject(proj._id)
 
-  console.log('project page loaded')
 
-  if (project) {
-    console.log('project page members', [
-      ...project.members.data,
-      project.manager
-    ])
-  }
+  const [showList, setShowList] = useState({
+    name: 'tasks',
+    id: '',
+    showForm: false
+  })
 
-  const [showForm, setShowForm] = useState('')
-  const [showMembers, setShowMembers] = useState('')
-  const [expandedTask, setExpandedTask] = useState('')
   const [title, setTitle] = useState(project ? project.title : proj.title)
 
   const handleUpdate = async (e) => {
@@ -86,6 +56,22 @@ function ProjectPage({ proj, userId }) {
     await updateProjectTitle(title)
   }
 
+  const handleAllTasks = () => {
+    setShowList(p => ({
+      ...p,
+      name: 'tasks',
+      id: '',
+    }))
+  }
+
+  const handleListChange = (e) => {
+    const name = e.currentTarget.id
+    setShowList(p => ({
+      ...p,
+      name,
+      id: '',
+    }))
+  }
 
   if (error) {
     return (
@@ -97,9 +83,14 @@ function ProjectPage({ proj, userId }) {
     <>
       <Container dir='column'>
         {loading ? (
-          <>
-            <LoadingIndicator />
-          </>
+          <Flex
+            ai='center'
+            jc='center'
+            flex='1'
+            className='w-100'
+          >
+            <Album size='40' className='c-brand rotate' />
+          </Flex>
         ) : (
           <>
             <Flex className="alt-bg std-div mt-s w-100">
@@ -130,108 +121,77 @@ function ProjectPage({ proj, userId }) {
 
             <Flex ai='center' className='alt-bg std-div mtb-s w-100'>
               <Flex ai='center' jc='space-between' className='bg std-div w-100'>
-                <Flex>
-                  <i style={{ marginRight: '5px' }}>manager: </i>
-                  <i style={{ marginRight: '25px' }}>{project.manager.handle}</i>
-                </Flex>
-                <Flex ai='center'>
-                  <i style={{ marginRight: '5px' }}>members: </i>
+                <Flex ai='center' jc='space-between' className='w-100'>
+                  {['tasks', 'members', 'invites'].map(el => (
+                    <StyledFilterButton
+                      key={el}
+                      id={el}
+                      onClick={handleListChange}
+                      active={showList.name === el}
+                    >
+                      <div>{el}</div>
+                    </StyledFilterButton>
+                  ))}
 
-                  <div>
-                    {project.members.data.length}
-                  </div>
-                  <BlankButton onClick={() => setShowMembers(!showMembers)}>
-                    <CaretDown size='20' />
-                  </BlankButton>
-                  {showMembers && (
-                    <Flex dir='column' className='bg std-div pop-up'>
-                      <BlankButton onClick={() => setShowMembers(!showMembers)}>
-                        <X size='20' />
-                      </BlankButton>
-                      {showMembers === 'invites' ? (
-                        <>
-                          <p>
-                            {`send invites for ${project.title}`}
-                          </p>
-                          <SendInviteForm
-                            userId={userId}
-                            projectId={proj._id}
-                            isInvite={true}
-                            projectMembers={[
-                              ...project.members.data,
-                              project.manager
-                            ]}
-                          />
-                        </>
-                      ) : (
-                        <Flex dir='column' ai='center' className='alt-bg std-div w-100 mb-s'>
-                          <i style={{ marginBottom: '8px' }}>all members</i>
-                          <BlankButton onClick={() => setShowMembers('invites')}>
-                            <UserPlus size='24' />
-                          </BlankButton>
-                          <Flex className="">
-                            <div className="alt-div-1 bg m-xxs">
-                              <i>@{project.manager.handle}</i>
-                            </div>
-                            {project.members.data.map(m => {
-                              return (
-                                <div key={m._id} className="alt-div-1 bg m-xxs">
-                                  <i>@{m.handle}</i>
-                                </div>
-                              )
-                            })}
-                          </Flex>
-                        </Flex>
-                      )}
-
-
-                    </Flex>
-                  )}
                 </Flex>
               </Flex>
             </Flex>
 
-
-            {expandedTask ? (
-              <Task
-                t={project.tasks.data.find(t => t._id === expandedTask)}
+            {showList.name === 'tasks' && (
+              <TaskList
+                tasks={project.tasks.data}
                 project={project}
-                close={() => setExpandedTask('')}
-                update={updateTask}
-                remove={deleteTask}
+                close={handleAllTasks}
+                createTask={createTask}
+                updateTask={updateTask}
+                deleteTask={deleteTask}
                 loading={updating.creating}
                 userId={userId}
                 id='expanded-task'
               />
-            ) : (
-              <BoardsContainer>
-                {['todo', 'doing', 'done'].map(s => {
-                  return (
-                    <StyledBoard
-                      status={s}
-                      key={s}
-                      tasks={project.tasks.data.filter(t => t.status === s)}
-                      setExpandedTask={setExpandedTask}
-                      openForm={() => setShowForm(s)}
-                      className='alt-bg std-div'
-                    />
-                  )
-                })}
-              </BoardsContainer>
+            )}
+
+            {showList.name === 'members' && (
+              <Flex dir='column' ai='center' className='alt-bg std-div w-100 mb-s'>
+                <i style={{ marginBottom: '8px' }}>all members</i>
+                <Flex className="">
+                  <div className="alt-div-1 bg m-xxs">
+                    <i>@{project.manager.handle}</i>
+                  </div>
+                  {project.members.data.map(m => {
+                    return (
+                      <div key={m._id} className="alt-div-1 bg m-xxs">
+                        <i>@{m.handle}</i>
+                      </div>
+                    )
+                  })}
+                </Flex>
+              </Flex>
+            )}
+
+            {showList.name === 'invites' && (
+              <>
+                <Flex dir='column' className='alt-bg std-div w-100'>
+                  <p className='mb-s'>
+                    {`send invites for ${project.title}`}
+                  </p>
+                  <SendInviteForm
+                    userId={userId}
+                    projectId={proj._id}
+                    isInvite={true}
+                    projectMembers={[
+                      ...project.members.data,
+                      project.manager
+                    ]}
+                  />
+                </Flex>
+                <Flex dir='column' className='alt-bg std-div w-100 mt-s'>
+                  <p className=''>pending invites</p>
+                  <Sent projectId={proj._id} />
+                </Flex>
+              </>
             )}
           </>
-        )}
-        {showForm && (
-          <Flex className="std-div bg pop-up" ai='center'>
-            <NewTaskForm
-              userId={userId}
-              projectId={proj._id}
-              status={showForm}
-              close={() => setShowForm('')}
-              loading={updating.creating}
-              createTask={createTask}
-            />
-          </Flex>
         )}
       </Container>
 

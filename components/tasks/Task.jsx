@@ -5,7 +5,6 @@ import styled from 'styled-components'
 import { X, ArrowBack, Trash, UserPlus, Album } from '@styled-icons/boxicons-regular'
 
 import { BlankButton } from 'components/shared/Button'
-import LoadingIndicator from 'components/shared/LoadingIndicator'
 import SendInviteForm from 'components/forms/SendInviteForm'
 
 const StyledTask = styled(Flex)`
@@ -30,7 +29,6 @@ const Task = ({
   update,
   remove,
   loading,
-  className,
   userId,
   project,
 }) => {
@@ -79,7 +77,7 @@ const Task = ({
         <BlankButton onClick={close}>
           <Flex ai='center'>
             <ArrowBack size='18' />
-            <i>boards</i>
+            <i>all tasks</i>
           </Flex>
         </BlankButton>
         {loading && <Album size='20' className='rotate c-brand' />}
