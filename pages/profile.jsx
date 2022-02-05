@@ -19,6 +19,7 @@ const Container = styled(Flex)`
 const Profile = ({ setTheme }) => {
     const { user, error, loading, updateHandle, updating, mutate } = useUser()
     const [edit, setEdit] = useState(null)
+    const router = useRouter()
 
     const handleLogout = async () => {
         const loggedOut = await fetch('/api/logout')
