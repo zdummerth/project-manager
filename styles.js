@@ -123,6 +123,8 @@ const rotate360 = keyframes`
     transform: rotate(360deg);
   }
 `
+
+
 export const GlobalStyle = createGlobalStyle`
   body {
     box-sizing: border-box;
@@ -162,13 +164,18 @@ export const GlobalStyle = createGlobalStyle`
 
   main { width: 100%; }
 
+  .absolute { position: absolute; }
+
   .bg { background: ${({ theme }) => theme.colors.background}; }
   .alt-bg { background: ${({ theme }) => theme.colors.altBackground}; }
+  .brand-bg { background: ${({ theme }) => theme.colors.brand}; }
 
   .std-div {
     border-radius: 10px;
     padding: 10px;
   }
+
+  .b-rad-s { border-radius: 10px; }
 
   .alt-div-1 {
     border-radius: 30px;
@@ -176,32 +183,130 @@ export const GlobalStyle = createGlobalStyle`
   }
 
   .w-100 { width: 100%; }
+  .w-50 { width: 50%; }
+  .h-75px { height: 75px; }
+  .h-200px { height: 200px; }
+  .h-40px { height: 40px; }
 
   .m-xxs { margin: 2.5px; }
-
-  .mb-s { margin-bottom: 10px; }
+  .m-xs { margin: 5px; }
+  .m-s { margin: 10px; }
+  .m-m { margin: 15px; }
+  .m-l { margin: 25px; }
 
   .mb-xs { margin-bottom: 5px; }
+  .mb-s { margin-bottom: 10px; }
+  .mb-m { margin-bottom: 15px; }
+  .mb-l { margin-bottom: 25px; }
 
   .ml-xs { margin-left: 5px; }
+  .ml-s { margin-left: 10px; }
+  .ml-m { margin-left: 15px; }
+  .ml-l { margin-left: 25px; }
 
   .mt-xs { margin-top: 5px; }
-
   .mt-s { margin-top: 10px; }
+  .mt-m { margin-top: 15px; }
+  .mt-l { margin-top: 25px; }
+
+  .mr-xs { margin-right: 5px; }
+  .mr-s { margin-right: 10px; }
+  .mr-m { margin-right: 15px; }
+  .mr-l { margin-right: 25px; }
+
 
   .mtb-s {
     margin-top: 10px;
     margin-bottom: 10px;
   }
+  .mtb-m {
+    margin-top: 15px;
+    margin-bottom: 15px;
+  }
+  .mtb-l {
+    margin-top: 25px;
+    margin-bottom: 25px;
+  }
+
+  .ptb-s {
+    padding-top: 10px;
+    padding-bottom: 10px;
+  }
+
+  .product-card {
+    width: 100%;
+    max-width: 370px;
+    // min-width: 200px;
+    // height: 100%;
+  }
+
+  .center {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .flex { display: flex; }
+  .flex-col {
+    display: flex;
+    flex-direction: column
+  }
+
+  .flex-1 {
+    flex: 1;
+  }
+
+  .f-wrap { flex-wrap: wrap; }
+  .fd-col { flex-direction: column }
+  .fai-fs { align-items: flex-start; }
+  .fai-fe { align-items: flex-end; }
+  .fai-s { align-items: stretch; }
+  .fai-c { align-items: center; }
+  .fas-b { align-self: baseline; }
+  .fas-fe { align-self: flex-end; }
+  .fjc-c { justify-content: center; }
+  .fjc-sb { justify-content: space-between; }
+  .fjc-sa { justify-content: space-around; }
+  .fjc-se { justify-content: space-evenly; }
+  .fjc-fe { justify-content: flex-end; }
+  .fjc-fs { justify-content: flex-start; }
+
+  .ta-center {
+    text-align: center;
+  }
+
+  .b-none {
+    border: none;
+  }
+
+  .block {
+    display: block;
+  }
+
+  .error {
+    color: red;
+    font-size: 14px;
+  }
+
+  .delete {
+    background: red;
+    color: white;
+    // text-shadow: 1px 1px #000;
+  }
 
   .active { border: 1px solid ${({ theme }) => theme.colors.brand}; }
 
   .c-brand { color: ${({ theme }) => theme.colors.brand}; }
+  .c-text { color: ${({ theme }) => theme.colors.text}; }
   .c-delete { color: red; }
 
   .border { border: 1px solid gray; }
 
   .rotate { animation: ${rotate360} 1s linear infinite; }
+
+  .cta {
+    background: ${({ theme }) => theme.colors.brand};
+    color: black;
+  }
 
   .pop-up {
     position: absolute;
@@ -212,13 +317,28 @@ export const GlobalStyle = createGlobalStyle`
     box-shadow: 0 0 5px 2px ${({ theme }) => theme.colors.text};
   }
 
+  button {
+    background: transparent;
+    border: none;
+    color: ${({ theme }) => theme.colors.text};
+    // display: block;
+  }
+
+  table {
+    border-collapse: collapse;
+  }
+
+  th, td {
+    padding: 10px;
+  }
+
   input, textarea {
     border-radius: 10px;
     border: none;
     padding: 10px;
     width: 100%;
     font-size: 16px;
-    background: ${({ theme }) => theme.colors.background};
+    background: ${({ theme }) => theme.colors.input.background};
     color: ${({ theme }) => theme.colors.text};
 
     &:focus {

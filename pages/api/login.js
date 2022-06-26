@@ -19,7 +19,7 @@ export default async function loginHandler(req, res) {
     console.log("metadata", metadata)
 
     //get user and access code from db and set access code as session
-    const user = await login(req.body.email, process.env.FAUNA_SERVER_KEY)
+    const user = await login(metadata.email, process.env.FAUNA_SERVER_KEY)
     console.log('user login res', user)
     const session = { ...metadata, ...user }
 

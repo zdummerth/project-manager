@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import Link from "next/link"
 import { useRouter } from 'next/router'
 import styled from 'styled-components'
-import { Home, User, Message } from '@styled-icons/boxicons-regular'
+import { Home, User, Message, Store } from '@styled-icons/boxicons-regular'
 import Flex from 'components/shared/Flex'
 import { useInvites } from 'lib/hooks'
 import { Received } from 'components/invites/InviteList'
@@ -53,6 +53,13 @@ const Navigation = () => {
         <a>
           <Flex className='std-div bg ml-xs' dir='column' ai='center'>
             <User size='20' />
+          </Flex>
+        </a>
+      </Link>
+      <Link href='/shopify-admin/dashboard' name='shopify-admin/dashboard'>
+        <a>
+          <Flex className='std-div bg ml-xs' dir='column' ai='center'>
+            <Store size='20' />
           </Flex>
         </a>
       </Link>
