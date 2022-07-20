@@ -8,6 +8,7 @@ const Container = styled(Flex)`
     min-height: 100vh;
     overflow: hidden;
     max-width: 1400px;
+    margin: 0 auto;
 `
 
 const Content = styled(Flex)`
@@ -19,9 +20,9 @@ const Layout = ({ children }) => {
   return (
     <>
       <GlobalStyle />
-      <Container className='std-div' dir='column'>
+      <Container className='std-div' dir='column' ai='center'>
         <Navigation />
-        <Content>
+        <Content dir='column' ai='center'>
           {children}
         </Content>
       </Container>

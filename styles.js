@@ -57,7 +57,7 @@ export const theme2 = {
       disabled: 'rgba(0,0,0,.6)'
     },
     input: {
-      background: '#202020',
+      background: '#999',
     }
   }
 }
@@ -347,9 +347,3 @@ export const GlobalStyle = createGlobalStyle`
     }
   }
 `
-
-
-
-
-
-

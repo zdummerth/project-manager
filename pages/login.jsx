@@ -2,6 +2,11 @@ import { useState } from 'react'
 import LoginForm from 'components/forms/LoginForm';
 import { Magic } from 'magic-sdk'
 import { useRouter } from 'next/router'
+import styled from 'styled-components'
+
+const Wrapper = styled.div`
+  max-width: 500px;
+`
 
 
 
@@ -46,13 +51,13 @@ const Login = () => {
   }
 
   return (
-    <>
+    <Wrapper className='w-100 flex fjs-c'>
       <div className="std-div alt-bg w-100 mt-s">
+      <p>Enter an email address to create an account. This site utilizes email links for authentication with Magic Links.</p>
         <LoginForm errorMessage={errorMsg} onSubmit={handleSubmit} loading={loading} />
       </div>
-    </>
+    </Wrapper>
   )
 }
 
 export default Login
-

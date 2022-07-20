@@ -12,11 +12,6 @@ export default function Home({ userId }) {
 
   return (
     <Container dir='column' ai='center'>
-      <div className="std-div alt-bg w-100 mtb-s">
-        <Flex jc='center' className='bg std-div w-100'>
-          <h2>my projects</h2>
-        </Flex>
-      </div>
       <ProjectList userId={userId} />
     </Container>
   )

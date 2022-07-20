@@ -7,14 +7,15 @@ import ProjectCard from 'components/projects/ProjectCard'
 
 const Container = styled(Flex)`
     position: relative;
-    
-    #form {
-        position fixed;
-        bottom: 10px;
-        right: 10px;
-        left: 10px;
-        box-shadow: 0 0 5px 1px ${({ theme }) => theme.colors.text};
-    }
+    max-width: 800px;
+
+    // #form {
+    //     position fixed;
+    //     bottom: 10px;
+    //     right: 10px;
+    //     left: 10px;
+    //     box-shadow: 0 0 5px 1px ${({ theme }) => theme.colors.text};
+    // }
 `
 
 export default function ProjectList({ userId, className }) {
@@ -23,6 +24,17 @@ export default function ProjectList({ userId, className }) {
     console.log('prod updating', updating)
     return (
         <Container dir='column' ai='center' className={`w-100 ${className}`}>
+        <div className="std-div alt-bg w-100 mtb-s">
+          <Flex jc='center' className='bg std-div w-100'>
+            <h2>My Projects</h2>
+          </Flex>
+        </div>
+        <div id='form' className='w-100 std-div alt-bg mtb-s'>
+            <NewProjectForm
+                createProject={createProject}
+                loading={updating.creating}
+            />
+        </div>
             <div className='std-div alt-bg w-100'>
                 {projects && projects.map((p, ind) => {
                     return (
@@ -37,12 +49,7 @@ export default function ProjectList({ userId, className }) {
                     )
                 })}
             </div>
-            <div id='form' className='std-div alt-bg mt-s'>
-                <NewProjectForm
-                    createProject={createProject}
-                    loading={updating.creating}
-                />
-            </div>
+
         </Container>
     )
 }
